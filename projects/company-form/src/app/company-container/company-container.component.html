@@ -1,0 +1,23 @@
+<p>company-container works!</p>
+<nav>
+    <mat-card *ngFor="let company of companyList$ | async ; let i = index">
+        <div mat-button>{{i + 1}} {{company | json}}</div>
+        <button
+            mat-button
+            [routerLink]="['editCompany', i]"
+        >
+            Edit Company
+        </button>
+        <mat-divider></mat-divider>
+    </mat-card>
+
+    <button
+        mat-button
+        routerLink="./registerNewCompany"
+        routerLinkActive="active"
+    >
+        Register new company
+    </button>
+</nav>
+
+<router-outlet></router-outlet>

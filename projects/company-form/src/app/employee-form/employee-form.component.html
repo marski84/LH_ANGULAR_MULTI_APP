@@ -1,0 +1,37 @@
+<p>employee-form works!</p>
+
+<mat-card [formGroup]="companyEmployeeForm">
+
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+
+        <input
+            matInput
+            formControlName="firstName"
+            placeholder="Employee firstname..."
+        >
+        <!-- <mat-error *ngIf="companyEmployeesNameCtrl.touched && companyEmployeesNameCtrl.hasError('required')">This field is required</mat-error> -->
+
+    </mat-form-field>
+    <mat-divider></mat-divider>
+    <mat-form-field appearance="fill">
+        <mat-label>Lastname</mat-label>
+        <input
+            matInput
+            formControlName="lastName"
+            placeholder="Employee lastname..."
+        >
+
+    </mat-form-field>
+    <mat-divider></mat-divider>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Age</mat-label>
+        <input
+            matInput
+            formControlName="employeeAge"
+            placeholder="Employee age..."
+        >
+    </mat-form-field>
+
+</mat-card>

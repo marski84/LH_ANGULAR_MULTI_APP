@@ -1,0 +1,13 @@
+<!-- {{companyData | json}} -->
+Edit Comapny data :
+company name: {{companyData.name}},
+tyoe of businees: {{companyData.typeOfBusiness}},
+Employees:
+{{companyData.employees}}
+<mat-card>
+    <app-company-form
+        [companyData]="companyData"
+        (companyDataEvent)="getEditedData($event)"
+    ></app-company-form>
+
+</mat-card>
