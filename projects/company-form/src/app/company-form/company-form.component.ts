@@ -20,6 +20,8 @@ export class CompanyFormComponent implements OnInit {
 
   companyEmployeesArray: Employee[] = [];
 
+  employeeForm!: FormGroup
+
   companyForm = this.fb.group({
     name: ['', [Validators.required]],
     typeOfBusiness: ['', [Validators.required]],
@@ -38,6 +40,10 @@ export class CompanyFormComponent implements OnInit {
   get companyEmployees() {
     return this.companyForm.controls['companyEmployees'] as FormArray;
   };
+
+  formGroupAtIndex(index: number) {
+    return this.companyEmployees.at(index) as FormGroup;
+  }
 
   companyEmployeesNameCtrl(empIndex: number) {
     return this.companyEmployees.at(empIndex) as FormGroup

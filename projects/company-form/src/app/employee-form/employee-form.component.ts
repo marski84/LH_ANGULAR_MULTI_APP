@@ -16,7 +16,10 @@ export class EmployeeFormComponent implements OnInit {
     lastName: ['', Validators.required],
     employeeAge: ['', Validators.required]
   });
-  @Input() formData!: Employee;
+  @Input() formData?: Employee;
+
+  @Input()
+  employeeForm!: FormGroup
 
   // get employeeCtrl() {
   //   return this.companyEmployeeForm.controls['companyEmployeeForm'] as FormGroup;
@@ -46,12 +49,16 @@ export class EmployeeFormComponent implements OnInit {
     this.handleEmployeeFormCtrl();
   }
   handleEmployeeFormCtrl(formData?: Employee) {
-
     this.employeeFirstNameCtrl.setValue(this.formData?.firstName);
     this.employeeLastNameCtrl.setValue(this.formData?.lastName);
     this.employeeAgeCtrl.setValue(this.formData?.employeeAge);
-
   };
+
+  // onSubmit(formData: Employee) {
+  //   console.log(formData);
+
+  //   return formData;
+  // }
 
 
 }

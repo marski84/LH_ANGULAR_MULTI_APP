@@ -16,7 +16,7 @@ export class NewCompanyComponent implements OnInit {
 
   handleAddNewCompany(data: Company) {
     this.companyService.createNewCompany(data);
-    console.log(data);
+    console.log(data.employees);
 
   }
 

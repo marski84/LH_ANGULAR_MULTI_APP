@@ -48,6 +48,7 @@
     <div class="add-employee-form">
 
         <ng-container formArrayName="companyEmployees">
+
             <ng-container *ngFor="let employeeForm of companyEmployees.controls; let i = index">
 
                 <div
@@ -55,11 +56,12 @@
                     [formGroupName]="i"
                 >
 
-                    <div>
-                        <app-employee-form [formData]="companyEmployeesArray[i]"></app-employee-form>
-                    </div>
+                    <app-employee-form
+                        [formData]="companyEmployeesArray[i]"
+                        [employeeForm]="employeeForm"
+                    ></app-employee-form>
 
-                    <mat-form-field appearance="fill">
+                    <!-- <mat-form-field appearance="fill">
                         <mat-label>Name</mat-label>
 
                         <input
@@ -67,7 +69,6 @@
                             formControlName="firstName"
                             placeholder="Employee firstname..."
                         >
-                        <!-- <mat-error *ngIf="companyEmployeesNameCtrl.touched && companyEmployeesNameCtrl.hasError('required')">This field is required</mat-error> -->
 
                     </mat-form-field>
 
@@ -90,7 +91,7 @@
                             formControlName="employeeAge"
                             placeholder="Employee age..."
                         >
-                    </mat-form-field>
+                    </mat-form-field> -->
 
                     <mat-icon
                         *ngIf="i!==0"
