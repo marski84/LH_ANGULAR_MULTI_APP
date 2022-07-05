@@ -49,49 +49,20 @@
 
         <ng-container formArrayName="companyEmployees">
 
-            <ng-container *ngFor="let employeeForm of companyEmployees.controls; let i = index">
-
+            <ng-container *ngFor="let employeeForm of companyEmployeesControls; let i = index">
+                {{employeeForm.value[0] | json}}
                 <div
                     class="employee-form-row"
                     [formGroupName]="i"
                 >
+                    <div>{{employeeForm.status}}</div>
+
+                    <!-- <app-employee-form [formData]="companyEmployeesArray[i]"></app-employee-form> -->
 
                     <app-employee-form
-                        [formData]="companyEmployeesArray[i]"
+                        [parentForm]="companyForm"
                         [employeeForm]="employeeForm"
                     ></app-employee-form>
-
-                    <!-- <mat-form-field appearance="fill">
-                        <mat-label>Name</mat-label>
-
-                        <input
-                            matInput
-                            formControlName="firstName"
-                            placeholder="Employee firstname..."
-                        >
-
-                    </mat-form-field>
-
-                    <mat-divider></mat-divider>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Lastname</mat-label>
-                        <input
-                            matInput
-                            formControlName="lastName"
-                            placeholder="Employee lastname..."
-                        >
-
-                    </mat-form-field>
-                    <mat-divider></mat-divider>
-
-                    <mat-form-field appearance="fill">
-                        <mat-label>Age</mat-label>
-                        <input
-                            matInput
-                            formControlName="employeeAge"
-                            placeholder="Employee age..."
-                        >
-                    </mat-form-field> -->
 
                     <mat-icon
                         *ngIf="i!==0"
@@ -102,7 +73,7 @@
                     </mat-icon>
                 </div>
 
-                <mat-error *ngIf="companyEmployeesNameCtrl(i).touched && companyEmployeesNameCtrl(i).invalid">All Fields are requiered</mat-error>
+                <!-- <mat-error *ngIf="companyEmployeesNameCtrl(i).touched && companyEmployeesNameCtrl(i).invalid">All Fields are requiered</mat-error> -->
 
             </ng-container>
 

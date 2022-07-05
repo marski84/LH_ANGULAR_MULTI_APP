@@ -20,7 +20,11 @@ export class CompanyFormComponent implements OnInit {
 
   companyEmployeesArray: Employee[] = [];
 
-  employeeForm!: FormGroup
+  employeeForm: FormGroup = this.fb.group({
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    employeeAge: ['', Validators.required]
+  });
 
   companyForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -37,16 +41,23 @@ export class CompanyFormComponent implements OnInit {
     return this.companyForm.get(['typeOfBusiness']) as FormControl;
   };
 
-  get companyEmployees() {
-    return this.companyForm.controls['companyEmployees'] as FormArray;
+  get companyEmployeesControls() {
+    return (this.companyForm.controls['companyEmployees'] as FormArray).controls as FormGroup[];
   };
 
+
+  get companyEmployees() {
+    return (this.companyForm.controls['companyEmployees'] as FormArray);
+  };
+
+
+
   formGroupAtIndex(index: number) {
-    return this.companyEmployees.at(index) as FormGroup;
+    // return this.companyEmployees.at(index) as FormGroup;
   }
 
   companyEmployeesNameCtrl(empIndex: number) {
-    return this.companyEmployees.at(empIndex) as FormGroup
+    // return this.companyEmployees.at(empIndex) as FormGroup
   };
 
   typeOfBusinessSelectOptions = [
@@ -63,14 +74,14 @@ export class CompanyFormComponent implements OnInit {
 
 
   constructor(private fb: FormBuilder) {
-    console.log(this.companyEmployees.controls);
+    // console.log(this.companyEmployees.controls);
 
   }
 
   ngOnInit(): void {
     if (this.companyData) {
 
-      this.companyEmployeesArray = this.companyData.employees
+      this.companyEmployeesArray = this.companyData.employees;
 
       this.companyNameCtrl.setValue(this.companyData.name);
       this.companyBusinessTypeFormCtrl.setValue(this.companyData.typeOfBusiness);
@@ -106,10 +117,11 @@ export class CompanyFormComponent implements OnInit {
       firstName: [employee?.firstName, Validators.required],
       lastName: [employee?.lastName, Validators.required],
       employeeAge: [employee?.employeeAge, Validators.required]
+
+
     });
 
-
-    this.companyEmployees.push(employeeForm)
+    this.companyEmployeesControls.push(employeeForm)
   };
 
   deleteEmployeeForm(employeeIndex: number) {
