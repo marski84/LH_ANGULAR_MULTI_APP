@@ -5,19 +5,16 @@ import { CompanyService } from '../company.service';
 @Component({
   selector: 'app-new-company',
   templateUrl: './new-company.component.html',
-  styleUrls: ['./new-company.component.scss']
+  styleUrls: ['./new-company.component.scss'],
 })
 export class NewCompanyComponent implements OnInit {
+  constructor(private companyService: CompanyService) {}
 
-  constructor(private companyService: CompanyService) { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-  }
+  handleAddNewCompany(data: any) {
+    console.log(data);
 
-  handleAddNewCompany(data: Company) {
     this.companyService.createNewCompany(data);
-    console.log(data.employees);
-
   }
-
 }

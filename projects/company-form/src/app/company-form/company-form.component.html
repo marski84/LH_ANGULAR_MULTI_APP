@@ -49,7 +49,7 @@
 
         <ng-container formArrayName="companyEmployees">
 
-            <ng-container *ngFor="let employeeForm of companyEmployeesControls; let i = index">
+            <ng-container *ngFor="let employeeForm of companyEmployeesControls; let i = index; trackBy: trackByFn">
                 {{employeeForm.value[0] | json}}
                 <div
                     class="employee-form-row"
@@ -73,7 +73,7 @@
                     </mat-icon>
                 </div>
 
-                <!-- <mat-error *ngIf="companyEmployeesNameCtrl(i).touched && companyEmployeesNameCtrl(i).invalid">All Fields are requiered</mat-error> -->
+                <mat-error *ngIf="employeeForm.touched && companyEmployeesNameCtrl(i).invalid">All Fields are requiered</mat-error>
 
             </ng-container>
 

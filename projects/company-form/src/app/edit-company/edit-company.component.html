@@ -7,7 +7,7 @@ Employees:
 <mat-card>
     <app-company-form
         [companyData]="companyData"
-        (companyDataEvent)="getEditedData($event)"
+        (companyDataEmitted)="editData($event)"
     ></app-company-form>
 
 </mat-card>

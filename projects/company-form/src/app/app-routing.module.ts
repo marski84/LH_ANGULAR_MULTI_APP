@@ -8,17 +8,17 @@ import { NewCompanyComponent } from './new-company/new-company.component';
 const routes: Routes = [
   { path: 'registerNewCompany', component: NewCompanyComponent },
   {
-    path: 'registerCompany', component: CompanyFormComponent
+    path: 'registerCompany',
+    component: CompanyFormComponent,
   },
   {
-    path: 'editCompany/:id', component: EditCompanyComponent
-
-  }
-
+    path: 'editCompany/:id',
+    component: EditCompanyComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
