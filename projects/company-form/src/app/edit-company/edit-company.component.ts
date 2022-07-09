@@ -14,7 +14,6 @@ export class EditCompanyComponent implements OnInit {
   companyIndex!: number;
 
   constructor(
-    private router: Router,
     private activatedRoute: ActivatedRoute,
     private companyService: CompanyService
   ) {}

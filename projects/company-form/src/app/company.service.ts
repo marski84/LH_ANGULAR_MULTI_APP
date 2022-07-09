@@ -41,7 +41,7 @@ export class CompanyService {
     return this._selectedCompany;
   }
 
-  createNewCompany(formData: any) {
+  createNewCompany(formData: ICompany) {
     console.log(formData);
 
     const { name, typeOfBusiness, companyEmployees } = formData;

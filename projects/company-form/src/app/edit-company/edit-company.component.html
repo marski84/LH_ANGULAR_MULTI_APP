@@ -1,9 +1,14 @@
 <!-- {{companyData | json}} -->
-Edit Comapny data :
-company name: {{companyData.name}},
-tyoe of businees: {{companyData.typeOfBusiness}},
-Employees:
-{{companyData.employees}}
+
+<mat-card>
+    Comapny data:
+    <div>name: {{companyData.name | uppercase}},</div>
+
+    <div>
+        type of businees: {{companyData.typeOfBusiness | uppercase}}
+    </div>
+</mat-card>
+<div>Company Employees:</div>
 <mat-card>
     <app-company-form
         [companyData]="companyData"

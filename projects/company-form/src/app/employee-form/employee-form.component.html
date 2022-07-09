@@ -1,42 +1,62 @@
-<p>employee-form works!</p>
-
 <form [formGroup]="parentForm"></form>
 
-<div [formGroup]="employeeForm">
+<div
+    class="container"
+    [formGroup]="employeeForm"
+>
 
-    <mat-card>
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input
+            matInput
+            formControlName="firstName"
+            placeholder="Employee firstname..."
+        >
+        <mat-error *ngIf="employeeFirstNameCtrl.hasError('required')">
+            Name is
+            <strong>required</strong>
+        </mat-error>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Name</mat-label>
+    </mat-form-field>
 
-            <input
-                matInput
-                formControlName="firstName"
-                placeholder="Employee firstname..."
-            >
-            <!-- <mat-error *ngIf="companyEmployeesNameCtrl.touched && companyEmployeesNameCtrl.hasError('required')">This field is required</mat-error> -->
+    <mat-form-field appearance="fill">
+        <mat-label>Lastname</mat-label>
+        <input
+            matInput
+            formControlName="lastName"
+            placeholder="Employee lastname..."
+        >
+        <mat-error *ngIf="employeeLastNameCtrl.hasError('required')">
+            Lastname is
+            <strong>required</strong>
+        </mat-error>
 
-        </mat-form-field>
-        <mat-divider></mat-divider>
-        <mat-form-field appearance="fill">
-            <mat-label>Lastname</mat-label>
-            <input
-                matInput
-                formControlName="lastName"
-                placeholder="Employee lastname..."
-            >
+    </mat-form-field>
+    <!-- <mat-divider></mat-divider> -->
 
-        </mat-form-field>
-        <mat-divider></mat-divider>
+    <mat-form-field appearance="fill">
+        <mat-label>Age</mat-label>
+        <input
+            matInput
+            formControlName="employeeAge"
+            placeholder="Employee age..."
+        >
+        <mat-error *ngIf="employeeAgeCtrl.hasError('required')">
+            Age is
+            <strong>required</strong>
+        </mat-error>
+    </mat-form-field>
+    <span class="button-container">
+        <button
+            *ngIf="employeeIndex > 0"
+            (click)="employeeFormDeleteEmitted()"
+            mat-raised-button
+            color="primary"
+            class="delete-btn"
+        >
+            Delete employee data
+            <mat-icon>delete</mat-icon>
+        </button>
+    </span>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Age</mat-label>
-            <input
-                matInput
-                formControlName="employeeAge"
-                placeholder="Employee age..."
-            >
-        </mat-form-field>
-
-    </mat-card>
 </div>

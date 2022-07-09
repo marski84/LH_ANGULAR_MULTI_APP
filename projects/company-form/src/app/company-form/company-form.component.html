@@ -18,6 +18,7 @@
                             [formControl]="companyNameCtrl"
                         >
                         <mat-error *ngIf="companyNameCtrl.touched && companyNameCtrl.hasError('required')">This field is required</mat-error>
+
                     </mat-form-field>
 
                 </td>
@@ -55,53 +56,52 @@
                     class="employee-form-row"
                     [formGroupName]="i"
                 >
-                    <div>{{employeeForm.status}}</div>
-
-                    <!-- <app-employee-form [formData]="companyEmployeesArray[i]"></app-employee-form> -->
-
                     <app-employee-form
                         [parentForm]="companyForm"
                         [employeeForm]="employeeForm"
+                        [employeeIndex]="i"
+                        (employeeFormIndexForDeleteEmitted)="handleEmployeeFormDelete($event)"
                     ></app-employee-form>
 
-                    <mat-icon
-                        *ngIf="i!==0"
-                        class="delete-btn"
-                        (click)="deleteEmployeeForm(i)"
-                    >
-                        delete
-                    </mat-icon>
                 </div>
-
-                <mat-error *ngIf="employeeForm.touched && companyEmployeesNameCtrl(i).invalid">All Fields are requiered</mat-error>
 
             </ng-container>
 
         </ng-container>
 
-        <button
-            mat-mini-fab
-            type="button"
-            (click)="addEmployeeForm()"
-        >
-            <mat-icon class="add-employee-btn">add</mat-icon>
-        </button>
+        <div>
+            <button
+                mat-raised-button
+                color="primary"
+                type="button"
+                (click)="addEmployeeForm()"
+            >
+                Add employee
+                <mat-icon class="add-employee-btn">add</mat-icon>
+            </button>
+        </div>
 
-        <button
-            *ngIf="companyData"
-            mat-mini-fab
-            type="submit"
-        >
-            Edit Data
-            <mat-icon class="add-employee-btn">edit</mat-icon>
-        </button>
+        <div>
+            <button
+                *ngIf="companyData"
+                mat-raised-button
+                color="primary"
+                type="submit"
+            >
+                Edit Data
+                <mat-icon class="add-employee-btn">edit</mat-icon>
+            </button>
+
+        </div>
 
     </div>
 
     <!-- połączył guzik edit i save -->
     <button
         *ngIf="!companyData"
-        mat-button
+        [disabled]="companyForm.invalid"
+        mat-raised-button
+        color="primary"
         type="submit"
     >
         Submit

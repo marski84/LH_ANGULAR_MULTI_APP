@@ -17,11 +17,8 @@ import { ICompany } from '../models/ICompany';
   styleUrls: ['./company-form.component.scss'],
 })
 export class CompanyFormComponent implements OnInit {
-  // nie piszemy input/output w nazwie zmiennej
   @Input() companyData?: Company;
-  // Output -> nazywamy czasownikiem w czasie przeszłym tzn. companyFormSubmitted / companyCreated
-  // Jeden Output po submicie formularza
-  // Typowanie zmienić na companyI ewentualnie napisać typ dla danych emitowanych
+
   @Output() companyDataEmitted: EventEmitter<ICompany> =
     new EventEmitter<ICompany>();
 
@@ -103,18 +100,8 @@ export class CompanyFormComponent implements OnInit {
       this.addEmployeeForm();
     }
   }
-  onSubmit(form: ICompany): void {
-    console.log(form);
 
-    if (!this.companyData) {
-      this.companyDataEmitted.emit(form);
-      this.companyForm.reset();
-      return;
-    }
-    return this.companyDataEmitted.emit(form);
-  }
-
-  addEmployeeForm(employee?: Employee) {
+  public addEmployeeForm(employee?: Employee) {
     const employeeForm = this.fb.group({
       firstName: [employee?.firstName, Validators.required],
       lastName: [employee?.lastName, Validators.required],
@@ -124,7 +111,23 @@ export class CompanyFormComponent implements OnInit {
     this.companyEmployees.insert(this.companyEmployees.length, employeeForm);
   }
 
-  deleteEmployeeForm(employeeIndex: number) {
+  private _deleteEmployeeForm(employeeIndex: number) {
     this.companyEmployees.removeAt(employeeIndex);
+  }
+
+  public handleEmployeeFormDelete(employyeFormIndex: number) {
+    this._deleteEmployeeForm(employyeFormIndex);
+  }
+
+  public onSubmit(form: ICompany): void {
+    console.log(form);
+
+    if (!this.companyData) {
+      this.companyDataEmitted.emit(form);
+      this.companyForm.reset();
+      // this.companyForm.markAsPristine();
+      return;
+    }
+    return this.companyDataEmitted.emit(form);
   }
 }

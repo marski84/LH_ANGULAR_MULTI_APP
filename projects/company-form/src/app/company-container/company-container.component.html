@@ -1,9 +1,9 @@
-<p>company-container works!</p>
-<nav>
+<nav *ngIf="companyList$ | async">
     <mat-card *ngFor="let company of companyList$ | async ; let i = index">
         <div mat-button>{{i + 1}} {{company | json}}</div>
         <button
-            mat-button
+            mat-raised-button
+            color="accent"
             [routerLink]="['editCompany', i]"
             routerLinkActive="active"
         >
@@ -13,7 +13,8 @@
     </mat-card>
 
     <button
-        mat-button
+        mat-raised-button
+        color="accent"
         routerLink="./registerNewCompany"
         routerLinkActive="active"
     >

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-employee-form',
@@ -18,6 +19,15 @@ export class EmployeeFormComponent implements OnInit {
 
   @Input()
   employeeForm!: FormGroup;
+
+  @Input()
+  employeeIndex!: number;
+
+  // @Output() companyDataEmitted: EventEmitter<ICompany> =
+  //   new EventEmitter<ICompany>();
+
+  @Output()
+  employeeFormIndexForDeleteEmitted: EventEmitter<number> = new EventEmitter<number>();
 
   get employeeFirstNameCtrl() {
     return this.employeeForm.controls['firstName'] as FormControl;
@@ -33,5 +43,11 @@ export class EmployeeFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.employeeIndex);
+  }
+
+  employeeFormDeleteEmitted() {
+    this.employeeFormIndexForDeleteEmitted.emit(this.employeeIndex);
+  }
 }
