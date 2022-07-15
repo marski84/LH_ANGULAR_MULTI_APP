@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CompanyService } from '../company.service';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Company } from '../models/Company';
 
 @Component({
@@ -9,13 +9,9 @@ import { Company } from '../models/Company';
   styleUrls: ['./company-container.component.scss'],
 })
 export class CompanyContainerComponent implements OnInit, OnDestroy {
-  companyList$: Observable<Company[]>;
+  companyList$: Observable<Company[]> = this.companyService.getCompanyList();
 
-  constructor(private companyService: CompanyService) {
-    this.companyList$ = this.companyService.getCompanyList();
-  }
-
+  constructor(private companyService: CompanyService) {}
   ngOnInit(): void {}
-
   ngOnDestroy(): void {}
 }

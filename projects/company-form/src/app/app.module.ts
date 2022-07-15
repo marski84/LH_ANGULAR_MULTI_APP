@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ButtonNamePipe } from './button-name.pipe';
 
 
 
@@ -30,7 +31,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     NewCompanyComponent,
     EditCompanyComponent,
     CompanyFormComponent,
-    EmployeeFormComponent
+    EmployeeFormComponent,
+    ButtonNamePipe
   ],
   imports: [
     BrowserModule,

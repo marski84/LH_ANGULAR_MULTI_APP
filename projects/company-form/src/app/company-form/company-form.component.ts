@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -10,23 +17,18 @@ import { EventEmitter } from '@angular/core';
 import { Employee } from '../models/Employee';
 import { Company } from '../models/Company';
 import { ICompany } from '../models/ICompany';
+import { DataService } from '../data.service';
+import { IselectType } from '../models/IselectType';
 
 @Component({
   selector: 'app-company-form',
   templateUrl: './company-form.component.html',
   styleUrls: ['./company-form.component.scss'],
 })
-export class CompanyFormComponent implements OnInit {
+export class CompanyFormComponent implements OnInit, OnChanges {
   @Input() companyData?: Company;
-
   @Output() companyDataEmitted: EventEmitter<ICompany> =
     new EventEmitter<ICompany>();
-
-  employeeForm: FormGroup = this.fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    employeeAge: ['', Validators.required],
-  });
 
   companyForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -63,29 +65,30 @@ export class CompanyFormComponent implements OnInit {
     return this.companyEmployees.at(empIndex) as FormGroup;
   }
 
-  typeOfBusinessSelectOptions = [
-    {
-      value: 'Sole proprietorship',
-      viewValue: 'Sole proprietorship',
-    },
-    { value: 'Partnership', viewValue: 'Partnership' },
-    {
-      value: 'Limited liability company (LLC)',
-      viewValue: 'Limited liability company (LLC)',
-    },
-    {
-      value: 'Limited liability company (LLC)',
-      viewValue: 'Limited liability company (LLC)',
-    },
-    { value: 'Corporation - C corp', viewValue: 'Corporation - C corp' },
-    { value: 'Corporation - S corp', viewValue: 'Corporation - S corp' },
-    { value: 'Corporation - B corp', viewValue: 'Corporation - B corp' },
-    { value: 'Corporation - nonprofit', viewValue: 'Corporation - nonprofit' },
-  ];
+  typeOfBusinessSelectOptions: IselectType[] = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private dataService: DataService) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this._handleFormDataEvent();
+  }
 
   ngOnInit(): void {
+    console.log(this.companyData);
+
+    this.dataService.typeOfBusiness.subscribe((response: IselectType[]) => {
+      this.typeOfBusinessSelectOptions = response;
+    });
+
+    this._handleFormDataEvent();
+    if (!this.companyData) {
+      this.addEmployeeForm();
+    }
+  }
+
+  private _handleFormDataEvent() {
+    this.companyEmployees.clear();
+
     if (this.companyData) {
       this.companyNameCtrl.setValue(this.companyData.name);
       this.companyBusinessTypeFormCtrl.setValue(
@@ -96,12 +99,9 @@ export class CompanyFormComponent implements OnInit {
         return;
       });
     }
-    if (!this.companyData) {
-      this.addEmployeeForm();
-    }
   }
 
-  public addEmployeeForm(employee?: Employee) {
+  addEmployeeForm(employee?: Employee) {
     const employeeForm = this.fb.group({
       firstName: [employee?.firstName, Validators.required],
       lastName: [employee?.lastName, Validators.required],
@@ -115,19 +115,21 @@ export class CompanyFormComponent implements OnInit {
     this.companyEmployees.removeAt(employeeIndex);
   }
 
-  public handleEmployeeFormDelete(employyeFormIndex: number) {
+  handleEmployeeFormDelete(employyeFormIndex: number) {
     this._deleteEmployeeForm(employyeFormIndex);
   }
 
-  public onSubmit(form: ICompany): void {
-    console.log(form);
+  onSubmit(): void {
+    const tempCompany: ICompany = this.companyForm.value;
 
-    if (!this.companyData) {
-      this.companyDataEmitted.emit(form);
+    if (this.companyForm.valid) {
+      this.companyDataEmitted.emit(tempCompany);
       this.companyForm.reset();
-      // this.companyForm.markAsPristine();
       return;
     }
-    return this.companyDataEmitted.emit(form);
+    // jezeli invalid
+    // nie propaguj danych do parenta
+    // ewentualnei notyfikacja itp.
+    // return this.companyDataEmitted.emit(tempCompany);
   }
 }

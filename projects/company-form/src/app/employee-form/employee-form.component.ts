@@ -14,20 +14,16 @@ import { EventEmitter } from '@angular/core';
   styleUrls: ['./employee-form.component.scss'],
 })
 export class EmployeeFormComponent implements OnInit {
-  @Input()
-  parentForm!: FormGroup;
-
-  @Input()
-  employeeForm!: FormGroup;
+  @Input() employeeForm!: FormGroup;
 
   @Input()
   employeeIndex!: number;
 
-  // @Output() companyDataEmitted: EventEmitter<ICompany> =
-  //   new EventEmitter<ICompany>();
+  @Input()
+  canBeDeleted: boolean = false;
 
-  @Output()
-  employeeFormIndexForDeleteEmitted: EventEmitter<number> = new EventEmitter<number>();
+  @Output() formDeletedEmitted: EventEmitter<number> =
+    new EventEmitter<number>();
 
   get employeeFirstNameCtrl() {
     return this.employeeForm.controls['firstName'] as FormControl;
@@ -41,13 +37,11 @@ export class EmployeeFormComponent implements OnInit {
     return this.employeeForm.controls['employeeAge'] as FormControl;
   }
 
-  constructor(private fb: FormBuilder) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.employeeIndex);
-  }
+  ngOnInit(): void {}
 
   employeeFormDeleteEmitted() {
-    this.employeeFormIndexForDeleteEmitted.emit(this.employeeIndex);
+    this.formDeletedEmitted.emit(this.employeeIndex);
   }
 }

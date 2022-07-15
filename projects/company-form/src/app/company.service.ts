@@ -4,41 +4,36 @@ import { Company } from './models/Company';
 import { Employee } from './models/Employee';
 import { IEmployee } from './models/IEmployee';
 import { ICompany } from './models/ICompany';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CompanyService {
-  first = new Company('firstOne', 'Partnership', [
-    new Employee('second', 'secondary', 29),
-    new Employee('fdsg', 'fd', 30),
-  ]);
+  companyList!: Company[];
 
-  second = new Company('second', 'Partnership', [
-    new Employee('second', 'secondary', 40),
-    new Employee('hiper', 'piper', 20),
-  ]);
-
-  third = new Company('third', 'Partnership', [
-    new Employee('super', 'duper', 40),
-    new Employee('hiper', 'piper', 20),
-  ]);
-
-  public companyList = [this.first, this.second, this.third];
-
-  constructor() {}
-  getCompanyList() {
-    return of(this.companyList);
+  constructor(private dataService: DataService) {
+    this.companyList = this.dataService.companyList;
   }
 
   private _selectedCompany!: Company;
 
-  set setSelectedCompany(companyIndex: number) {
+  set selectedCompany(companyIndex: number) {
     this._selectedCompany = this.companyList[companyIndex];
   }
 
-  get getSelectedCompany() {
+  get selectedCompanyValue() {
+    console.log(this._selectedCompany);
+
     return this._selectedCompany;
+  }
+
+  getCompanyList() {
+    return of(this.companyList);
+  }
+
+  getCompanyByIndex(companyIndex: number) {
+    return this.companyList[companyIndex];
   }
 
   createNewCompany(formData: ICompany) {

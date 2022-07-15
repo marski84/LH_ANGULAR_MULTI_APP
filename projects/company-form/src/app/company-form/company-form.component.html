@@ -1,7 +1,7 @@
 <h3>Add new company:</h3>
 <form
     [formGroup]="companyForm"
-    (submit)="onSubmit(companyForm.value)"
+    (submit)="onSubmit()"
 >
 
     <table
@@ -56,12 +56,24 @@
                     class="employee-form-row"
                     [formGroupName]="i"
                 >
-                    <app-employee-form
-                        [parentForm]="companyForm"
-                        [employeeForm]="employeeForm"
-                        [employeeIndex]="i"
-                        (employeeFormIndexForDeleteEmitted)="handleEmployeeFormDelete($event)"
-                    ></app-employee-form>
+                    <div *ngIf="i > 0; then secondEmployeeTemplate  else firstEmployeeTemplate"></div>
+
+                    <ng-template #firstEmployeeTemplate>
+                        <app-employee-form
+                            [employeeForm]="employeeForm"
+                            [employeeIndex]="i"
+                            (formDeletedEmitted)="handleEmployeeFormDelete($event)"
+                        ></app-employee-form>
+                    </ng-template>
+
+                    <ng-template #secondEmployeeTemplate>
+                        <app-employee-form
+                            [employeeForm]="employeeForm"
+                            [employeeIndex]="i"
+                            [canBeDeleted]="true"
+                            (formDeletedEmitted)="handleEmployeeFormDelete($event)"
+                        ></app-employee-form>
+                    </ng-template>
 
                 </div>
 
@@ -80,30 +92,14 @@
                 <mat-icon class="add-employee-btn">add</mat-icon>
             </button>
         </div>
-
-        <div>
-            <button
-                *ngIf="companyData"
-                mat-raised-button
-                color="primary"
-                type="submit"
-            >
-                Edit Data
-                <mat-icon class="add-employee-btn">edit</mat-icon>
-            </button>
-
-        </div>
-
     </div>
 
-    <!-- połączył guzik edit i save -->
     <button
-        *ngIf="!companyData"
         [disabled]="companyForm.invalid"
         mat-raised-button
         color="primary"
         type="submit"
     >
-        Submit
+        {{ companyData | buttonName}}
     </button>
 </form>

@@ -1,0 +1,20 @@
+<div [formGroup]="parentForm">
+    <tbody>
+        <tr>
+            <td>
+                <mat-form-field
+                    appearance="fill"
+                    *ngIf="contactTypePhoneCtrl"
+                >
+                    <mat-label>Phone number details</mat-label>
+                    <input
+                        name="Phone number details"
+                        matInput
+                        type="text"
+                        [formControl]="contactTypePhoneCtrl"
+                    >
+                </mat-form-field>
+            </td>
+        </tr>
+    </tbody>
+</div>

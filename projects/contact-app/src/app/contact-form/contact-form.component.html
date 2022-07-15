@@ -1,0 +1,80 @@
+<form
+    [formGroup]="contactForm"
+    (submit)="onSubmit()"
+    class="contact-form"
+>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Contact name</mat-label>
+                        <input
+                            placeholder="Contact name"
+                            matInput
+                            type="text"
+                            [formControl]="contactNameCtrl"
+                        >
+                    </mat-form-field>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <mat-form-field
+                        appearance="fill"
+                        class="select-option"
+                    >
+                        <mat-label>Select contact type</mat-label>
+                        <mat-select
+                            placeholder="Select contact type"
+                            type="select"
+                            matInput
+                            [formControl]="contactTypeCtrl"
+                        >
+                            <mat-option
+                                class="select-option"
+                                *ngFor="let option of selectOptions"
+                                [value]="option.value"
+                            >
+                                {{option.value | viewValue}}
+                            </mat-option>
+
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+            </tr>
+
+            <!-- EMAIL -->
+            <div *ngIf="contactTypeEmailCtrl">
+                <app-email [parentForm]="contactForm"></app-email>
+            </div>
+            <!-- PHONE -->
+            <div *ngIf="contactTypePhoneCtrl">
+                <app-phone-form [parentForm]="contactForm"></app-phone-form>
+            </div>
+
+            <!-- ADRESS -->
+            <div *ngIf="contactTypeAdressCtrl">
+                <app-adress-form [parentForm]="contactForm"></app-adress-form>
+            </div>
+
+        </tbody>
+    </table>
+
+    <button
+        type="submit"
+        mat-raised-button
+        color="accent"
+    >
+        Add contact
+    </button>
+</form>
+
+<button
+    mat-raised-button
+    color="accent"
+    [routerLink]="['/']"
+>
+    Back
+</button>

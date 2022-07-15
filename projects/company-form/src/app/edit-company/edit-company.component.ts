@@ -1,5 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import {
+  AfterViewInit,
+  Component,
+  OnChanges,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { CompanyService } from '../company.service';
 import { Company } from '../models/Company';
 import { ICompany } from '../models/ICompany';
@@ -9,25 +16,34 @@ import { ICompany } from '../models/ICompany';
   templateUrl: './edit-company.component.html',
   styleUrls: ['./edit-company.component.scss'],
 })
-export class EditCompanyComponent implements OnInit {
+export class EditCompanyComponent implements OnInit, OnDestroy {
   companyData!: Company;
-  companyIndex!: number;
+  companyIndex!: Subscription;
+  onDestory$ = new Subject<void>();
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private companyService: CompanyService
   ) {}
 
-  ngOnInit(): void {
-    const companyIndex = Number(this.activatedRoute.snapshot.params['id']);
-    this.companyService.setSelectedCompany = companyIndex;
-
-    console.log(this.companyService.getSelectedCompany);
-
-    this.companyData = this.companyService.getSelectedCompany;
+  ngOnDestroy(): void {
+    this.onDestory$.next();
+    this.onDestory$.complete();
   }
 
-  editData(data: any) {
+  ngOnInit(): void {
+    // edit/1 -> edit/2
+    // this.activatedRoute.params.subscribe(); => bezpieczny w razie zmiany routingu
+    this.activatedRoute.params
+      .pipe(takeUntil(this.onDestory$))
+      .subscribe((params: Params) => {
+        console.log(this.companyData);
+        this.companyService.selectedCompany = Number(params['id']);
+        return (this.companyData = this.companyService.selectedCompanyValue);
+      });
+  }
+
+  editData(data: ICompany) {
     // doda id od modelu Company
     this.companyService.editCompanyData(data);
   }
