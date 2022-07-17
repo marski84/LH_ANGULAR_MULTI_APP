@@ -50,7 +50,7 @@
 
         <ng-container formArrayName="companyEmployees">
 
-            <ng-container *ngFor="let employeeForm of companyEmployeesControls; let i = index; trackBy: trackByFn">
+            <ng-container *ngFor="let employeeForm of companyEmployeesControls; let i = index;">
                 {{employeeForm.value[0] | json}}
                 <div
                     class="employee-form-row"

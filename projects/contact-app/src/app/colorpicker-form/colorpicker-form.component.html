@@ -1,0 +1,18 @@
+<tr [formGroup]="parentForm">
+    <td>
+        <mat-form-field>
+            <mat-label>Pick contact background color</mat-label>
+            <input
+                [value]="color"
+                name="color"
+                matInput
+                [cpPosition]="'bottom'"
+                [cpPositionOffset]="'50%'"
+                [cpPositionRelativeToArrow]="true"
+                [(colorPicker)]="color"
+                [style.background]="color"
+                (colorPickerChange)="handleColorChange()"
+            >
+        </mat-form-field>
+    </td>
+</tr>

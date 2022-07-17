@@ -2,6 +2,7 @@ import { IselectType } from './IselectType';
 export class Contact {
   name: string;
   type: string;
+  backgroundColor: string;
   emailAdditionalInfo?;
   adressAdditionalInfo?;
   phoneAdditionalInfo?;
@@ -9,6 +10,7 @@ export class Contact {
   constructor(
     name: string,
     type: string,
+    backgroundColor: string,
     emailAdditionalInfo?: { emailAdress: string },
     adressAdditionalInfo?: {
       homeNumber?: string;
@@ -19,6 +21,7 @@ export class Contact {
   ) {
     this.name = name;
     this.type = type;
+    this.backgroundColor = backgroundColor;
     this.emailAdditionalInfo = emailAdditionalInfo;
     this.adressAdditionalInfo = adressAdditionalInfo;
     this.phoneAdditionalInfo = phoneAdditionalInfo;

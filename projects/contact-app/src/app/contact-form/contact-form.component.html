@@ -19,6 +19,13 @@
                 </td>
             </tr>
 
+            <!-- COLORPICKER -->
+            <app-colorpicker-form
+                (selectedColorEmitted)="getSelectedColor($event)"
+                [parentForm]="contactForm"
+            ></app-colorpicker-form>
+
+            <!-- TYPE OF CONTACT -->
             <tr>
                 <td>
                     <mat-form-field
@@ -37,7 +44,7 @@
                                 *ngFor="let option of selectOptions"
                                 [value]="option.value"
                             >
-                                {{option.value | viewValue}}
+                                {{option.value | viewValue: true}}
                             </mat-option>
 
                         </mat-select>
@@ -47,7 +54,7 @@
 
             <!-- EMAIL -->
             <div *ngIf="contactTypeEmailCtrl">
-                <app-email [parentForm]="contactForm"></app-email>
+                <app-email-form [parentForm]="contactForm"></app-email-form>
             </div>
             <!-- PHONE -->
             <div *ngIf="contactTypePhoneCtrl">

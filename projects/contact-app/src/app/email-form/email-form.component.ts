@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-email',
-  templateUrl: './email.component.html',
-  styleUrls: ['./email.component.scss'],
+  selector: 'app-email-form',
+  templateUrl: './email-form.component.html',
+  styleUrls: ['./email-form.component.scss'],
 })
-export class EmailComponent implements OnInit {
+export class EmailFormComponent implements OnInit {
   @Input()
   parentForm!: FormGroup;
 
@@ -18,7 +18,6 @@ export class EmailComponent implements OnInit {
   }
 
   constructor() {
-    console.log(this.parentForm);
     // console.log(this.contactTypeEmailCtrl);
   }
 

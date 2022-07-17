@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContactComponent } from './contact.component';
+import { ColorpickerFormComponent } from './colorpicker-form.component';
 
-describe('ContactComponent', () => {
-  let component: ContactComponent;
-  let fixture: ComponentFixture<ContactComponent>;
+describe('ColorpickerFormComponent', () => {
+  let component: ColorpickerFormComponent;
+  let fixture: ComponentFixture<ColorpickerFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ContactComponent ]
+      declarations: [ ColorpickerFormComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContactComponent);
+    fixture = TestBed.createComponent(ColorpickerFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

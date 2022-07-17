@@ -6,4 +6,18 @@
 >
     Add new contact
 </button>
+
+<mat-nav-list>
+    <mat-list-item
+        mat-list-item
+        *ngFor="let contact of contactList$ | async; let i = index"
+    >
+        <!-- {{ contact | json }} -->
+        <app-contact
+            [contact]="contact"
+            [constactIndex]="i"
+        ></app-contact>
+    </mat-list-item>
+</mat-nav-list>
+
 <router-outlet class="margin"></router-outlet>

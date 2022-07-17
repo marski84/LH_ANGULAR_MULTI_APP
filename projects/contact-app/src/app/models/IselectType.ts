@@ -14,3 +14,9 @@ export enum contactTypeViewValue {
   postViewValue = 'Post Adress',
   phoneViewValue = 'Contact Phone',
 }
+
+export enum contactTypeActionHandle {
+  email = 'Send email',
+  postAdres = 'Copy adress to clipboard',
+  phone = 'Make a call',
+}

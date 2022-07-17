@@ -32,6 +32,7 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   contactForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     type: ['', [Validators.required]],
+    color: ['', Validators.required],
   });
 
   adressForm: FormGroup = this.fb.group({
@@ -53,6 +54,10 @@ export class ContactFormComponent implements OnInit, OnDestroy {
 
   get contactNameCtrl() {
     return this.contactForm.get(['name']) as FormControl;
+  }
+
+  get colorPickerCtrl() {
+    return this.contactForm.get(['color']) as FormControl;
   }
 
   get contactTypeCtrl() {
@@ -77,6 +82,8 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.contact);
+
     this.contactTypeCtrl.valueChanges
       .pipe(takeUntil(this.onDestory$))
       .subscribe((selectedValue: contactType) => {
@@ -88,6 +95,10 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.onDestory$.next();
     this.onDestory$.complete();
+  }
+
+  getSelectedColor(color: string) {
+    this.colorPickerCtrl.setValue(color);
   }
 
   private _handleContactTypeChange(option: contactType) {
@@ -119,10 +130,13 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    console.log(this.contactForm.value);
+
     if (this.contactForm.valid) {
       const {
         name,
         type,
+        color,
         emailAdditionalInfo,
         adressAdditionalInfo,
         phoneAdditionalInfo,
@@ -131,14 +145,13 @@ export class ContactFormComponent implements OnInit, OnDestroy {
       const contact = new Contact(
         name,
         type,
+        color,
         emailAdditionalInfo,
         adressAdditionalInfo,
         phoneAdditionalInfo
       );
-
-      console.log(contact);
-
-      console.log('click');
+      this.contactDataEmitted.emit(contact);
+      this.contactForm.reset();
     }
   }
 }

@@ -1,1 +1,22 @@
-<p>contact works!</p>
+<tr [style.background-color]="contact.backgroundColor">
+    <div>
+        name: {{contact.name}}, type: {{contact.type}}
+        <span *ngIf="contact.adressAdditionalInfo !== undefined">
+            {{contact.adressAdditionalInfo.street}}, {{contact.adressAdditionalInfo.streetNumber}}, {{contact.adressAdditionalInfo.homeNumber}}
+        </span>
+        <span *ngIf="contact.emailAdditionalInfo !== undefined">
+            {{contact.emailAdditionalInfo.emailAdress}}
+        </span>
+        <span *ngIf="contact.phoneAdditionalInfo !== undefined">
+            {{contact.phoneAdditionalInfo.phoneNumber}}
+        </span>
+        <button
+            mat-raised-button
+            [routerLink]="['/editContact', constactIndex]"
+        >
+            Edytuj
+        </button>
+
+        <button mat-raised-button>{{contact.type | viewValue: false}}</button>
+    </div>
+</tr>

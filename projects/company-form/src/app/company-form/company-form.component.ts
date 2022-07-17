@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  Output,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -25,8 +18,12 @@ import { IselectType } from '../models/IselectType';
   templateUrl: './company-form.component.html',
   styleUrls: ['./company-form.component.scss'],
 })
-export class CompanyFormComponent implements OnInit, OnChanges {
-  @Input() companyData?: Company;
+export class CompanyFormComponent implements OnInit {
+  @Input() set company(data: Company) {
+    this.companyData = data;
+    this._handleFormDataEvent();
+  }
+  companyData?: Company;
   @Output() companyDataEmitted: EventEmitter<ICompany> =
     new EventEmitter<ICompany>();
 
@@ -53,10 +50,6 @@ export class CompanyFormComponent implements OnInit, OnChanges {
     return this.companyForm.controls['companyEmployees'] as FormArray;
   }
 
-  trackByFn(index: number, item: FormGroup) {
-    return index;
-  }
-
   formGroupAtIndex(index: number) {
     return this.companyEmployees.at(index) as FormGroup;
   }
@@ -68,10 +61,6 @@ export class CompanyFormComponent implements OnInit, OnChanges {
   typeOfBusinessSelectOptions: IselectType[] = [];
 
   constructor(private fb: FormBuilder, private dataService: DataService) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this._handleFormDataEvent();
-  }
 
   ngOnInit(): void {
     console.log(this.companyData);
@@ -108,7 +97,8 @@ export class CompanyFormComponent implements OnInit, OnChanges {
       employeeAge: [employee?.employeeAge, Validators.required],
     });
 
-    this.companyEmployees.insert(this.companyEmployees.length, employeeForm);
+    // this.companyEmployees.insert(this.companyEmployees.length, employeeForm);
+    this.companyEmployees.push(employeeForm);
   }
 
   private _deleteEmployeeForm(employeeIndex: number) {
@@ -124,7 +114,9 @@ export class CompanyFormComponent implements OnInit, OnChanges {
 
     if (this.companyForm.valid) {
       this.companyDataEmitted.emit(tempCompany);
-      this.companyForm.reset();
+      if (!this.companyData) {
+        this.companyForm.reset();
+      }
       return;
     }
     // jezeli invalid
