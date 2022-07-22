@@ -24,6 +24,7 @@ import { EmailFormComponent } from './email-form/email-form.component';
 import { MatListModule } from '@angular/material/list';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ColorpickerFormComponent } from './colorpicker-form/colorpicker-form.component';
+import { SubmitButtonNamePipe } from './submit-button-name.pipe';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { ColorpickerFormComponent } from './colorpicker-form/colorpicker-form.co
     EditContactComponent,
     ViewValuePipe,
     ColorpickerFormComponent,
+    SubmitButtonNamePipe,
   ],
   imports: [
     BrowserModule,

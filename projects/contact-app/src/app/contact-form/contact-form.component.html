@@ -23,6 +23,7 @@
             <app-colorpicker-form
                 (selectedColorEmitted)="getSelectedColor($event)"
                 [parentForm]="contactForm"
+                [bgcColor]="contactBgColor"
             ></app-colorpicker-form>
 
             <!-- TYPE OF CONTACT -->
@@ -74,7 +75,7 @@
         mat-raised-button
         color="accent"
     >
-        Add contact
+        {{contact | submitButtonName}}
     </button>
 </form>
 

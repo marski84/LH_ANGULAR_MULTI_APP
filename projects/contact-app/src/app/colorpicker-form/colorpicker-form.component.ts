@@ -8,10 +8,16 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class ColorpickerFormComponent implements OnInit {
   constructor() {}
-
+  @Input() set bgcColor(bgcColor: string | undefined) {
+    if (bgcColor === undefined) {
+      this.color = '#846f6f';
+      return;
+    }
+    this.color = bgcColor;
+  }
   @Input() parentForm!: FormGroup;
   @Output() selectedColorEmitted = new EventEmitter<string>();
-  color = '#bd5454';
+  color!: string;
 
   get colorPickerCtrl() {
     return this.parentForm.get(['color']) as FormControl;

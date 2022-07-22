@@ -11,10 +11,7 @@ export class EmailFormComponent implements OnInit {
   parentForm!: FormGroup;
 
   get contactTypeEmailCtrl() {
-    return this.parentForm.get([
-      'emailAdditionalInfo',
-      'emailAdress',
-    ]) as FormControl;
+    return this.parentForm.get(['emailAdditionalInfo']) as FormControl;
   }
 
   constructor() {

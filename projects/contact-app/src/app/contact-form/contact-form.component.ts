@@ -13,9 +13,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { ContactService } from '../contact.service';
-import { contactType, IselectType } from '../models/IselectType';
+import { IselectType } from '../models/contactTypeActionHandle.enum.';
 import { Contact } from '../models/Contact';
 import { Subject, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
+import { contactType } from '../models/ContactType.enum';
 
 @Component({
   selector: 'app-contact-form',
@@ -23,8 +25,12 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./contact-form.component.scss'],
 })
 export class ContactFormComponent implements OnInit, OnDestroy {
-  @Input()
+  @Input() set contactData(data: Contact) {
+    this.contact = data;
+    this._handleFormEdit(this.contact);
+  }
   contact?: Contact;
+  contactBgColor?: string;
 
   @Output()
   contactDataEmitted: EventEmitter<Contact> = new EventEmitter<Contact>();
@@ -41,13 +47,15 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     homeNumber: [''],
   });
 
-  emailForm: FormGroup = this.fb.group({
-    emailAdress: ['', [Validators.required, Validators.email]],
-  });
+  emailControl: FormControl = this.fb.control('', [
+    Validators.required,
+    Validators.email,
+  ]);
 
-  phoneForm: FormGroup = this.fb.group({
-    phoneNumber: ['', [Validators.required, Validators.minLength(9)]],
-  });
+  phoneControl: FormControl = this.fb.control('', [
+    Validators.required,
+    Validators.minLength(9),
+  ]);
 
   selectOptions: IselectType[] = this.contactService.typeSelectOptions;
   onDestory$ = new Subject<void>();
@@ -68,22 +76,46 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     return this.contactForm.get(['adressAdditionalInfo']) as FormGroup;
   }
 
+  get streetNameCtrl() {
+    return this.contactForm.get([
+      'adressAdditionalInfo',
+      'street',
+    ]) as FormControl;
+  }
+
+  get streetNumberCtrl() {
+    return this.contactForm.get([
+      'adressAdditionalInfo',
+      'streetNumber',
+    ]) as FormControl;
+  }
+
+  get homeNumberCtrl() {
+    return this.contactForm.get([
+      'adressAdditionalInfo',
+      'homeNumber',
+    ]) as FormControl;
+  }
+
   get contactTypeEmailCtrl() {
-    return this.contactForm.get(['emailAdditionalInfo']) as FormGroup;
+    return this.contactForm.get(['emailAdditionalInfo']) as FormControl;
   }
 
   get contactTypePhoneCtrl() {
-    return this.contactForm.get(['phoneAdditionalInfo']) as FormGroup;
+    return this.contactForm.get(['phoneAdditionalInfo']) as FormControl;
   }
 
   constructor(
     private fb: FormBuilder,
-    private contactService: ContactService
+    private contactService: ContactService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    console.log(this.contact);
-
+    if (this.contact) {
+      // this.contactForm.controls
+      this._handleFormEdit(this.contact);
+    }
     this.contactTypeCtrl.valueChanges
       .pipe(takeUntil(this.onDestory$))
       .subscribe((selectedValue: contactType) => {
@@ -95,43 +127,67 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.onDestory$.next();
     this.onDestory$.complete();
+
+    console.log('ok');
   }
 
   getSelectedColor(color: string) {
     this.colorPickerCtrl.setValue(color);
   }
 
-  private _handleContactTypeChange(option: contactType) {
-    console.log(option);
+  private _handleFormEdit(contact: Contact) {
+    console.log(1);
 
+    const typeOfContact = contact.type as contactType;
+
+    this.contactNameCtrl.setValue(contact.name);
+    this.contactBgColor = contact.backgroundColor;
+    this._handleContactTypeChange(typeOfContact);
+    this.contactTypeCtrl.setValue(typeOfContact);
+
+    switch (typeOfContact) {
+      case contactType.phone:
+        return this.contactTypePhoneCtrl.setValue(contact.phoneAdditionalInfo);
+
+      case contactType.email:
+        return this.contactTypeEmailCtrl.setValue(contact.emailAdditionalInfo);
+      case contactType.adress:
+        // czemu destruktutyzacja nie działa???
+        // const { homeNumber, street, streetNumber } =
+        //   this.contact.adressAdditionalInfo;
+        this.streetNameCtrl.setValue(contact.adressAdditionalInfo?.street);
+        this.streetNumberCtrl.setValue(
+          contact.adressAdditionalInfo?.streetNumber
+        );
+        this.homeNumberCtrl.setValue(contact.adressAdditionalInfo?.homeNumber);
+        return;
+    }
+  }
+
+  private _handleContactTypeChange(option: contactType) {
     this.contactForm.removeControl('adressAdditionalInfo');
     this.contactForm.removeControl('emailAdditionalInfo');
     this.contactForm.removeControl('phoneAdditionalInfo');
 
     switch (option) {
       case contactType.adress:
-        return this.contactForm.addControl(
-          'adressAdditionalInfo',
-          this.adressForm
-        );
+        this.contactForm.addControl('adressAdditionalInfo', this.adressForm);
+        this.contactTypeAdressCtrl.reset();
+        return;
       case contactType.phone:
-        return this.contactForm.addControl(
-          'phoneAdditionalInfo',
-          this.phoneForm
-        );
+        this.contactForm.addControl('phoneAdditionalInfo', this.phoneControl);
+        this.contactTypePhoneCtrl.reset();
+        return;
       case contactType.email:
-        return this.contactForm.addControl(
-          'emailAdditionalInfo',
-          this.emailForm
-        );
+        this.contactForm.addControl('emailAdditionalInfo', this.emailControl);
+        this.contactTypeEmailCtrl.reset();
+        return;
       default:
         const exhaustCheck: never = option;
     }
   }
 
   onSubmit() {
-    console.log(this.contactForm.value);
-
     if (this.contactForm.valid) {
       const {
         name,
@@ -151,7 +207,8 @@ export class ContactFormComponent implements OnInit, OnDestroy {
         phoneAdditionalInfo
       );
       this.contactDataEmitted.emit(contact);
-      this.contactForm.reset();
+      // this.contactForm.reset();
+      this.router.navigate(['../']);
     }
   }
 }

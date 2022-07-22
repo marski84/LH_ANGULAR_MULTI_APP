@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { Contact } from './models/Contact';
+import { contactType } from './models/ContactType.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Contact } from './models/Contact';
 export class MockDataService {
   first: Contact = {
     name: 'Adress',
-    type: 'adress',
+    type: contactType.adress,
     backgroundColor: 'blue',
     adressAdditionalInfo: {
       street: 'gs',
@@ -19,20 +20,16 @@ export class MockDataService {
 
   second: Contact = {
     name: 'Phone',
-    type: 'phone',
+    type: contactType.phone,
     backgroundColor: 'yellow',
-    phoneAdditionalInfo: {
-      phoneNumber: '666666666',
-    },
+    phoneAdditionalInfo: '666666666',
   };
 
   third: Contact = {
     name: 'email',
-    type: 'email',
+    type: contactType.email,
     backgroundColor: 'red',
-    emailAdditionalInfo: {
-      emailAdress: 'av@o2.pl',
-    },
+    emailAdditionalInfo: 'av@o2.pl',
   };
 
   contactList: Contact[] = [this.first, this.second, this.third];

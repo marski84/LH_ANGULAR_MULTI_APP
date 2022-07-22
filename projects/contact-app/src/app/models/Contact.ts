@@ -1,23 +1,26 @@
-import { IselectType } from './IselectType';
+import { contactType } from './ContactType.enum';
+
 export class Contact {
   name: string;
   type: string;
   backgroundColor: string;
-  emailAdditionalInfo?;
-  adressAdditionalInfo?;
-  phoneAdditionalInfo?;
+  emailAdditionalInfo?: string | undefined;
+  adressAdditionalInfo?: {
+    homeNumber: string;
+    street: string;
+    streetNumber: string;
+  };
+  phoneAdditionalInfo?: string | undefined;
 
   constructor(
     name: string,
-    type: string,
+    type: contactType,
     backgroundColor: string,
-    emailAdditionalInfo?: { emailAdress: string },
-    adressAdditionalInfo?: {
-      homeNumber?: string;
-      street: string;
-      streetNumber: string;
-    },
-    phoneAdditionalInfo?: { phoneNumber: string }
+    emailAdditionalInfo?: string | undefined,
+    adressAdditionalInfo?:
+      | { homeNumber: string; street: string; streetNumber: string }
+      | undefined,
+    phoneAdditionalInfo?: string | undefined
   ) {
     this.name = name;
     this.type = type;

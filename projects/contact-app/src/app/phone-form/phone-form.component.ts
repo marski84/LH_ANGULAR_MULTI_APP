@@ -11,10 +11,7 @@ export class PhoneFormComponent implements OnInit {
   parentForm!: FormGroup;
 
   get contactTypePhoneCtrl() {
-    return this.parentForm.get([
-      'phoneAdditionalInfo',
-      'phoneNumber',
-    ]) as FormControl;
+    return this.parentForm.get(['phoneAdditionalInfo']) as FormControl;
   }
 
   constructor() {}

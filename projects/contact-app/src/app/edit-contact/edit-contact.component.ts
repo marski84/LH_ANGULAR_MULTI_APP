@@ -12,6 +12,8 @@ import { ContactService } from '../contact.service';
 export class EditContactComponent implements OnInit {
   onDestroy$: Subject<void> = new Subject<void>();
 
+  selectedContactIndex!: number;
+
   contactToEdit!: Contact;
   constructor(
     private contactService: ContactService,
@@ -24,7 +26,16 @@ export class EditContactComponent implements OnInit {
       .subscribe((routeParams: Params) => {
         console.log(routeParams);
         this.contactService.selectedContact = routeParams['id'];
+        this.selectedContactIndex = routeParams['id'];
         this.contactToEdit = this.contactService.selectedContactDetails;
       });
+  }
+
+  handleContactDataEdit(editedContactData: Contact) {
+    console.log(editedContactData);
+    this.contactService.editContactData(
+      editedContactData,
+      this.selectedContactIndex
+    );
   }
 }

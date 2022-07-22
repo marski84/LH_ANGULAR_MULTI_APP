@@ -1,8 +1,9 @@
 import { MockDataService } from './mock-data.service';
-import { Injectable, OnDestroy } from '@angular/core';
-import { IselectType, contactType } from './models/IselectType';
+import { Injectable } from '@angular/core';
+import { IselectType } from './models/contactTypeActionHandle.enum.';
 import { Contact } from './models/Contact';
-import { take, Subject, of } from 'rxjs';
+import { take, of } from 'rxjs';
+import { contactType } from './models/ContactType.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -47,5 +48,9 @@ export class ContactService {
 
   getContactList() {
     return of(this._contactList);
+  }
+
+  editContactData(editedContact: Contact, contactIndex: number) {
+    this._contactList[contactIndex] = editedContact;
   }
 }
