@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ContactService } from '../contact.service';
+import { ContactService } from '../services/contact.service';
 import { Subscription, takeUntil, take, Subject } from 'rxjs';
 import { Contact } from '../models/Contact';
 import { ActivatedRoute, Params } from '@angular/router';

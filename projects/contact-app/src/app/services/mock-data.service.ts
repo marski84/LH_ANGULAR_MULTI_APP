@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { Contact } from './models/Contact';
-import { contactType } from './models/ContactType.enum';
+import { Contact } from '../models/Contact';
+import { contactType } from '../models/ContactType.enum';
 
 @Injectable({
   providedIn: 'root',

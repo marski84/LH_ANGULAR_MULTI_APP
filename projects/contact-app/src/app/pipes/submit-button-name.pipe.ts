@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Contact } from './models/Contact';
-import { ButtonText } from './models/ButtonText.enum';
+import { ButtonText } from '../models/ButtonText.enum';
+import { Contact } from '../models/Contact';
 
 @Pipe({
   name: 'submitButtonName',

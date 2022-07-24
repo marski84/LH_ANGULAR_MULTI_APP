@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { contactType } from './models/ContactType.enum';
-import { contactTypeActionHandle } from './models/contactTypeActionHandle.enum.';
-import { contactTypeViewValue } from './models/ContactTypeViewValue.enum';
+import { contactType } from '../models/ContactType.enum';
+import { contactTypeActionHandle } from '../models/contactTypeActionHandle.enum.';
+import { contactTypeViewValue } from '../models/ContactTypeViewValue.enum';
 
 @Pipe({
   name: 'viewValue',

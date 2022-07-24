@@ -1,18 +1,26 @@
-<tr [style.background-color]="contact.backgroundColor">
+<tr
+    class="container"
+    [style.background-color]="contact.backgroundColor"
+>
     <div>
-        name: {{contact.name}}, type: {{contact.type}}
-        <span *ngIf="contact.adressAdditionalInfo !== undefined">
+        name: {{contact.name}}, type: {{contact.type}},
+        <div *ngIf="contact.adressAdditionalInfo !== undefined">
             {{contact.adressAdditionalInfo.street}}, {{contact.adressAdditionalInfo.streetNumber}}, {{contact.adressAdditionalInfo.homeNumber}}
-        </span>
-        <span *ngIf="contact.emailAdditionalInfo !== undefined">{{contact.emailAdditionalInfo}}</span>
-        <span *ngIf="contact.phoneAdditionalInfo !== undefined">{{contact.phoneAdditionalInfo}}</span>
+        </div>
+        <div *ngIf="contact.emailAdditionalInfo !== undefined">{{contact.emailAdditionalInfo}}</div>
+        <div *ngIf="contact.phoneAdditionalInfo !== undefined">{{contact.phoneAdditionalInfo}}</div>
         <button
             mat-raised-button
-            [routerLink]="['/editContact', constactIndex]"
+            [routerLink]="['/editContact', contactIndex]"
         >
             Edytuj
         </button>
 
-        <button mat-raised-button>{{contact.type | viewValue: false}}</button>
+        <button
+            (click)="handleMessageSend()"
+            mat-raised-button
+        >
+            {{contact.type | viewValue: false}}
+        </button>
     </div>
 </tr>

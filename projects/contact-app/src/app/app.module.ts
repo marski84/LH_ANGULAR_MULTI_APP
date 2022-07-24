@@ -15,16 +15,19 @@ import { ContactComponent } from './contact/contact.component';
 import { ContactFormComponent } from './contact-form/contact-form.component';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AdressFormComponent } from './adress-form/adress-form.component';
-import { PhoneFormComponent } from './phone-form/phone-form.component';
-import { NewContactComponent } from './new-contact/new-contact.component';
-import { EditContactComponent } from './edit-contact/edit-contact.component';
-import { ViewValuePipe } from './view-value.pipe';
-import { EmailFormComponent } from './email-form/email-form.component';
+
 import { MatListModule } from '@angular/material/list';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { ColorpickerFormComponent } from './colorpicker-form/colorpicker-form.component';
-import { SubmitButtonNamePipe } from './submit-button-name.pipe';
+
+import { SubmitButtonNamePipe } from './pipes/submit-button-name.pipe';
+import { AdressFormComponent } from './contact-form/adress-form/adress-form.component';
+import { ColorpickerFormComponent } from './contact-form/colorpicker-form/colorpicker-form.component';
+
+import { EmailFormComponent } from './contact-form/email-form/email-form.component';
+import { PhoneFormComponent } from './contact-form/phone-form/phone-form.component';
+import { EditContactComponent } from './edit-contact/edit-contact.component';
+import { NewContactComponent } from './new-contact/new-contact.component';
+import { ViewValuePipe } from './pipes/view-value.pipe';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,7 @@ import { SubmitButtonNamePipe } from './submit-button-name.pipe';
     MatInputModule,
     MatListModule,
     ColorPickerModule,
+    MatTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

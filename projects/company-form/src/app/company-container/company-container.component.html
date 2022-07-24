@@ -1,5 +1,5 @@
-<nav *ngIf="companyList$ | async">
-    <mat-card *ngFor="let company of companyList$ | async ; let i = index">
+<nav *ngIf="companyList$ | async as companyList">
+    <mat-card *ngFor="let company of companyList; let i = index">
         <div mat-button>{{i + 1}} {{company | json}}</div>
         <button
             mat-raised-button

@@ -1,9 +1,9 @@
 import { MockDataService } from './mock-data.service';
 import { Injectable } from '@angular/core';
-import { IselectType } from './models/contactTypeActionHandle.enum.';
-import { Contact } from './models/Contact';
+import { IselectType } from '../models/contactTypeActionHandle.enum.';
+import { Contact } from '../models/Contact';
 import { take, of } from 'rxjs';
-import { contactType } from './models/ContactType.enum';
+import { contactType } from '../models/ContactType.enum';
 
 @Injectable({
   providedIn: 'root',

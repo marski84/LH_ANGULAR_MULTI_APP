@@ -12,7 +12,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ContactService } from '../contact.service';
+import { ContactService } from '../services/contact.service';
 import { IselectType } from '../models/contactTypeActionHandle.enum.';
 import { Contact } from '../models/Contact';
 import { Subject, takeUntil } from 'rxjs';

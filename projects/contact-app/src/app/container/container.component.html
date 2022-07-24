@@ -10,12 +10,13 @@
 <mat-nav-list>
     <mat-list-item
         mat-list-item
-        *ngFor="let contact of contactList$ | async; let i = index"
+        *ngFor="let contact of contactList$ | async as contactList; let i = index"
     >
+
         <!-- {{ contact | json }} -->
         <app-contact
             [contact]="contact"
-            [constactIndex]="i"
+            [contactIndex]="i"
         ></app-contact>
     </mat-list-item>
 </mat-nav-list>

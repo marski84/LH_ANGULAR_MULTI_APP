@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Contact } from '../models/Contact';
-import { ContactService } from '../contact.service';
+import { ContactService } from '../services/contact.service';
 
 @Component({
   selector: 'app-edit-contact',
