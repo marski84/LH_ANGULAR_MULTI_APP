@@ -1,9 +1,9 @@
 import { MockDataService } from './mock-data.service';
 import { Injectable } from '@angular/core';
-import { IselectType } from '../models/contactTypeActionHandle.enum.';
 import { Contact } from '../models/Contact';
 import { take, of } from 'rxjs';
 import { contactType } from '../models/ContactType.enum';
+import { IselectType } from '../models/IselectType';
 
 @Injectable({
   providedIn: 'root',
@@ -23,24 +23,20 @@ export class ContactService {
     },
   ];
 
-  private _selectedContact!: Contact;
+  private _typeSelectOptions: contactType[] = [
+    contactType.email,
+    contactType.adress,
+    contactType.phone,
+  ];
 
-  set selectedContact(index: number) {
-    this._selectedContact = this._contactList[index];
-  }
-
-  get selectedContactDetails(): Contact {
-    return this._selectedContact;
-  }
-
-  set addNewContactToList(contact: Contact) {
+  addNewContactToList(contact: Contact) {
     this._contactList.push(contact);
   }
 
   constructor(private mockDataService: MockDataService) {
     this.mockDataService
       .getContactList()
-      .pipe(take(1))
+      .pipe(take(1)) // first()
       .subscribe((response: Contact[]) => {
         this._contactList = response;
       });
@@ -48,6 +44,10 @@ export class ContactService {
 
   getContactList() {
     return of(this._contactList);
+  }
+
+  getContactByIndex(index: number) {
+    return this._contactList[index];
   }
 
   editContactData(editedContact: Contact, contactIndex: number) {

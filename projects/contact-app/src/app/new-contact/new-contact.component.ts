@@ -14,6 +14,6 @@ export class NewContactComponent implements OnInit {
 
   handleAddContact(contact: Contact) {
     console.log(contact);
-    this.contactService.addNewContactToList = contact;
+    this.contactService.addNewContactToList(contact);
   }
 }

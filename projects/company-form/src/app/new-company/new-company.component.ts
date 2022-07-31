@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Company } from '../models/Company';
-import { CompanyService } from '../company.service';
-import { ICompany } from '../models/ICompany';
+import { CompanyService } from '../services/company.service';
 
 @Component({
   selector: 'app-new-company',
@@ -13,7 +12,7 @@ export class NewCompanyComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  handleAddNewCompany(data: ICompany) {
+  handleAddNewCompany(data: Company) {
     this.companyService.createNewCompany(data);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CompanyService } from '../company.service';
+import { CompanyService } from '../services/company.service';
 import { Observable } from 'rxjs';
 import { Company } from '../models/Company';
 

@@ -8,15 +8,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class EmailFormComponent implements OnInit {
   @Input()
-  parentForm!: FormGroup;
+  emailControl!: FormControl;
 
-  get contactTypeEmailCtrl() {
-    return this.parentForm.get(['emailAdditionalInfo']) as FormControl;
-  }
-
-  constructor() {
-    // console.log(this.contactTypeEmailCtrl);
-  }
+  constructor() {}
 
   ngOnInit(): void {}
 }

@@ -21,7 +21,7 @@
         <mat-label>Lastname</mat-label>
         <input
             matInput
-            formControlName="lastName"
+            [formControl]="employeeLastNameCtrl"
             placeholder="Employee lastname..."
         >
         <mat-error *ngIf="employeeLastNameCtrl.hasError('required')">

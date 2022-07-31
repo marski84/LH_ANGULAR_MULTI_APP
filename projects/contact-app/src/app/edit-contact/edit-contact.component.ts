@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { first, map, Subject, takeUntil, Observable } from 'rxjs';
 import { Contact } from '../models/Contact';
 import { ContactService } from '../services/contact.service';
 
@@ -9,12 +9,12 @@ import { ContactService } from '../services/contact.service';
   templateUrl: './edit-contact.component.html',
   styleUrls: ['./edit-contact.component.scss'],
 })
-export class EditContactComponent implements OnInit {
-  onDestroy$: Subject<void> = new Subject<void>();
-
-  selectedContactIndex!: number;
-
+export class EditContactComponent implements OnInit, OnDestroy {
   contactToEdit!: Contact;
+  editedContact$?: Observable<Contact>;
+
+  private onDestroy$: Subject<void> = new Subject<void>();
+
   constructor(
     private contactService: ContactService,
     private activatedRoute: ActivatedRoute
@@ -22,20 +22,39 @@ export class EditContactComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.params
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((routeParams: Params) => {
-        console.log(routeParams);
-        this.contactService.selectedContact = routeParams['id'];
-        this.selectedContactIndex = routeParams['id'];
-        this.contactToEdit = this.contactService.selectedContactDetails;
-      });
+      .pipe(
+        takeUntil(this.onDestroy$),
+        map((params: Params) => params['id']),
+        map((contactIndex: number) =>
+          this.contactService.getContactByIndex(contactIndex)
+        )
+      )
+      .subscribe((contact: Contact) => (this.contactToEdit = contact));
   }
 
   handleContactDataEdit(editedContactData: Contact) {
-    console.log(editedContactData);
-    this.contactService.editContactData(
-      editedContactData,
-      this.selectedContactIndex
-    );
+    // this.editedContact$ =
+    this.contactService
+      .getContactList()
+      .pipe(
+        first(),
+        map((contactList: Contact[]) => {
+          const contactIndex = contactList.findIndex(
+            (contact) => contact.id === editedContactData.id
+          );
+          contactList[contactIndex] = editedContactData;
+          return contactList[contactIndex];
+        })
+      )
+      .subscribe((result) => result);
+
+    console.log(this.editedContact$);
+
+    // .subscribe((result: any) => console.log(result));
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 }

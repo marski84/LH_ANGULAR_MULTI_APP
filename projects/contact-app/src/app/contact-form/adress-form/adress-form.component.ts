@@ -8,32 +8,21 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class AdressFormComponent implements OnInit {
   @Input()
-  parentForm!: FormGroup;
+  adressFromControl!: FormGroup;
 
   get streetNameCtrl() {
-    return this.parentForm.get([
-      'adressAdditionalInfo',
-      'street',
-    ]) as FormControl;
+    return this.adressFromControl.get(['street']) as FormControl;
   }
 
   get streetNumberCtrl() {
-    return this.parentForm.get([
-      'adressAdditionalInfo',
-      'streetNumber',
-    ]) as FormControl;
+    return this.adressFromControl.get(['streetNumber']) as FormControl;
   }
 
   get homeNumberCtrl() {
-    return this.parentForm.get([
-      'adressAdditionalInfo',
-      'homeNumber',
-    ]) as FormControl;
+    return this.adressFromControl.get(['homeNumber']) as FormControl;
   }
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.streetNameCtrl);
-  }
+  ngOnInit(): void {}
 }

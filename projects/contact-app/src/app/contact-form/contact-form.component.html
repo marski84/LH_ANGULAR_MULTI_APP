@@ -22,8 +22,7 @@
             <!-- COLORPICKER -->
             <app-colorpicker-form
                 (selectedColorEmitted)="getSelectedColor($event)"
-                [parentForm]="contactForm"
-                [bgcColor]="contactBgColor"
+                [bgcColor]="colorPickerCtrl.value"
             ></app-colorpicker-form>
 
             <!-- TYPE OF CONTACT -->
@@ -45,7 +44,7 @@
                                 *ngFor="let option of selectOptions"
                                 [value]="option.value"
                             >
-                                {{option.value | viewValue: true}}
+                                {{option.value | DispalyContactValue}}
                             </mat-option>
 
                         </mat-select>
@@ -55,28 +54,42 @@
 
             <!-- EMAIL -->
             <div *ngIf="contactTypeEmailCtrl">
-                <app-email-form [parentForm]="contactForm"></app-email-form>
+                <app-email-form [emailControl]="contactTypeEmailCtrl"></app-email-form>
             </div>
             <!-- PHONE -->
             <div *ngIf="contactTypePhoneCtrl">
-                <app-phone-form [parentForm]="contactForm"></app-phone-form>
+                <app-phone-form [phoneControl]="contactTypePhoneCtrl"></app-phone-form>
             </div>
 
             <!-- ADRESS -->
             <div *ngIf="contactTypeAdressCtrl">
-                <app-adress-form [parentForm]="contactForm"></app-adress-form>
+                <app-adress-form [adressFromControl]="contactTypeAdressCtrl"></app-adress-form>
             </div>
 
         </tbody>
     </table>
 
-    <button
-        type="submit"
-        mat-raised-button
-        color="accent"
-    >
-        {{contact | submitButtonName}}
-    </button>
+    <div *ngIf="contact then editContact else newContact"></div>
+    <ng-template #newContact>
+        <button
+            type="submit"
+            mat-raised-button
+            color="accent"
+        >
+            Add contact
+        </button>
+    </ng-template>
+
+    <ng-template #editContact>
+        <button
+            type="submit"
+            mat-raised-button
+            color="accent"
+        >
+            Edit contact
+        </button>
+    </ng-template>
+
 </form>
 
 <button

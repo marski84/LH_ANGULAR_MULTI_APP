@@ -8,11 +8,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class PhoneFormComponent implements OnInit {
   @Input()
-  parentForm!: FormGroup;
-
-  get contactTypePhoneCtrl() {
-    return this.parentForm.get(['phoneAdditionalInfo']) as FormControl;
-  }
+  phoneControl!: FormControl;
 
   constructor() {}
 

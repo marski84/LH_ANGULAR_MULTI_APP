@@ -1,3 +1,4 @@
+import { MessageDisplayValuePipe } from './pipes/message-display-value.pipe';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,20 +16,18 @@ import { ContactComponent } from './contact/contact.component';
 import { ContactFormComponent } from './contact-form/contact-form.component';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { MatListModule } from '@angular/material/list';
 import { ColorPickerModule } from 'ngx-color-picker';
-
-import { SubmitButtonNamePipe } from './pipes/submit-button-name.pipe';
 import { AdressFormComponent } from './contact-form/adress-form/adress-form.component';
 import { ColorpickerFormComponent } from './contact-form/colorpicker-form/colorpicker-form.component';
-
 import { EmailFormComponent } from './contact-form/email-form/email-form.component';
 import { PhoneFormComponent } from './contact-form/phone-form/phone-form.component';
 import { EditContactComponent } from './edit-contact/edit-contact.component';
 import { NewContactComponent } from './new-contact/new-contact.component';
-import { ViewValuePipe } from './pipes/view-value.pipe';
+import { DispalyContactValue } from './pipes/display-contact-value.pipe';
 
+// TODO: wydzielić moduł materialowy jako MaterialModule i importować tutaj
+// TODO: wydzielić moduł SharedModule i importować go w kazdym module
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,9 +39,9 @@ import { ViewValuePipe } from './pipes/view-value.pipe';
     PhoneFormComponent,
     NewContactComponent,
     EditContactComponent,
-    ViewValuePipe,
+    DispalyContactValue,
     ColorpickerFormComponent,
-    SubmitButtonNamePipe,
+    MessageDisplayValuePipe,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +59,22 @@ import { ViewValuePipe } from './pipes/view-value.pipe';
     ColorPickerModule,
     MatTableModule,
   ],
-  providers: [],
+  providers: [
+    // LoggerService,
+    // {
+    // privade: ovLoggerServic
+    // useClass: LoggerService,
+    // useFactory
+    // useFactory =>czyuser jest adminem jeżeli tak to loguj do bazy jeżeli nie to do conosli
+    // },
+    // {
+    // provia, // de:jakis_klucz
+    // useValue: wartość => true, 'adsasdads, 123
+    // useValue => klucz do api
+    // każdy komponent odwołuje się w constructorze
+    // constructror(private klucz: jakis_klucz){}
+    // },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

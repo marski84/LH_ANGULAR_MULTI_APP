@@ -9,9 +9,8 @@ import {
 import { EventEmitter } from '@angular/core';
 import { Employee } from '../models/Employee';
 import { Company } from '../models/Company';
-import { ICompany } from '../models/ICompany';
-import { DataService } from '../data.service';
 import { IselectType } from '../models/IselectType';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-company-form',
@@ -20,17 +19,25 @@ import { IselectType } from '../models/IselectType';
 })
 export class CompanyFormComponent implements OnInit {
   @Input() set company(data: Company) {
+    console.log(this.company);
+
     this.companyData = data;
     this._handleFormDataEvent();
   }
   companyData?: Company;
-  @Output() companyDataEmitted: EventEmitter<ICompany> =
-    new EventEmitter<ICompany>();
+  @Output() companyDataEmitted: EventEmitter<Company> =
+    new EventEmitter<Company>();
 
   companyForm = this.fb.group({
     name: ['', [Validators.required]],
     typeOfBusiness: ['', [Validators.required]],
-    companyEmployees: this.fb.array([]),
+    companyEmployees: this.fb.array([
+      this.fb.group({
+        firstName: ['', Validators.required],
+        lastName: ['', Validators.required],
+        employeeAge: ['', Validators.required],
+      }),
+    ]),
   });
 
   get companyNameCtrl() {
@@ -63,31 +70,24 @@ export class CompanyFormComponent implements OnInit {
   constructor(private fb: FormBuilder, private dataService: DataService) {}
 
   ngOnInit(): void {
-    console.log(this.companyData);
-
     this.dataService.typeOfBusiness.subscribe((response: IselectType[]) => {
       this.typeOfBusinessSelectOptions = response;
     });
-
-    this._handleFormDataEvent();
-    if (!this.companyData) {
-      this.addEmployeeForm();
-    }
   }
-
   private _handleFormDataEvent() {
     this.companyEmployees.clear();
+    console.log(this.companyData);
 
-    if (this.companyData) {
-      this.companyNameCtrl.setValue(this.companyData.name);
-      this.companyBusinessTypeFormCtrl.setValue(
-        this.companyData.typeOfBusiness
-      );
-      this.companyData.employees.forEach((employee) => {
-        this.addEmployeeForm(employee);
-        return;
-      });
+    if (this.companyData === undefined) {
+      console.log('ok');
+      this.addEmployeeForm();
+      return;
     }
+    this.companyNameCtrl.setValue(this.companyData.name);
+    this.companyBusinessTypeFormCtrl.setValue(this.companyData.typeOfBusiness);
+    this.companyData.companyEmployees.forEach((employee) => {
+      this.addEmployeeForm(employee);
+    });
   }
 
   addEmployeeForm(employee?: Employee) {
@@ -96,8 +96,6 @@ export class CompanyFormComponent implements OnInit {
       lastName: [employee?.lastName, Validators.required],
       employeeAge: [employee?.employeeAge, Validators.required],
     });
-
-    // this.companyEmployees.insert(this.companyEmployees.length, employeeForm);
     this.companyEmployees.push(employeeForm);
   }
 
@@ -110,18 +108,20 @@ export class CompanyFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const tempCompany: ICompany = this.companyForm.value;
-
     if (this.companyForm.valid) {
-      this.companyDataEmitted.emit(tempCompany);
-      if (!this.companyData) {
-        this.companyForm.reset();
-      }
-      return;
+      const { name, typeOfBusiness, companyEmployees } = this.companyForm.value;
+
+      const companyToEmit = new Company(name, typeOfBusiness, companyEmployees);
+
+      this.companyData
+        ? (companyToEmit.id = this.companyData.id)
+        : companyToEmit;
+
+      this.companyDataEmitted.emit(companyToEmit);
     }
-    // jezeli invalid
-    // nie propaguj danych do parenta
-    // ewentualnei notyfikacja itp.
-    // return this.companyDataEmitted.emit(tempCompany);
+    return;
   }
+  // jezeli invalid
+  // nie propaguj danych do parenta
+  // ewentualnei notyfikacja itp.
 }

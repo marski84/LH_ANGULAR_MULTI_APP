@@ -1,26 +1,32 @@
-import { ICompany } from './ICompany';
 import { IEmployee } from './IEmployee';
+import { faker } from '@faker-js/faker';
 
 export class Company {
+  id: string;
   name: string;
   typeOfBusiness: string;
-  employees: IEmployee[];
+  companyEmployees: IEmployee[];
 
-  constructor(name: string, typeOfBusiness: string, employees: IEmployee[]) {
+  constructor(
+    name: string,
+    typeOfBusiness: string,
+    companyEmployees: IEmployee[]
+  ) {
+    this.id = faker.datatype.uuid();
     this.name = name;
     this.typeOfBusiness = typeOfBusiness;
-    this.employees = employees;
+    this.companyEmployees = companyEmployees;
   }
 
   addNewEmployeeData(employeeData: IEmployee) {
-    this.employees.push(employeeData);
+    this.companyEmployees.push(employeeData);
   }
 
-  editCompanyData(companyData: ICompany) {
+  editCompanyData(companyData: Company) {
     const { name, typeOfBusiness, companyEmployees } = companyData;
 
     this.name = name;
     this.typeOfBusiness = typeOfBusiness;
-    this.employees = companyEmployees;
+    this.companyEmployees = companyEmployees;
   }
 }

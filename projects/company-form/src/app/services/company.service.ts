@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { Company } from './models/Company';
-import { Employee } from './models/Employee';
-import { IEmployee } from './models/IEmployee';
-import { ICompany } from './models/ICompany';
+import { Company } from '../models/Company';
+import { IEmployee } from '../models/IEmployee';
 import { DataService } from './data.service';
 
 @Injectable({
@@ -16,18 +14,6 @@ export class CompanyService {
     this.companyList = this.dataService.companyList;
   }
 
-  private _selectedCompany!: Company;
-
-  set selectedCompany(companyIndex: number) {
-    this._selectedCompany = this.companyList[companyIndex];
-  }
-
-  get selectedCompanyValue() {
-    console.log(this._selectedCompany);
-
-    return this._selectedCompany;
-  }
-
   getCompanyList() {
     return of(this.companyList);
   }
@@ -36,7 +22,7 @@ export class CompanyService {
     return this.companyList[companyIndex];
   }
 
-  createNewCompany(formData: ICompany) {
+  createNewCompany(formData: Company) {
     console.log(formData);
 
     const { name, typeOfBusiness, companyEmployees } = formData;
@@ -49,8 +35,11 @@ export class CompanyService {
     company.addNewEmployeeData(employeeData);
   }
 
-  editCompanyData(companyEditedData: ICompany) {
-    this._selectedCompany.editCompanyData(companyEditedData);
-    console.log(this.companyList);
+  editCompanyData(companyEditedData: Company) {
+    const editedCompanyIndex = this.companyList.findIndex(
+      (company) => company.id === companyEditedData.id
+    );
+
+    this.companyList[editedCompanyIndex] = companyEditedData;
   }
 }

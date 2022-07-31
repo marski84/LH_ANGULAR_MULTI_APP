@@ -1,3 +1,6 @@
 <p>edit-contact works!</p>
-{{contactToEdit | json}}
-<app-contact-form (contactDataEmitted)="handleContactDataEdit($event)" [contactData]="contactToEdit"></app-contact-form>
+{{editedContact$ | json}}
+<app-contact-form
+    (contactDataEmitted)="handleContactDataEdit($event)"
+    [contactData]="contactToEdit"
+></app-contact-form>

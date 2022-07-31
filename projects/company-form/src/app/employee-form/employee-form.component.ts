@@ -1,11 +1,5 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
 
 @Component({

@@ -13,12 +13,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { ContactService } from '../services/contact.service';
-import { IselectType } from '../models/contactTypeActionHandle.enum.';
+import { IselectType } from '../models/IselectType';
 import { Contact } from '../models/Contact';
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { contactType } from '../models/ContactType.enum';
 
+// TODO:controlki dzieci tego formularza przepisać tak aby ni e przekazywaćparent form tylko interesujące ich formControl
 @Component({
   selector: 'app-contact-form',
   templateUrl: './contact-form.component.html',
@@ -32,6 +33,8 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   contact?: Contact;
   contactBgColor?: string;
 
+  formControl!: FormControl;
+
   @Output()
   contactDataEmitted: EventEmitter<Contact> = new EventEmitter<Contact>();
 
@@ -41,24 +44,24 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     color: ['', Validators.required],
   });
 
-  adressForm: FormGroup = this.fb.group({
-    street: ['', Validators.required],
-    streetNumber: ['', Validators.required],
-    homeNumber: [''],
-  });
+  // adressForm: FormGroup = this.fb.group({
+  //   street: ['', Validators.required],
+  //   streetNumber: ['', Validators.required],
+  //   homeNumber: [''],
+  // });
 
-  emailControl: FormControl = this.fb.control('', [
-    Validators.required,
-    Validators.email,
-  ]);
+  // emailControl: FormControl = this.fb.control('', [
+  //   Validators.required,
+  //   Validators.email,
+  // ]);
 
-  phoneControl: FormControl = this.fb.control('', [
-    Validators.required,
-    Validators.minLength(9),
-  ]);
+  // phoneControl: FormControl = this.fb.control('', [
+  //   Validators.required,
+  //   Validators.minLength(9),
+  // ]);
 
   selectOptions: IselectType[] = this.contactService.typeSelectOptions;
-  onDestory$ = new Subject<void>();
+  private onDestory$ = new Subject<void>();
 
   get contactNameCtrl() {
     return this.contactForm.get(['name']) as FormControl;
@@ -77,24 +80,15 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   get streetNameCtrl() {
-    return this.contactForm.get([
-      'adressAdditionalInfo',
-      'street',
-    ]) as FormControl;
+    return this.contactTypeAdressCtrl.get(['street']) as FormControl;
   }
 
   get streetNumberCtrl() {
-    return this.contactForm.get([
-      'adressAdditionalInfo',
-      'streetNumber',
-    ]) as FormControl;
+    return this.contactTypeAdressCtrl.get(['streetNumber']) as FormControl;
   }
 
   get homeNumberCtrl() {
-    return this.contactForm.get([
-      'adressAdditionalInfo',
-      'homeNumber',
-    ]) as FormControl;
+    return this.contactTypeAdressCtrl.get(['homeNumber']) as FormControl;
   }
 
   get contactTypeEmailCtrl() {
@@ -103,6 +97,7 @@ export class ContactFormComponent implements OnInit, OnDestroy {
 
   get contactTypePhoneCtrl() {
     return this.contactForm.get(['phoneAdditionalInfo']) as FormControl;
+    // return this.formControl.get(['phoneAdditionalInfo']) as FormControl;
   }
 
   constructor(
@@ -113,7 +108,6 @@ export class ContactFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.contact) {
-      // this.contactForm.controls
       this._handleFormEdit(this.contact);
     }
     this.contactTypeCtrl.valueChanges
@@ -124,11 +118,9 @@ export class ContactFormComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {
+  OnDestroy() {
     this.onDestory$.next();
     this.onDestory$.complete();
-
-    console.log('ok');
   }
 
   getSelectedColor(color: string) {
@@ -136,33 +128,45 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   private _handleFormEdit(contact: Contact) {
-    console.log(1);
-
     const typeOfContact = contact.type as contactType;
 
     this.contactNameCtrl.setValue(contact.name);
     this.contactBgColor = contact.backgroundColor;
     this._handleContactTypeChange(typeOfContact);
     this.contactTypeCtrl.setValue(typeOfContact);
+    this.colorPickerCtrl.setValue(contact.backgroundColor);
+    console.log(this.colorPickerCtrl.value);
 
     switch (typeOfContact) {
       case contactType.phone:
+        const phoneControl: FormControl = this.fb.control('', [
+          Validators.required,
+          Validators.minLength(9),
+        ]);
+        this.formControl = phoneControl;
+
         return this.contactTypePhoneCtrl.setValue(contact.phoneAdditionalInfo);
 
       case contactType.email:
         return this.contactTypeEmailCtrl.setValue(contact.emailAdditionalInfo);
+
       case contactType.adress:
         // czemu destruktutyzacja nie działa???
         // const { homeNumber, street, streetNumber } =
         //   this.contact.adressAdditionalInfo;
-        this.streetNameCtrl.setValue(contact.adressAdditionalInfo?.street);
-        this.streetNumberCtrl.setValue(
+
+        this.streetNameCtrl?.setValue(contact.adressAdditionalInfo?.street);
+        this.streetNumberCtrl?.setValue(
           contact.adressAdditionalInfo?.streetNumber
         );
-        this.homeNumberCtrl.setValue(contact.adressAdditionalInfo?.homeNumber);
+        this.homeNumberCtrl?.setValue(contact.adressAdditionalInfo?.homeNumber);
         return;
+      default:
+        const exhaustCheck: never = typeOfContact;
     }
   }
+
+  // dodac dynamicznie wrzucane kontrolki i usunąc reset- ok
 
   private _handleContactTypeChange(option: contactType) {
     this.contactForm.removeControl('adressAdditionalInfo');
@@ -171,16 +175,30 @@ export class ContactFormComponent implements OnInit, OnDestroy {
 
     switch (option) {
       case contactType.adress:
-        this.contactForm.addControl('adressAdditionalInfo', this.adressForm);
-        this.contactTypeAdressCtrl.reset();
+        const adressForm: FormGroup = this.fb.group({
+          street: ['', Validators.required],
+          streetNumber: ['', Validators.required],
+          homeNumber: [''],
+        });
+        this.contactForm.addControl('adressAdditionalInfo', adressForm);
+
         return;
       case contactType.phone:
-        this.contactForm.addControl('phoneAdditionalInfo', this.phoneControl);
-        this.contactTypePhoneCtrl.reset();
+        const phoneControl: FormControl = this.fb.control('', [
+          Validators.required,
+          Validators.minLength(9),
+        ]);
+        // this.formControl = phoneControl;
+
+        this.contactForm.addControl('phoneAdditionalInfo', phoneControl);
         return;
       case contactType.email:
-        this.contactForm.addControl('emailAdditionalInfo', this.emailControl);
-        this.contactTypeEmailCtrl.reset();
+        const emailControl: FormControl = this.fb.control('', [
+          Validators.required,
+          Validators.email,
+        ]);
+
+        this.contactForm.addControl('emailAdditionalInfo', emailControl);
         return;
       default:
         const exhaustCheck: never = option;
@@ -188,27 +206,43 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    if (this.contactForm.valid) {
-      const {
-        name,
-        type,
-        color,
-        emailAdditionalInfo,
-        adressAdditionalInfo,
-        phoneAdditionalInfo,
-      } = this.contactForm.value;
-
-      const contact = new Contact(
-        name,
-        type,
-        color,
-        emailAdditionalInfo,
-        adressAdditionalInfo,
-        phoneAdditionalInfo
-      );
-      this.contactDataEmitted.emit(contact);
-      // this.contactForm.reset();
-      this.router.navigate(['../']);
+    if (this.contactForm.invalid) {
+      return;
     }
+
+    const {
+      name,
+      type,
+      color,
+      emailAdditionalInfo,
+      adressAdditionalInfo,
+      phoneAdditionalInfo,
+    } = this.contactForm.value;
+
+    const tempContact = new Contact(
+      name,
+      type,
+      color,
+      emailAdditionalInfo,
+      adressAdditionalInfo,
+      phoneAdditionalInfo
+    );
+
+    if (this.contact) {
+      tempContact.id = this.contact.id;
+    }
+
+    console.log(tempContact);
+
+    this.contactDataEmitted.emit(tempContact);
+    console.log(tempContact);
+
+    this.router.navigate(['./']);
+    // TODO: nawigacje do parenta
+  }
+
+  ngOnDestroy() {
+    this.onDestory$.next();
+    this.onDestory$.complete();
   }
 }

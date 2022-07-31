@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { Company } from './models/Company';
-import { Employee } from './models/Employee';
+
+import { faker } from '@faker-js/faker';
+import { Company } from '../models/Company';
+import { Employee } from '../models/Employee';
 
 @Injectable({
   providedIn: 'root',

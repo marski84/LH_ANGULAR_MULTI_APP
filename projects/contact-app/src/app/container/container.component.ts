@@ -11,7 +11,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class ContainerComponent implements OnInit {
   contactList$ = this.contactService.getContactList();
-  onDestroy$: Subject<void> = new Subject<void>();
+  private onDestroy$: Subject<void> = new Subject<void>();
 
   constructor(
     private contactService: ContactService,
@@ -19,8 +19,8 @@ export class ContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((routeParams: Params) => console.log(routeParams));
+    // this.activatedRoute.params
+    //   .pipe(takeUntil(this.onDestroy$))
+    //   .subscribe((routeParams: Params) => console.log(routeParams));
   }
 }

@@ -15,13 +15,8 @@ export class ColorpickerFormComponent implements OnInit {
     }
     this.color = bgcColor;
   }
-  @Input() parentForm!: FormGroup;
   @Output() selectedColorEmitted = new EventEmitter<string>();
   color!: string;
-
-  get colorPickerCtrl() {
-    return this.parentForm.get(['color']) as FormControl;
-  }
 
   ngOnInit(): void {
     this.selectedColorEmitted.emit(this.color);
