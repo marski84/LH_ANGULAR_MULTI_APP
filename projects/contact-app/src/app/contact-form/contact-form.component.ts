@@ -97,7 +97,6 @@ export class ContactFormComponent implements OnInit, OnDestroy {
 
   get contactTypePhoneCtrl() {
     return this.contactForm.get(['phoneAdditionalInfo']) as FormControl;
-    // return this.formControl.get(['phoneAdditionalInfo']) as FormControl;
   }
 
   constructor(
@@ -107,9 +106,6 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.contact) {
-      this._handleFormEdit(this.contact);
-    }
     this.contactTypeCtrl.valueChanges
       .pipe(takeUntil(this.onDestory$))
       .subscribe((selectedValue: contactType) => {
@@ -118,17 +114,14 @@ export class ContactFormComponent implements OnInit, OnDestroy {
       });
   }
 
-  OnDestroy() {
-    this.onDestory$.next();
-    this.onDestory$.complete();
-  }
-
   getSelectedColor(color: string) {
     this.colorPickerCtrl.setValue(color);
   }
 
   private _handleFormEdit(contact: Contact) {
-    const typeOfContact = contact.type as contactType;
+    const typeOfContact = contact.type;
+
+    console.log('_handleFormEdit');
 
     this.contactNameCtrl.setValue(contact.name);
     this.contactBgColor = contact.backgroundColor;
@@ -139,12 +132,6 @@ export class ContactFormComponent implements OnInit, OnDestroy {
 
     switch (typeOfContact) {
       case contactType.phone:
-        const phoneControl: FormControl = this.fb.control('', [
-          Validators.required,
-          Validators.minLength(9),
-        ]);
-        this.formControl = phoneControl;
-
         return this.contactTypePhoneCtrl.setValue(contact.phoneAdditionalInfo);
 
       case contactType.email:
@@ -188,7 +175,6 @@ export class ContactFormComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(9),
         ]);
-        // this.formControl = phoneControl;
 
         this.contactForm.addControl('phoneAdditionalInfo', phoneControl);
         return;
