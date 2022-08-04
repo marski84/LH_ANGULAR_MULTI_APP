@@ -11,7 +11,7 @@ import { ContactService } from '../services/contact.service';
 })
 export class EditContactComponent implements OnInit, OnDestroy {
   contactToEdit!: Contact;
-  editedContact$?: Observable<Contact>;
+  editedContact?: Contact;
 
   private onDestroy$: Subject<void> = new Subject<void>();
 
@@ -46,9 +46,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
           return contactList[contactIndex];
         })
       )
-      .subscribe((result) => result);
-
-    console.log(this.editedContact$);
+      .subscribe((result) => (this.editedContact = result));
 
     // .subscribe((result: any) => console.log(result));
   }

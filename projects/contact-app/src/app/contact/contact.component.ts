@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Contact } from '../models/Contact';
-import { LoggerService } from '../services/logger.service';
+import { LoggerService } from '../../../../modules/shared/logger.service';
 
 @Component({
   selector: 'app-contact',

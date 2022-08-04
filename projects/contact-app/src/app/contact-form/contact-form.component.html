@@ -16,6 +16,10 @@
                             [formControl]="contactNameCtrl"
                         >
                     </mat-form-field>
+                    <mat-error *ngIf="contactNameCtrl.hasError('required')">
+                        Contact name is
+                        <strong>required</strong>
+                    </mat-error>
                 </td>
             </tr>
 
@@ -24,6 +28,10 @@
                 (selectedColorEmitted)="getSelectedColor($event)"
                 [bgcColor]="colorPickerCtrl.value"
             ></app-colorpicker-form>
+            <mat-error *ngIf="colorPickerCtrl.hasError('required')">
+                Picking contact color is
+                <strong>required</strong>
+            </mat-error>
 
             <!-- TYPE OF CONTACT -->
             <tr>
@@ -49,6 +57,10 @@
 
                         </mat-select>
                     </mat-form-field>
+                    <mat-error *ngIf="contactTypeCtrl.hasError('required')">
+                        Contact type is
+                        <strong>required</strong>
+                    </mat-error>
                 </td>
             </tr>
 

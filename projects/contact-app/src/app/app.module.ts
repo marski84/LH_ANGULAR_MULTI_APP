@@ -25,6 +25,9 @@ import { PhoneFormComponent } from './contact-form/phone-form/phone-form.compone
 import { EditContactComponent } from './edit-contact/edit-contact.component';
 import { NewContactComponent } from './new-contact/new-contact.component';
 import { DispalyContactValue } from './pipes/display-contact-value.pipe';
+import { MaterialModule } from '../../../modules/material/material.module';
+import { LoggerService } from '../../../company-form/src/app/logger.service';
+import { SharedModule } from '../../../modules/shared/shared.module';
 
 // TODO: wydzielić moduł materialowy jako MaterialModule i importować tutaj
 // TODO: wydzielić moduł SharedModule i importować go w kazdym module
@@ -46,29 +49,20 @@ import { DispalyContactValue } from './pipes/display-contact-value.pipe';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatCardModule,
-    MatSelectModule,
-    MatIconModule,
-    MatDividerModule,
-    MatInputModule,
-    MatListModule,
+    MaterialModule,
     ColorPickerModule,
-    MatTableModule,
+    SharedModule,
   ],
   providers: [
     // LoggerService,
     // {
-    // privade: ovLoggerServic
+    // private: ovLoggerServic
     // useClass: LoggerService,
     // useFactory
     // useFactory =>czyuser jest adminem jeżeli tak to loguj do bazy jeżeli nie to do conosli
     // },
     // {
-    // provia, // de:jakis_klucz
+    // provide:jakis_klucz
     // useValue: wartość => true, 'adsasdads, 123
     // useValue => klucz do api
     // każdy komponent odwołuje się w constructorze
