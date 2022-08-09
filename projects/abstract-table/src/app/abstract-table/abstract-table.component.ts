@@ -1,3 +1,4 @@
+import { ProductColumnsDef } from './../models/ProductColumnsDef';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -14,24 +15,27 @@ import { MatTableDataSource } from '@angular/material/table';
 export class AbstractTableComponent implements OnInit {
   matPaginator: any;
   matSort: any;
-  columnNames!: any;
+
+  @Input() tableColumnsDefinition: any;
 
   @Input() set tableData(data: {}[]) {
-    this.columnNames = this.tableData.map((record: {}) => {
-      return Object.keys(record);
-    });
     this.setTableDataSource(data);
   }
+
+  columnsToDisplay!: string[];
 
   tableDataSource = new MatTableDataSource<Array<{}>>([]);
 
   constructor() {}
 
   ngOnInit(): void {
-    // this.columnNames = this.tableData.map((record: {}) => {
-    //   return Object.keys(record);
-    // });
-    console.log(this.columnNames);
+    const columnNames = this.tableColumnsDefinition.map(
+      (column: ProductColumnsDef) => column.name
+    );
+    this.columnsToDisplay = columnNames;
+
+    console.log(this.tableDataSource);
+    console.log(this.tableColumnsDefinition);
   }
 
   setTableDataSource(data: any) {
