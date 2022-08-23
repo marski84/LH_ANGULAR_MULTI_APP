@@ -1,5 +1,11 @@
 import { ProductColumnsDef } from './../models/ProductColumnsDef';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  Input,
+  OnInit,
+  TemplateRef,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -21,6 +27,10 @@ export class AbstractTableComponent implements OnInit {
   @Input() set tableData(data: {}[]) {
     this.setTableDataSource(data);
   }
+
+  @ContentChild('customProperties') customProperties:
+    | TemplateRef<any>
+    | undefined;
 
   columnsToDisplay!: string[];
 

@@ -10,6 +10,8 @@ import { DataService } from './data.service';
 export class CompanyService {
   companyList!: Company[];
 
+  companyFormTouched!: boolean;
+
   constructor(private dataService: DataService) {
     this.companyList = this.dataService.companyList;
   }
@@ -18,17 +20,16 @@ export class CompanyService {
     return of(this.companyList);
   }
 
-  getCompanyByIndex(companyIndex: number) {
-    return this.companyList[companyIndex];
+  getCompanyById(companyIndex: number) {
+    return this.companyList.find(
+      (company) => company.id === String(companyIndex)
+    ) as Company;
   }
 
   createNewCompany(formData: Company) {
-    console.log(formData);
-
     const { name, typeOfBusiness, companyEmployees } = formData;
     const company = new Company(name, typeOfBusiness, companyEmployees);
     this.companyList.push(company);
-    console.log(this.companyList);
   }
 
   addEmployeeToEmployeeList(company: Company, employeeData: IEmployee) {

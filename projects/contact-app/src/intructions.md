@@ -43,3 +43,8 @@
 
 - Dynamiczna zmiana formularzy - https://netbasal.com/three-ways-to-dynamically-alter-your-form-validation-in-angular-e5fd15f1e946
 - Dependency injection Service'ów - https://angular.io/guide/architecture-services
+
+- [ ] usunac console :)
+- [ ] przebudować architekture folder modules do src/app => zawsze!---- ok, pytanie czy przeniesienie jeszcze wyej w tym przypadku jest ok:-)
+- [ ] przebudować handleFormEdit w contact form
+- [ ] logger service - przebudować---- done

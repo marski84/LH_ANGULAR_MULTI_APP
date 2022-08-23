@@ -1,22 +1,11 @@
 import { MessageDisplayValuePipe } from './pipes/message-display-value.pipe';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ContainerComponent } from './container/container.component';
 import { ContactComponent } from './contact/contact.component';
 import { ContactFormComponent } from './contact-form/contact-form.component';
-import { MatTableModule } from '@angular/material/table';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatListModule } from '@angular/material/list';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { AdressFormComponent } from './contact-form/adress-form/adress-form.component';
 import { ColorpickerFormComponent } from './contact-form/colorpicker-form/colorpicker-form.component';
@@ -26,8 +15,13 @@ import { EditContactComponent } from './edit-contact/edit-contact.component';
 import { NewContactComponent } from './new-contact/new-contact.component';
 import { DispalyContactValue } from './pipes/display-contact-value.pipe';
 import { MaterialModule } from '../../../modules/material/material.module';
-import { LoggerService } from '../../../company-form/src/app/logger.service';
 import { SharedModule } from '../../../modules/shared/shared.module';
+import { LoggerService } from 'projects/modules/shared/logger.service';
+import { BetterLoggerService } from 'projects/modules/shared/better-logger.service';
+
+function initApp() {
+  return () => console.log('init');
+}
 
 // TODO: wydzielić moduł materialowy jako MaterialModule i importować tutaj
 // TODO: wydzielić moduł SharedModule i importować go w kazdym module
@@ -68,6 +62,10 @@ import { SharedModule } from '../../../modules/shared/shared.module';
     // każdy komponent odwołuje się w constructorze
     // constructror(private klucz: jakis_klucz){}
     // },
+
+    // LoggerService => BetterLoggerService => pamiętaj o zmianie folderu modules!
+    { provide: LoggerService, useClass: BetterLoggerService },
+    // { provide: APP_INITIALIZER, useFactory: initApp },
   ],
   bootstrap: [AppComponent],
 })

@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>{{dialogTitle}}</h1>
+<div mat-dialog-content>{{dialogContent}}</div>
+<div mat-dialog-actions>
+    <button
+        [mat-dialog-close]="false"
+        mat-button
+    >
+        Cancel
+    </button>
+    <button
+        mat-button
+        [mat-dialog-close]="true"
+        (close)="close()"
+        cdkFocusInitial
+    >
+        Forward
+    </button>
+</div>

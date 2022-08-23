@@ -28,7 +28,7 @@ import { contactType } from '../models/ContactType.enum';
 export class ContactFormComponent implements OnInit, OnDestroy {
   @Input() set contactData(data: Contact) {
     this.contact = data;
-    this._handleFormEdit(this.contact);
+    this.createForm(this.contact);
   }
   contact?: Contact;
   contactBgColor?: string;
@@ -41,24 +41,8 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   contactForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     type: ['', [Validators.required]],
-    color: ['', Validators.required],
+    color: [''],
   });
-
-  // adressForm: FormGroup = this.fb.group({
-  //   street: ['', Validators.required],
-  //   streetNumber: ['', Validators.required],
-  //   homeNumber: [''],
-  // });
-
-  // emailControl: FormControl = this.fb.control('', [
-  //   Validators.required,
-  //   Validators.email,
-  // ]);
-
-  // phoneControl: FormControl = this.fb.control('', [
-  //   Validators.required,
-  //   Validators.minLength(9),
-  // ]);
 
   selectOptions: IselectType[] = this.contactService.typeSelectOptions;
   private onDestory$ = new Subject<void>();
@@ -71,31 +55,31 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     return this.contactForm.get(['color']) as FormControl;
   }
 
-  get contactTypeCtrl() {
+  get typeCtrl() {
     return this.contactForm.get(['type']) as FormControl;
   }
 
-  get contactTypeAdressCtrl() {
+  get adressCtrl() {
     return this.contactForm.get(['adressAdditionalInfo']) as FormGroup;
   }
 
   get streetNameCtrl() {
-    return this.contactTypeAdressCtrl.get(['street']) as FormControl;
+    return this.adressCtrl.get(['street']) as FormControl;
   }
 
   get streetNumberCtrl() {
-    return this.contactTypeAdressCtrl.get(['streetNumber']) as FormControl;
+    return this.adressCtrl.get(['streetNumber']) as FormControl;
   }
 
   get homeNumberCtrl() {
-    return this.contactTypeAdressCtrl.get(['homeNumber']) as FormControl;
+    return this.adressCtrl.get(['homeNumber']) as FormControl;
   }
 
-  get contactTypeEmailCtrl() {
+  get emailCtrl() {
     return this.contactForm.get(['emailAdditionalInfo']) as FormControl;
   }
 
-  get contactTypePhoneCtrl() {
+  get phoneCtrl() {
     return this.contactForm.get(['phoneAdditionalInfo']) as FormControl;
   }
 
@@ -106,11 +90,11 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.contactTypeCtrl.valueChanges
+    this.typeCtrl.valueChanges
       .pipe(takeUntil(this.onDestory$))
       .subscribe((selectedValue: contactType) => {
+        // this.createForm(this.contact);
         console.log(selectedValue);
-        this._handleContactTypeChange(selectedValue);
       });
   }
 
@@ -118,81 +102,105 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     this.colorPickerCtrl.setValue(color);
   }
 
-  private _handleFormEdit(contact: Contact) {
-    const typeOfContact = contact.type;
-
-    console.log('_handleFormEdit');
-
-    this.contactNameCtrl.setValue(contact.name);
-    this.contactBgColor = contact.backgroundColor;
-    this._handleContactTypeChange(typeOfContact);
-    this.contactTypeCtrl.setValue(typeOfContact);
-    this.colorPickerCtrl.setValue(contact.backgroundColor);
-    console.log(this.colorPickerCtrl.value);
-
-    switch (typeOfContact) {
-      case contactType.phone:
-        return this.contactTypePhoneCtrl.setValue(contact.phoneAdditionalInfo);
-
-      case contactType.email:
-        return this.contactTypeEmailCtrl.setValue(contact.emailAdditionalInfo);
-
-      case contactType.adress:
-        // czemu destruktutyzacja nie działa???
-        // const { homeNumber, street, streetNumber } =
-        //   this.contact.adressAdditionalInfo;
-
-        this.streetNameCtrl?.setValue(contact.adressAdditionalInfo?.street);
-        this.streetNumberCtrl?.setValue(
-          contact.adressAdditionalInfo?.streetNumber
-        );
-        this.homeNumberCtrl?.setValue(contact.adressAdditionalInfo?.homeNumber);
-        return;
-      default:
-        const exhaustCheck: never = typeOfContact;
-    }
-  }
-
-  // dodac dynamicznie wrzucane kontrolki i usunąc reset- ok
-
-  private _handleContactTypeChange(option: contactType) {
+  //createForm(contact) - tworzy nowy formularz jeżeli masz contact tona init daje values dla form'a
+  private clearForm() {
     this.contactForm.removeControl('adressAdditionalInfo');
     this.contactForm.removeControl('emailAdditionalInfo');
     this.contactForm.removeControl('phoneAdditionalInfo');
+  }
 
-    switch (option) {
-      case contactType.adress:
-        const adressForm: FormGroup = this.fb.group({
-          street: ['', Validators.required],
-          streetNumber: ['', Validators.required],
-          homeNumber: [''],
-        });
-        this.contactForm.addControl('adressAdditionalInfo', adressForm);
+  private createForm(contact: Contact) {
+    this.clearForm();
+    const typeOfContact = contact.type;
 
-        return;
+    this.contactNameCtrl.setValue(contact.name);
+    this.contactBgColor = contact.backgroundColor;
+    this.colorPickerCtrl.setValue(contact.backgroundColor);
+    this.typeCtrl.setValue(contact.type);
+
+    switch (typeOfContact) {
       case contactType.phone:
-        const phoneControl: FormControl = this.fb.control('', [
-          Validators.required,
-          Validators.minLength(9),
-        ]);
+        const phoneControl: FormControl = this.fb.control(
+          contact.phoneAdditionalInfo,
+          [Validators.required, Validators.minLength(9)]
+        );
 
         this.contactForm.addControl('phoneAdditionalInfo', phoneControl);
         return;
-      case contactType.email:
-        const emailControl: FormControl = this.fb.control('', [
-          Validators.required,
-          Validators.email,
-        ]);
 
+      case contactType.email:
+        const emailControl: FormControl = this.fb.control(
+          contact.emailAdditionalInfo,
+          [Validators.required, Validators.email]
+        );
         this.contactForm.addControl('emailAdditionalInfo', emailControl);
         return;
+
+      case contactType.adress:
+        const adressForm: FormGroup = this.fb.group({
+          street: [contact.adressAdditionalInfo?.street, Validators.required],
+          streetNumber: [
+            contact.adressAdditionalInfo?.streetNumber,
+            Validators.required,
+          ],
+          homeNumber: [contact.adressAdditionalInfo?.homeNumber],
+        });
+        this.contactForm.addControl('adressAdditionalInfo', adressForm);
+        return;
+
       default:
-        const exhaustCheck: never = option;
+        const exhaustCheck: never = typeOfContact;
+        return;
+    }
+
+    // this._handleContactTypeChange(typeOfContact);
+
+    // stworzenie podstawowego formGroup wraz z typem
+    // _handleContactTypeChange(contact.type);
+  }
+
+  private _handleContactTypeChange(option: contactType) {
+    this.typeCtrl.setValue(option);
+
+    this.clearForm();
+
+    switch (
+      option
+      // case contactType.adress:
+      //   const adressForm: FormGroup = this.fb.group({
+      //     street: ['', Validators.required],
+      //     streetNumber: ['', Validators.required],
+      //     homeNumber: [''],
+      //   });
+      //   this.contactForm.addControl('adressAdditionalInfo', adressForm);
+
+      //   return;
+      // case contactType.phone:
+      //   const phoneControl: FormControl = this.fb.control('', [
+      //     Validators.required,
+      //     Validators.minLength(9),
+      //   ]);
+
+      //   this.contactForm.addControl('phoneAdditionalInfo', phoneControl);
+      //   return;
+      // case contactType.email:
+      //   const emailControl: FormControl = this.fb.control('', [
+      //     Validators.required,
+      //     Validators.email,
+      //   ]);
+
+      //   this.contactForm.addControl('emailAdditionalInfo', emailControl);
+      //   return;
+      // default:
+      //   const exhaustCheck: never = option;
+    ) {
     }
   }
 
   onSubmit() {
     if (this.contactForm.invalid) {
+      console.log(this.contactForm.value);
+
       return;
     }
 
@@ -204,6 +212,7 @@ export class ContactFormComponent implements OnInit, OnDestroy {
       adressAdditionalInfo,
       phoneAdditionalInfo,
     } = this.contactForm.value;
+    console.log(this.contactForm.value);
 
     const tempContact = new Contact(
       name,
@@ -214,16 +223,14 @@ export class ContactFormComponent implements OnInit, OnDestroy {
       phoneAdditionalInfo
     );
 
+    console.log(tempContact);
+
     if (this.contact) {
       tempContact.id = this.contact.id;
     }
 
-    console.log(tempContact);
-
     this.contactDataEmitted.emit(tempContact);
-    console.log(tempContact);
-
-    this.router.navigate(['./']);
+    // this.router.navigate(['./']);
     // TODO: nawigacje do parenta
   }
 

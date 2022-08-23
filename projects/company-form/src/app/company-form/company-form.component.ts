@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -11,22 +11,27 @@ import { Employee } from '../models/Employee';
 import { Company } from '../models/Company';
 import { IselectType } from '../models/IselectType';
 import { DataService } from '../services/data.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-company-form',
   templateUrl: './company-form.component.html',
   styleUrls: ['./company-form.component.scss'],
 })
-export class CompanyFormComponent implements OnInit {
+export class CompanyFormComponent implements OnInit, OnDestroy {
   @Input() set company(data: Company) {
-    console.log(this.company);
-
     this.companyData = data;
+    this.initialEmployeeAmount = data.companyEmployees.length;
     this._handleFormDataEvent();
+    this.companyForm.markAsPristine();
   }
   companyData?: Company;
+
   @Output() companyDataEmitted: EventEmitter<Company> =
     new EventEmitter<Company>();
+
+  initialEmployeeAmount: number | undefined;
+  private onDestory$ = new Subject<void>();
 
   companyForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -57,29 +62,22 @@ export class CompanyFormComponent implements OnInit {
     return this.companyForm.controls['companyEmployees'] as FormArray;
   }
 
-  formGroupAtIndex(index: number) {
-    return this.companyEmployees.at(index) as FormGroup;
-  }
-
-  companyEmployeesNameCtrl(empIndex: number) {
-    return this.companyEmployees.at(empIndex) as FormGroup;
-  }
-
   typeOfBusinessSelectOptions: IselectType[] = [];
 
   constructor(private fb: FormBuilder, private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.dataService.typeOfBusiness.subscribe((response: IselectType[]) => {
-      this.typeOfBusinessSelectOptions = response;
-    });
+    this.dataService.typeOfBusiness
+      .pipe(takeUntil(this.onDestory$))
+      .subscribe((response: IselectType[]) => {
+        this.typeOfBusinessSelectOptions = response;
+      });
   }
+
   private _handleFormDataEvent() {
     this.companyEmployees.clear();
-    console.log(this.companyData);
 
     if (this.companyData === undefined) {
-      console.log('ok');
       this.addEmployeeForm();
       return;
     }
@@ -108,20 +106,25 @@ export class CompanyFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.companyForm.valid) {
-      const { name, typeOfBusiness, companyEmployees } = this.companyForm.value;
-
-      const companyToEmit = new Company(name, typeOfBusiness, companyEmployees);
-
-      this.companyData
-        ? (companyToEmit.id = this.companyData.id)
-        : companyToEmit;
-
-      this.companyDataEmitted.emit(companyToEmit);
+    if (this.companyForm.invalid) {
+      return;
     }
-    return;
+    const { name, typeOfBusiness, companyEmployees } = this.companyForm.value;
+
+    const companyToEmit = new Company(name, typeOfBusiness, companyEmployees);
+
+    this.companyData ? (companyToEmit.id = this.companyData.id) : companyToEmit;
+
+    this.companyDataEmitted.emit(companyToEmit);
+
+    this.companyForm.markAsPristine();
   }
   // jezeli invalid
   // nie propaguj danych do parenta
   // ewentualnei notyfikacja itp.
+
+  ngOnDestroy(): void {
+    this.onDestory$.next();
+    this.onDestory$.complete();
+  }
 }

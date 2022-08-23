@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { of, first } from 'rxjs';
 
 import { faker } from '@faker-js/faker';
 import { Company } from '../models/Company';
@@ -46,7 +46,11 @@ export class DataService {
 
   companyList = [this.first, this.second, this.third];
 
-  constructor() {}
+  constructor() {
+    this.companyList[0].id = '9b6cfe23-d0c3-45fc-a631-e51a678ef9f3';
+    this.companyList[1].id = '04a07ef-b341-418d-9798-2606344e8e91';
+    this.companyList[2].id = '5a368acb-8ec3-4517-815f-77f5c8530f29';
+  }
 
   get typeOfBusiness() {
     return of(this._typeOfBusinessSelectOptions);

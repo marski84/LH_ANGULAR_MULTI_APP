@@ -1,11 +1,28 @@
-<div class="card">
-    <div class="header">
-        <ng-content select="header"></ng-content>
+<ng-template #customTabButtons>
+    <div class="custom-class">
+        <button
+            class="tab-button"
+            (click)="login()"
+        >
+            {{loginText}}
+        </button>
+        <button
+            class="tab-button"
+            (click)="signUp()"
+        >
+            {{signUpText}}
+        </button>
     </div>
-    <div class="content">
-        <ng-content select="content"></ng-content>
+</ng-template>
+
+<ng-container [ngTemplateOutlet]="customTabButtons"></ng-container>
+
+<ng-template
+    #estimateTemplate
+    let-lessonsCounter="estimate"
+>
+    <div>
+        Approximately {{lessonsCounter}} lessons ...
     </div>
-    <div class="footer">
-        <ng-content select="footer"></ng-content>
-    </div>
-</div>
+</ng-template>
+<ng-container *ngTemplateOutlet="estimateTemplate;context:ctx"></ng-container>

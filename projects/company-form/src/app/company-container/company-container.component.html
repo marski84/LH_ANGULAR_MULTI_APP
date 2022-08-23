@@ -1,25 +1,38 @@
-<nav *ngIf="companyList$ | async as companyList">
-    <mat-card *ngFor="let company of companyList; let i = index">
-        <div mat-button>{{i + 1}} {{company | json}}</div>
+<mat-toolbar
+    color="primary"
+    *ngIf="companyList$ | async as companyList"
+>
+    <mat-toolbar-row *ngFor="let company of companyList">
+        <span>Company name: {{company.name}}</span>
+        ,
+        <span>
+            Type of business: {{company.typeOfBusiness}}
+        </span>
+        ,
+        <span>
+            Employee amount: {{company.companyEmployees.length}}
+        </span>
+
         <button
             mat-raised-button
-            color="accent"
-            [routerLink]="['editCompany', i]"
+            [routerLink]="['editCompany', company.id]"
             routerLinkActive="active"
         >
-            Edit Company
+            Edit Company Data
         </button>
-        <mat-divider></mat-divider>
-    </mat-card>
+    </mat-toolbar-row>
 
-    <button
-        mat-raised-button
-        color="accent"
-        routerLink="./registerNewCompany"
-        routerLinkActive="active"
-    >
-        Register new company
-    </button>
-</nav>
+    <mat-toolbar-row>
+        <button
+            mat-raised-button
+            routerLink="./registerNewCompany"
+            routerLinkActive="active"
+        >
+            Register new company
+        </button>
+    </mat-toolbar-row>
+
+</mat-toolbar>
+<!--  -->
 
 <router-outlet></router-outlet>

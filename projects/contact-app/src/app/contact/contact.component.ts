@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LoggerService } from 'projects/modules/shared/logger.service';
 import { Contact } from '../models/Contact';
-import { LoggerService } from '../../../../modules/shared/logger.service';
 
 @Component({
   selector: 'app-contact',
@@ -13,9 +13,7 @@ export class ContactComponent implements OnInit {
 
   constructor(private logger: LoggerService) {}
 
-  ngOnInit(): void {
-    console.log(this.contact);
-  }
+  ngOnInit(): void {}
 
   handleMessageSend() {
     this.logger.handleEvent(this.contact.name);

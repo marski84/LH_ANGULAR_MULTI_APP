@@ -33,6 +33,8 @@ export class EditContactComponent implements OnInit, OnDestroy {
   }
 
   handleContactDataEdit(editedContactData: Contact) {
+    console.log('ok');
+
     // this.editedContact$ =
     this.contactService
       .getContactList()
@@ -47,8 +49,6 @@ export class EditContactComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((result) => (this.editedContact = result));
-
-    // .subscribe((result: any) => console.log(result));
   }
 
   ngOnDestroy(): void {

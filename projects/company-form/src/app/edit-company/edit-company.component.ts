@@ -1,18 +1,26 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { CompanyFormComponent } from './../company-form/company-form.component';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { map, Subject, Subscription, takeUntil } from 'rxjs';
 import { CompanyService } from '../services/company.service';
 import { Company } from '../models/Company';
+import { CanDeactivateRoute } from '../app-routing.module';
 
 @Component({
   selector: 'app-edit-company',
   templateUrl: './edit-company.component.html',
   styleUrls: ['./edit-company.component.scss'],
 })
-export class EditCompanyComponent implements OnInit, OnDestroy {
+export class EditCompanyComponent
+  implements OnInit, OnDestroy, CanDeactivateRoute
+{
   companyData!: Company;
   companyIndex!: Subscription;
   private onDestory$ = new Subject<void>();
+
+  @ViewChild(CompanyFormComponent, { static: true })
+  editCompanyForm!: CompanyFormComponent;
+  employeesAmount!: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -23,18 +31,26 @@ export class EditCompanyComponent implements OnInit, OnDestroy {
     this.activatedRoute.params
       .pipe(
         takeUntil(this.onDestory$),
-        map((params) => {
-          const index = params['id'];
-          return index;
-        }),
-        map((index) => this.companyService.getCompanyByIndex(index))
+        map((params) => params['id']),
+        map((id) => this.companyService.getCompanyById(id))
       )
       .subscribe((company) => (this.companyData = company));
   }
 
-  editData(data: Company, id?: string) {
+  editData(data: Company) {
     this.companyService.editCompanyData(data);
-    console.log(data, id);
+  }
+
+  isDataSaved(): boolean {
+    console.log(this.companyData.companyEmployees.length);
+    console.log(this.editCompanyForm.initialEmployeeAmount);
+
+    return !(
+      (this.editCompanyForm.companyForm.touched &&
+        this.editCompanyForm.companyForm.dirty) ||
+      this.companyData.companyEmployees.length !==
+        this.editCompanyForm.initialEmployeeAmount
+    );
   }
 
   ngOnDestroy(): void {

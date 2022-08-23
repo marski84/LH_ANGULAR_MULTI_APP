@@ -86,8 +86,7 @@
                 mat-raised-button
                 color="primary"
                 type="button"
-                (click)="
-                addEmployeeForm()"
+                (click)="addEmployeeForm()"
             >
                 Add employee
                 <mat-icon class="add-employee-btn">add</mat-icon>
@@ -95,12 +94,30 @@
         </div>
     </div>
 
-    <button
-        [disabled]="companyForm.invalid"
-        mat-raised-button
-        color="primary"
-        type="submit"
-    >
-        {{ companyData | buttonName}}
-    </button>
+    <ng-container *ngIf="companyData; then EditCompany else AddCompany"></ng-container>
+
+    <ng-template #AddCompany>
+        <button
+            mat-raised-button
+            [disabled]="companyForm.invalid"
+            mat-raised-button
+            color="primary"
+            type="submit"
+        >
+            Submit
+        </button>
+    </ng-template>
+
+    <ng-template #EditCompany>
+        <button
+            mat-raised-button
+            class="add-employee-btn"
+            [disabled]="companyForm.invalid"
+            mat-raised-button
+            type="submit"
+        >
+            Edit
+        </button>
+    </ng-template>
+
 </form>

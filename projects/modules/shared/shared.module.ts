@@ -5,6 +5,6 @@ import { LoggerService } from '../../company-form/src/app/logger.service';
 @NgModule({
   declarations: [],
   imports: [CommonModule],
-  providers: [{ provide: LoggerService, useClass: LoggerService }],
+  providers: [],
 })
 export class SharedModule {}

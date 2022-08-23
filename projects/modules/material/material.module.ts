@@ -14,6 +14,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [],
@@ -31,6 +32,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatTableModule,
     MatMenuModule,
     MatSidenavModule,
+    MatDialogModule,
   ],
   declarations: [MaterialComponent],
 })

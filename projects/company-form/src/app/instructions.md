@@ -47,3 +47,9 @@
 
 - Dokumentacja Routingu - https://angular.io/guide/router
 - canDeactivate - https://www.angular.love/2017/05/23/angular-candeactivate-guard/
+
+- [ ] przebudować front 1. nawigacje w mat-toolbar w środku przyciski bez jsonów----- ok
+- [ ] zmiana w formualrzu edycji nie jest blokowana - #deactivateGuard----ok
+- [ ] przebuduj sobie na uuid----- ok
+- [ ] wywalić buttonNamePipe ---- ok
+- [ ] typeOfBusiness w company form onDestroy----ok
