@@ -57,7 +57,7 @@
 
                         </mat-select>
                     </mat-form-field>
-                    <mat-error *ngIf="typeCtrl.touched && contactNameCtrl.hasError('required')">
+                    <mat-error *ngIf="typeCtrl.touched && typeCtrl.hasError('required')">
                         Contact type is
                         <strong>required</strong>
                     </mat-error>

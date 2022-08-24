@@ -13,14 +13,7 @@ export class ContainerComponent implements OnInit {
   contactList$ = this.contactService.getContactList();
   private onDestroy$: Subject<void> = new Subject<void>();
 
-  constructor(
-    private contactService: ContactService,
-    private activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private contactService: ContactService) {}
 
-  ngOnInit(): void {
-    // this.activatedRoute.params
-    //   .pipe(takeUntil(this.onDestroy$))
-    //   .subscribe((routeParams: Params) => console.log(routeParams));
-  }
+  ngOnInit(): void {}
 }

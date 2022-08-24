@@ -13,7 +13,6 @@ export class NewContactComponent implements OnInit {
   ngOnInit() {}
 
   handleAddContact(contact: Contact) {
-    console.log(contact);
     this.contactService.addNewContactToList(contact);
   }
 }

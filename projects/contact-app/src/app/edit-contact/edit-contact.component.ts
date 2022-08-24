@@ -33,9 +33,6 @@ export class EditContactComponent implements OnInit, OnDestroy {
   }
 
   handleContactDataEdit(editedContactData: Contact) {
-    console.log('ok');
-
-    // this.editedContact$ =
     this.contactService
       .getContactList()
       .pipe(

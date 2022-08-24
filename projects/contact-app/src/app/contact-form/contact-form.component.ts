@@ -5,6 +5,7 @@ import {
   OnInit,
   Output,
   OnDestroy,
+  AfterViewInit,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -25,10 +26,18 @@ import { contactType } from '../models/ContactType.enum';
   templateUrl: './contact-form.component.html',
   styleUrls: ['./contact-form.component.scss'],
 })
-export class ContactFormComponent implements OnInit, OnDestroy {
+export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() set contactData(data: Contact) {
+    this.onDestory$.next();
     this.contact = data;
-    this.createForm(this.contact);
+    this.createForm(data);
+    this.typeCtrl.valueChanges
+      .pipe(takeUntil(this.onDestory$))
+      .subscribe((selectedValue: contactType) => {
+        if (this.contact?.type !== selectedValue) {
+          this._handleContactTypeChange(selectedValue);
+        }
+      });
   }
   contact?: Contact;
   contactBgColor?: string;
@@ -90,13 +99,19 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.typeCtrl.valueChanges
-      .pipe(takeUntil(this.onDestory$))
-      .subscribe((selectedValue: contactType) => {
-        // this.createForm(this.contact);
-        console.log(selectedValue);
-      });
+    if (!this.contact) {
+      this.typeCtrl.valueChanges
+        .pipe(takeUntil(this.onDestory$))
+        .subscribe((selectedValue: contactType) => {
+          // this._handleContactTypeChange(selectedValue);
+          if (this.contact?.type !== selectedValue) {
+            this._handleContactTypeChange(selectedValue);
+          }
+        });
+    }
   }
+
+  ngAfterViewInit(): void {}
 
   getSelectedColor(color: string) {
     this.colorPickerCtrl.setValue(color);
@@ -160,40 +175,36 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   private _handleContactTypeChange(option: contactType) {
-    this.typeCtrl.setValue(option);
-
     this.clearForm();
 
-    switch (
-      option
-      // case contactType.adress:
-      //   const adressForm: FormGroup = this.fb.group({
-      //     street: ['', Validators.required],
-      //     streetNumber: ['', Validators.required],
-      //     homeNumber: [''],
-      //   });
-      //   this.contactForm.addControl('adressAdditionalInfo', adressForm);
+    switch (option) {
+      case contactType.adress:
+        const adressForm: FormGroup = this.fb.group({
+          street: ['', Validators.required],
+          streetNumber: ['', Validators.required],
+          homeNumber: [''],
+        });
+        this.contactForm.addControl('adressAdditionalInfo', adressForm);
 
-      //   return;
-      // case contactType.phone:
-      //   const phoneControl: FormControl = this.fb.control('', [
-      //     Validators.required,
-      //     Validators.minLength(9),
-      //   ]);
+        return;
+      case contactType.phone:
+        const phoneControl: FormControl = this.fb.control('', [
+          Validators.required,
+          Validators.minLength(9),
+        ]);
 
-      //   this.contactForm.addControl('phoneAdditionalInfo', phoneControl);
-      //   return;
-      // case contactType.email:
-      //   const emailControl: FormControl = this.fb.control('', [
-      //     Validators.required,
-      //     Validators.email,
-      //   ]);
+        this.contactForm.addControl('phoneAdditionalInfo', phoneControl);
+        return;
+      case contactType.email:
+        const emailControl: FormControl = this.fb.control('', [
+          Validators.required,
+          Validators.email,
+        ]);
 
-      //   this.contactForm.addControl('emailAdditionalInfo', emailControl);
-      //   return;
-      // default:
-      //   const exhaustCheck: never = option;
-    ) {
+        this.contactForm.addControl('emailAdditionalInfo', emailControl);
+        return;
+      default:
+        const exhaustCheck: never = option;
     }
   }
 
@@ -235,6 +246,8 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('destroyed');
+
     this.onDestory$.next();
     this.onDestory$.complete();
   }
