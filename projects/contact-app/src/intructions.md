@@ -48,3 +48,17 @@
 - [ ] przebudować architekture folder modules do src/app => zawsze!---- ok, pytanie czy przeniesienie jeszcze wyej w tym przypadku jest ok:-)
 - [ ] przebudować handleFormEdit w contact form
 - [ ] logger service - przebudować---- done
+
+
+- [ ] przenieść modules do src/app
+- [ ] materialModule do SHared - upewnij sie że tak jest :) 
+- [ ] poczytać jak wygląda enum po kompilacji do js'a
+- [ ] ContactFormComponent - wywalić IselectType i posługiwać się tylko enumem(Możliwe że trzeba pipe do przeiterowania na templatce)
+- [ ] ContactFormComponent - _handleContactTypeChange - dodać argument z value i użyć jej w createForm #DRY
+
+<!-- enum type = {a,b,c}
+po kompilacji wynikiem będzie funkcja
+() => a || 1
+
+type.a; => 1 
+type[1]; => a -->

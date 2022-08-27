@@ -14,8 +14,9 @@ import { EditCompanyComponent } from './edit-company/edit-company.component';
 import { NewCompanyComponent } from './new-company/new-company.component';
 import { FormGroup } from '@angular/forms';
 
+// IDeactivableComponent
 export interface CanDeactivateRoute {
-  isDataSaved(): boolean;
+  isDataSaved(): boolean; //canBeLeft
 }
 
 const routes: Routes = [

@@ -25,21 +25,21 @@ export class CanDeactiveFormService
   ): Observable<boolean> | Promise<boolean> | boolean {
     console.log('canDeactivate triggered');
 
-    if (!component.isDataSaved()) {
-      const dialogConfig = new MatDialogConfig();
-
-      dialogConfig.disableClose = true;
-      dialogConfig.width = '250px';
-      dialogConfig.hasBackdrop = true;
-      dialogConfig.closeOnNavigation = true;
-      dialogConfig.data = {
-        title: 'Please confirm',
-        content: 'You have unsaved changes- are you sure you wanna leave?',
-      };
-      const dialogRef = this.dialog.open(DialogComponent, dialogConfig);
-
-      return dialogRef.afterClosed();
+    if (component.isDataSaved()) {
+      return of(true);
     }
-    return of(true);
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.width = '250px';
+    dialogConfig.hasBackdrop = true;
+    dialogConfig.closeOnNavigation = true;
+    dialogConfig.data = {
+      title: 'Please confirm',
+      content: 'You have unsaved changes- are you sure you wanna leave?',
+    };
+    const dialogRef = this.dialog.open(DialogComponent, dialogConfig);
+
+    return dialogRef.afterClosed();
   }
 }

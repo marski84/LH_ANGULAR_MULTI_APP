@@ -16,7 +16,7 @@ import {
 import { ContactService } from '../services/contact.service';
 import { IselectType } from '../models/IselectType';
 import { Contact } from '../models/Contact';
-import { Subject, takeUntil } from 'rxjs';
+import { startWith, Subject, takeUntil, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { contactType } from '../models/ContactType.enum';
 
@@ -28,16 +28,8 @@ import { contactType } from '../models/ContactType.enum';
 })
 export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() set contactData(data: Contact) {
-    this.onDestory$.next();
     this.contact = data;
     this.createForm(data);
-    this.typeCtrl.valueChanges
-      .pipe(takeUntil(this.onDestory$))
-      .subscribe((selectedValue: contactType) => {
-        if (this.contact?.type !== selectedValue) {
-          this._handleContactTypeChange(selectedValue);
-        }
-      });
   }
   contact?: Contact;
   contactBgColor?: string;
@@ -54,7 +46,9 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
   });
 
   selectOptions: IselectType[] = this.contactService.typeSelectOptions;
+  // selectOptions: typeof contactType = contactType;
   private onDestory$ = new Subject<void>();
+  private newFormGenerated$ = new Subject<void>();
 
   get contactNameCtrl() {
     return this.contactForm.get(['name']) as FormControl;
@@ -98,21 +92,11 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    if (!this.contact) {
-      this.typeCtrl.valueChanges
-        .pipe(takeUntil(this.onDestory$))
-        .subscribe((selectedValue: contactType) => {
-          // this._handleContactTypeChange(selectedValue);
-          if (this.contact?.type !== selectedValue) {
-            this._handleContactTypeChange(selectedValue);
-          }
-        });
-    }
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {}
 
+  // To nie jest get tylko set :)
   getSelectedColor(color: string) {
     this.colorPickerCtrl.setValue(color);
   }
@@ -125,6 +109,7 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private createForm(contact: Contact) {
+    this.newFormGenerated$.next();
     this.clearForm();
     const typeOfContact = contact.type;
 
@@ -133,48 +118,19 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.colorPickerCtrl.setValue(contact.backgroundColor);
     this.typeCtrl.setValue(contact.type);
 
-    switch (typeOfContact) {
-      case contactType.phone:
-        const phoneControl: FormControl = this.fb.control(
-          contact.phoneAdditionalInfo,
-          [Validators.required, Validators.minLength(9)]
-        );
-
-        this.contactForm.addControl('phoneAdditionalInfo', phoneControl);
-        return;
-
-      case contactType.email:
-        const emailControl: FormControl = this.fb.control(
-          contact.emailAdditionalInfo,
-          [Validators.required, Validators.email]
-        );
-        this.contactForm.addControl('emailAdditionalInfo', emailControl);
-        return;
-
-      case contactType.adress:
-        const adressForm: FormGroup = this.fb.group({
-          street: [contact.adressAdditionalInfo?.street, Validators.required],
-          streetNumber: [
-            contact.adressAdditionalInfo?.streetNumber,
-            Validators.required,
-          ],
-          homeNumber: [contact.adressAdditionalInfo?.homeNumber],
-        });
-        this.contactForm.addControl('adressAdditionalInfo', adressForm);
-        return;
-
-      default:
-        const exhaustCheck: never = typeOfContact;
-        return;
-    }
-
-    // this._handleContactTypeChange(typeOfContact);
-
-    // stworzenie podstawowego formGroup wraz z typem
-    // _handleContactTypeChange(contact.type);
+    this.typeCtrl.valueChanges
+      .pipe(
+        takeUntil(this.onDestory$),
+        takeUntil(this.newFormGenerated$),
+        startWith(contact.type),
+        tap((selectedValue: contactType) =>
+          this._handleContactTypeChange(selectedValue)
+        )
+      )
+      .subscribe();
   }
 
-  private _handleContactTypeChange(option: contactType) {
+  private _handleContactTypeChange(option: contactType, value?: any) {
     this.clearForm();
 
     switch (option) {
@@ -205,6 +161,7 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       default:
         const exhaustCheck: never = option;
+        return;
     }
   }
 

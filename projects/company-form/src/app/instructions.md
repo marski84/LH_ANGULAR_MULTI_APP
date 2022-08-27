@@ -53,3 +53,10 @@
 - [ ] przebuduj sobie na uuid----- ok
 - [ ] wywalić buttonNamePipe ---- ok
 - [ ] typeOfBusiness w company form onDestroy----ok
+
+
+
+
+- [ ] DialogComponent => refactor na confirmationDialogComponent
+- [ ] CanDeactivateRoute => wydzielić do osobnego pliku + rename
+- [ ] CompanyFormComponent => sprawdzić czy initialEmployeeAmount jest potrzebne + przerobić guard na sprawdzanie flagi - flage ustawiać w nasłuchiwaniu na valueChanges

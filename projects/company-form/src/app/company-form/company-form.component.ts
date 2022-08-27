@@ -21,7 +21,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class CompanyFormComponent implements OnInit, OnDestroy {
   @Input() set company(data: Company) {
     this.companyData = data;
-    this.initialEmployeeAmount = data.companyEmployees.length;
+    this.initialEmployeeAmount = data.companyEmployees.length; // wywalić jeżeli zbędne
     this._handleFormDataEvent();
     this.companyForm.markAsPristine();
   }
@@ -69,9 +69,9 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.dataService.typeOfBusiness
       .pipe(takeUntil(this.onDestory$))
-      .subscribe((response: IselectType[]) => {
-        this.typeOfBusinessSelectOptions = response;
-      });
+      .subscribe((response: IselectType[]) => this.typeOfBusinessSelectOptions = response);
+
+    this.companyForm.valueChanges.subscribe();// ustawiać flagę po zmianie + w guardzie sprawdzać
   }
 
   private _handleFormDataEvent() {
