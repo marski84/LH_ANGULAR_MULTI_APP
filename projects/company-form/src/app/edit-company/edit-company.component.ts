@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { map, Subject, Subscription, takeUntil } from 'rxjs';
 import { CompanyService } from '../services/company.service';
 import { Company } from '../models/Company';
-import { CanDeactivateRoute } from '../app-routing.module';
+import { IDeactivableComponent } from '../models/IDeactivableComponent';
 
 @Component({
   selector: 'app-edit-company',
@@ -12,7 +12,7 @@ import { CanDeactivateRoute } from '../app-routing.module';
   styleUrls: ['./edit-company.component.scss'],
 })
 export class EditCompanyComponent
-  implements OnInit, OnDestroy, CanDeactivateRoute
+  implements OnInit, OnDestroy, IDeactivableComponent
 {
   companyData!: Company;
   companyIndex!: Subscription;
@@ -42,15 +42,9 @@ export class EditCompanyComponent
   }
 
   isDataSaved(): boolean {
-    console.log(this.companyData.companyEmployees.length);
-    console.log(this.editCompanyForm.initialEmployeeAmount);
+    console.log(this.editCompanyForm.isFormModified);
 
-    return !(
-      (this.editCompanyForm.companyForm.touched &&
-        this.editCompanyForm.companyForm.dirty) ||
-      this.companyData.companyEmployees.length !==
-        this.editCompanyForm.initialEmployeeAmount
-    );
+    return !this.editCompanyForm.isFormModified;
   }
 
   ngOnDestroy(): void {

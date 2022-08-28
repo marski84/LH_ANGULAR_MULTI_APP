@@ -9,7 +9,7 @@ import { CompanyFormComponent } from './company-form/company-form.component';
 import { EmployeeFormComponent } from './employee-form/employee-form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DialogComponent } from './dialog-component/dialog/dialog.component';
+import { ConfirmationDialogComponent } from './dialog-component/dialog/confirmation-dialog.component';
 import { MaterialModule } from '../../../modules/material/material.module';
 
 @NgModule({
@@ -20,7 +20,7 @@ import { MaterialModule } from '../../../modules/material/material.module';
     EditCompanyComponent,
     CompanyFormComponent,
     EmployeeFormComponent,
-    DialogComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,

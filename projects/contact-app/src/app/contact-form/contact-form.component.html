@@ -25,7 +25,7 @@
 
             <!-- COLORPICKER -->
             <app-colorpicker-form
-                (selectedColorEmitted)="getSelectedColor($event)"
+                (selectedColorEmitted)="setSelectedColor($event)"
                 [bgcColor]="colorPickerCtrl.value"
             ></app-colorpicker-form>
             <mat-error *ngIf="colorPickerCtrl.touched">
@@ -50,9 +50,9 @@
                             <mat-option
                                 class="select-option"
                                 *ngFor="let option of selectOptions"
-                                [value]="option.value"
+                                [value]="option"
                             >
-                                {{option.value | DispalyContactValue}}
+                                {{option | DispalyContactValue}}
                             </mat-option>
 
                         </mat-select>

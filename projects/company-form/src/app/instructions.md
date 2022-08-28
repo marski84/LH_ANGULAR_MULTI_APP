@@ -54,9 +54,6 @@
 - [ ] wywalić buttonNamePipe ---- ok
 - [ ] typeOfBusiness w company form onDestroy----ok
 
-
-
-
-- [ ] DialogComponent => refactor na confirmationDialogComponent
-- [ ] CanDeactivateRoute => wydzielić do osobnego pliku + rename
-- [ ] CompanyFormComponent => sprawdzić czy initialEmployeeAmount jest potrzebne + przerobić guard na sprawdzanie flagi - flage ustawiać w nasłuchiwaniu na valueChanges
+- [ ] DialogComponent => refactor na confirmationDialogComponent: done
+- [ ] IDeactivableComponent => wydzielić do osobnego pliku + rename: done
+- [ ] CompanyFormComponent => sprawdzić czy initialEmployeeAmount jest potrzebne + przerobić guard na sprawdzanie flagi - flage ustawiać w nasłuchiwaniu na valueChanges: done

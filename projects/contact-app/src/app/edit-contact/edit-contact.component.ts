@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { first, map, Subject, takeUntil, Observable } from 'rxjs';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { first, map, Subject, takeUntil } from 'rxjs';
 import { Contact } from '../models/Contact';
 import { ContactService } from '../services/contact.service';
 
@@ -17,7 +17,8 @@ export class EditContactComponent implements OnInit, OnDestroy {
 
   constructor(
     private contactService: ContactService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -46,6 +47,9 @@ export class EditContactComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((result) => (this.editedContact = result));
+
+    // navigate to home if success
+    this.router.navigate(['/']);
   }
 
   ngOnDestroy(): void {

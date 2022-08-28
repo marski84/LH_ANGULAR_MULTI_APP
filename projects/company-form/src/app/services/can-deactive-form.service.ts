@@ -1,27 +1,24 @@
-import { CanDeactivateRoute } from './../app-routing.module';
+import { IDeactivableComponent } from './../models/IDeactivableComponent';
+import {} from './../app-routing.module';
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanDeactivate,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanDeactivate } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { DialogComponent } from '../dialog-component/dialog/dialog.component';
+import { ConfirmationDialogComponent } from '../dialog-component/dialog/confirmation-dialog.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CanDeactiveFormService
-  implements CanDeactivate<CanDeactivateRoute>
+  implements CanDeactivate<IDeactivableComponent>
 {
-  component!: CanDeactivateRoute;
+  component!: IDeactivableComponent;
   route!: ActivatedRouteSnapshot;
 
   constructor(private dialog: MatDialog) {}
 
   canDeactivate(
-    component: CanDeactivateRoute
+    component: IDeactivableComponent
   ): Observable<boolean> | Promise<boolean> | boolean {
     console.log('canDeactivate triggered');
 
@@ -38,7 +35,10 @@ export class CanDeactiveFormService
       title: 'Please confirm',
       content: 'You have unsaved changes- are you sure you wanna leave?',
     };
-    const dialogRef = this.dialog.open(DialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(
+      ConfirmationDialogComponent,
+      dialogConfig
+    );
 
     return dialogRef.afterClosed();
   }

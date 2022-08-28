@@ -1,9 +1,8 @@
+import { contactType } from './../models/ContactType.enum';
 import { MockDataService } from './mock-data.service';
 import { Injectable } from '@angular/core';
 import { Contact } from '../models/Contact';
 import { take, of } from 'rxjs';
-import { contactType } from '../models/ContactType.enum';
-import { IselectType } from '../models/IselectType';
 
 @Injectable({
   providedIn: 'root',
@@ -11,19 +10,7 @@ import { IselectType } from '../models/IselectType';
 export class ContactService {
   private _contactList!: Contact[];
 
-  typeSelectOptions: IselectType[] = [
-    {
-      value: contactType.email,
-    },
-    {
-      value: contactType.adress,
-    },
-    {
-      value: contactType.phone,
-    },
-  ];
-
-  private _typeSelectOptions: contactType[] = [
+  typeSelectOptions: contactType[] = [
     contactType.email,
     contactType.adress,
     contactType.phone,

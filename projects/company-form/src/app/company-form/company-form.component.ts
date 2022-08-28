@@ -11,7 +11,7 @@ import { Employee } from '../models/Employee';
 import { Company } from '../models/Company';
 import { IselectType } from '../models/IselectType';
 import { DataService } from '../services/data.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, map } from 'rxjs';
 
 @Component({
   selector: 'app-company-form',
@@ -21,16 +21,16 @@ import { Subject, takeUntil } from 'rxjs';
 export class CompanyFormComponent implements OnInit, OnDestroy {
   @Input() set company(data: Company) {
     this.companyData = data;
-    this.initialEmployeeAmount = data.companyEmployees.length; // wywalić jeżeli zbędne
+
     this._handleFormDataEvent();
     this.companyForm.markAsPristine();
+    this.isFormModified = false;
   }
   companyData?: Company;
 
   @Output() companyDataEmitted: EventEmitter<Company> =
     new EventEmitter<Company>();
 
-  initialEmployeeAmount: number | undefined;
   private onDestory$ = new Subject<void>();
 
   companyForm = this.fb.group({
@@ -44,6 +44,8 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
       }),
     ]),
   });
+
+  isFormModified: boolean = false;
 
   get companyNameCtrl() {
     return this.companyForm.get(['name']) as FormControl;
@@ -67,11 +69,17 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, private dataService: DataService) {}
 
   ngOnInit(): void {
+    this.isFormModified = false;
     this.dataService.typeOfBusiness
       .pipe(takeUntil(this.onDestory$))
-      .subscribe((response: IselectType[]) => this.typeOfBusinessSelectOptions = response);
+      .subscribe(
+        (response: IselectType[]) =>
+          (this.typeOfBusinessSelectOptions = response)
+      );
 
-    this.companyForm.valueChanges.subscribe();// ustawiać flagę po zmianie + w guardzie sprawdzać
+    this.companyForm.valueChanges
+      .pipe(map((value) => (this.isFormModified = true)))
+      .subscribe();
   }
 
   private _handleFormDataEvent() {
