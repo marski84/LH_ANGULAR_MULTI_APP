@@ -1,7 +1,7 @@
 <tr class="container">
     <mat-card [style.background-color]="contact.backgroundColor">
         <mat-card-title>
-            {{contact.name}}, type: {{contact.type}}
+            {{contact.name}}, type: {{contact.type | DispalyContactValue}}
         </mat-card-title>
         <mat-card-subtitle *ngIf="contact.adressAdditionalInfo !== undefined">
             <div *ngIf="contact.adressAdditionalInfo !== undefined">

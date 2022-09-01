@@ -1,0 +1,51 @@
+<div>
+    <form
+        [formGroup]="editDataForm"
+        (submit)="onSubmit(editDataForm.value)"
+    >
+
+        <custom-mat-input
+            class="custom-input"
+            [control]="userNameCtrl"
+            placeHolder="eg. example user"
+            [inputLabel]="'User name'"
+            [name]="'username'"
+        ></custom-mat-input>
+
+        <custom-mat-input
+            [control]="emailCtrl"
+            placeHolder="eg. email@email.com"
+            [inputLabel]="'Email adress'"
+            [name]="'email'"
+        ></custom-mat-input>
+
+        <custom-mat-select
+            [control]="accountTypeCtrl"
+            [selectValues]="accountTypeDict"
+        ></custom-mat-select>
+
+        <div *ngIf="nipNumberCtrl">
+            <custom-mat-input
+                [formControl]="nipNumberCtrl"
+                [type]="'text'"
+                placeHolder="eg. 1111-111-11-1"
+                [inputLabel]="'Email adress'"
+                [name]="'nipNumber'"
+            ></custom-mat-input>
+        </div>
+
+        <!-- <div *ngIf="nipNumberCtrl">
+            <mat-form-field>
+                <mat-label>Company NIP</mat-label>
+                <input
+                    [formControl]="nipNumberCtrl"
+                    matInput
+                    type="text"
+                    [formControl]="nipNumberCtrl"
+                >
+            </mat-form-field>
+        </div> -->
+
+    </form>
+
+</div>

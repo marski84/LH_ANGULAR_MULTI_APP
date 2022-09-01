@@ -132,7 +132,7 @@ export class ContactFormComponent implements OnInit, OnDestroy {
 
   private _handleContactTypeChange(option: contactType, formData?: Contact) {
     this.clearForm();
-    console.log(option);
+    console.log(contactType[0]);
 
     switch (option) {
       case contactType.adress:

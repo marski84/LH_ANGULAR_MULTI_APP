@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [],
@@ -33,6 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatMenuModule,
     MatSidenavModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
   ],
   declarations: [MaterialComponent],
 })
