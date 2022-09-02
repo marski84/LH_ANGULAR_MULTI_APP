@@ -24,28 +24,22 @@
             [selectValues]="accountTypeDict"
         ></custom-mat-select>
 
-        <div *ngIf="nipNumberCtrl">
+        <div
+            *ngIf="nipNumberCtrl"
+            name="nip"
+            ngDefaultControl
+        >
             <custom-mat-input
-                [formControl]="nipNumberCtrl"
+                [control]="nipNumberCtrl"
                 [type]="'text'"
                 placeHolder="eg. 1111-111-11-1"
-                [inputLabel]="'Email adress'"
+                [inputLabel]="'NIP'"
                 [name]="'nipNumber'"
             ></custom-mat-input>
         </div>
 
-        <!-- <div *ngIf="nipNumberCtrl">
-            <mat-form-field>
-                <mat-label>Company NIP</mat-label>
-                <input
-                    [formControl]="nipNumberCtrl"
-                    matInput
-                    type="text"
-                    [formControl]="nipNumberCtrl"
-                >
-            </mat-form-field>
-        </div> -->
-
     </form>
 
 </div>
+
+<!-- <data-preview [formData]=""></data-preview> -->

@@ -1,5 +1,5 @@
 import { IAccountType } from './../models/IAccountType';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -7,6 +7,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { delay, map, switchMap } from 'rxjs';
+import { FakeApiService } from '../services/fake-api.service';
 
 @Component({
   selector: 'edit-profile-data-form',
@@ -42,7 +43,7 @@ export class EditProfileDataFormComponent implements OnInit {
     return this.editFormCtrl.get(['nipNumber']) as FormControl;
   }
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private dataApi: FakeApiService) {}
   // doda onDestroy
   ngOnInit() {
     // console.log(this.emailCtrl);
@@ -69,6 +70,7 @@ export class EditProfileDataFormComponent implements OnInit {
         map((value) => {
           if (this.editFormCtrl.valid) {
             console.log(value);
+            this.dataApi.formData$.next(value);
           }
         })
       )
@@ -78,4 +80,8 @@ export class EditProfileDataFormComponent implements OnInit {
   onSubmit(formData: any) {
     console.log(formData);
   }
+
+  // get nipNumberCtrl() {
+  //   return this.editFormCtrl.get(['nipNumber']) as FormControl;
+  // }
 }

@@ -14,6 +14,8 @@ export class FormContainerComponent implements OnInit {
 
   onDestroy$ = new Subject();
 
+  formData: any;
+
   constructor(private dataApi: FakeApiService) {}
 
   ngOnInit() {
