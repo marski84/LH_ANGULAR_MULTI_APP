@@ -7,7 +7,8 @@ import { IFormData } from '../models/IFormData';
   providedIn: 'root',
 })
 export class FakeApiService {
-  formData$ = new Subject<IFormData>();
+  private _formDataSubject = new Subject<IFormData>();
+  formData$ = this._formDataSubject.asObservable();
 
   private _typeOfContactData: IAccountType[] = [
     { value: 'person', viewValue: 'Personal account' },
@@ -18,5 +19,9 @@ export class FakeApiService {
 
   getTypeOfContactDictionary() {
     return of(this._typeOfContactData);
+  }
+
+  sendFormData(formData: IFormData) {
+    this._formDataSubject.next(formData);
   }
 }

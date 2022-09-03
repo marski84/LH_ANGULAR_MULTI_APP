@@ -6,8 +6,9 @@ import {
   FormControl,
   FormGroup,
 } from '@angular/forms';
-import { delay, map, switchMap } from 'rxjs';
+import { delay, map, switchMap, Subscription, debounceTime } from 'rxjs';
 import { FakeApiService } from '../services/fake-api.service';
+import { IFormData } from '../models/IFormData';
 
 @Component({
   selector: 'edit-profile-data-form',
@@ -16,6 +17,8 @@ import { FakeApiService } from '../services/fake-api.service';
 })
 export class EditProfileDataFormComponent implements OnInit {
   @Input() accountTypeDict!: IAccountType[];
+
+  formChangesSubscription!: Subscription;
 
   editDataForm = this.fb.group({
     userName: ['', Validators.required],
@@ -62,15 +65,13 @@ export class EditProfileDataFormComponent implements OnInit {
       )
       .subscribe();
 
-    console.log(this.userNameCtrl);
-    this.editFormCtrl.valueChanges
+    this.formChangesSubscription = this.editFormCtrl.valueChanges
       .pipe(
-        delay(500),
-        // switchMap((value) => value),
+        debounceTime(500),
         map((value) => {
           if (this.editFormCtrl.valid) {
             console.log(value);
-            this.dataApi.formData$.next(value);
+            this.dataApi.sendFormData(value);
           }
         })
       )
@@ -80,8 +81,4 @@ export class EditProfileDataFormComponent implements OnInit {
   onSubmit(formData: any) {
     console.log(formData);
   }
-
-  // get nipNumberCtrl() {
-  //   return this.editFormCtrl.get(['nipNumber']) as FormControl;
-  // }
 }

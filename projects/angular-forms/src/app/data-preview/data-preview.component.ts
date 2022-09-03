@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { delay, map, Observable, of, tap, Subscription } from 'rxjs';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { delay, map, Observable, of, tap, Subscription, finalize } from 'rxjs';
 import { IFormData } from '../models/IFormData';
 import { FakeApiService } from '../services/fake-api.service';
 
@@ -9,26 +11,42 @@ import { FakeApiService } from '../services/fake-api.service';
   styleUrls: ['./data-preview.component.scss'],
 })
 export class DataPreviewComponent implements OnInit {
-  // formData!: string;
+  formData!: string;
 
   formDataResult$!: Observable<Subscription>;
 
   constructor(private dataApi: FakeApiService) {}
 
-  ngOnInit(): void {
-    // this.dataApi.formData$
-    //   .pipe(
-    //     map((data) => {
-    //       this.parseData(data).subscribe((result) => (this.formData = result));
-    //     })
-    //   )
-    //   .subscribe();
+  isLoading = false;
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 50;
 
-    this.formDataResult$ = this.dataApi.formData$.pipe(
-      map((data) => {
-        return this.parseData(data).subscribe((result) => console.log(result));
-      })
-    );
+  ngOnInit(): void {
+    this.dataApi.formData$
+      .pipe(
+        tap(() => (this.isLoading = true)),
+        map((data) => {
+          this.parseData(data)
+            .pipe(
+              map((formData) => {
+                this.isLoading = true;
+                this.formData = formData;
+              }),
+              finalize(() => (this.isLoading = false))
+            )
+            .subscribe();
+        }),
+        tap((data) => (this.isLoading = false))
+      )
+      .subscribe();
+
+    // this.formDataResult$ = this.dataApi.formData$.pipe(
+    //   tap((value) => (this.isLoading = true)),
+    //   map((data) => {
+    //     return this.parseData(data).subscribe((result) => console.log(result));
+    //   })
+    // );
   }
 
   parseData(
