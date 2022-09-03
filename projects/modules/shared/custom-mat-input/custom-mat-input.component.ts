@@ -49,6 +49,7 @@ export class CustomMatInputComponent implements OnInit, Validator {
 
   writeValue(value: any): void {
     this.input.nativeElement.value = value;
+    console.log(value);
   }
 
   registerOnChange(fn: (value: any) => void): void {

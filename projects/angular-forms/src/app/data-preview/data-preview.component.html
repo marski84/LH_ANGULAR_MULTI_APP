@@ -1,12 +1,13 @@
 <div>{{formData}}</div>
 
-<mat-progress-spinner
-    *ngIf="isLoading"
-    class="example-margin"
-    [color]="color"
-    [mode]="mode"
-    [value]="value"
->
-</mat-progress-spinner>
+<div *ngIf="isLoading$ | async">
+    <mat-progress-spinner
+        class="example-margin"
+        [color]="color"
+        [mode]="mode"
+        [value]="value"
+    >
+    </mat-progress-spinner>
+</div>
 
 <div>{{formDataResult$ | async}}</div>

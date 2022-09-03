@@ -11,6 +11,7 @@
             matInput
             type={{type}}
         >
+        <mat-error *ngIf="control.touched && control.hasError('required')">This field is required</mat-error>
 
     </mat-form-field>
 </div>

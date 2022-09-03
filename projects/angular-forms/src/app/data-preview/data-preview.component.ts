@@ -1,7 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
-import { delay, map, Observable, of, tap, Subscription, finalize } from 'rxjs';
+import {
+  delay,
+  map,
+  Observable,
+  of,
+  tap,
+  Subscription,
+  finalize,
+  BehaviorSubject,
+} from 'rxjs';
 import { IFormData } from '../models/IFormData';
 import { FakeApiService } from '../services/fake-api.service';
 
@@ -12,12 +21,13 @@ import { FakeApiService } from '../services/fake-api.service';
 })
 export class DataPreviewComponent implements OnInit {
   formData!: string;
+  private _isLoading = new BehaviorSubject<boolean>(false);
+  isLoading$ = this._isLoading.asObservable();
 
   formDataResult$!: Observable<Subscription>;
 
   constructor(private dataApi: FakeApiService) {}
 
-  isLoading = false;
   color: ThemePalette = 'primary';
   mode: ProgressSpinnerMode = 'indeterminate';
   value = 50;
@@ -25,37 +35,25 @@ export class DataPreviewComponent implements OnInit {
   ngOnInit(): void {
     this.dataApi.formData$
       .pipe(
-        tap(() => (this.isLoading = true)),
+        tap(() => {
+          console.log(1);
+          this.showLoader();
+        }),
         map((data) => {
           this.parseData(data)
             .pipe(
               map((formData) => {
-                this.isLoading = true;
                 this.formData = formData;
               }),
-              finalize(() => (this.isLoading = false))
+              finalize(() => this.hideLoader())
             )
             .subscribe();
-        }),
-        tap((data) => (this.isLoading = false))
+        })
       )
       .subscribe();
-
-    // this.formDataResult$ = this.dataApi.formData$.pipe(
-    //   tap((value) => (this.isLoading = true)),
-    //   map((data) => {
-    //     return this.parseData(data).subscribe((result) => console.log(result));
-    //   })
-    // );
   }
 
-  parseData(
-    // email: string,
-    // name: string,
-    // type: string,
-    // nip?: string
-    data: IFormData
-  ): Observable<string> {
+  parseData(data: IFormData): Observable<string> {
     const { userName, email, accountType, nipNumber } = data;
     const res = `email: ${email} | name: ${userName} | type: ${accountType} ${
       nipNumber ? 'NIP:' + nipNumber : ''
@@ -63,5 +61,13 @@ export class DataPreviewComponent implements OnInit {
     return of(res).pipe(
       delay(2000) // simulation of calculation proccess
     );
+  }
+
+  showLoader() {
+    this._isLoading.next(true);
+  }
+
+  hideLoader() {
+    this._isLoading.next(false);
   }
 }
