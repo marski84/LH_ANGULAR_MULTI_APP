@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import {
@@ -13,6 +13,7 @@ import {
 } from 'rxjs';
 import { IFormData } from '../models/IFormData';
 import { FakeApiService } from '../services/fake-api.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'data-preview',
@@ -23,6 +24,8 @@ export class DataPreviewComponent implements OnInit {
   formData!: string;
   private _isLoading = new BehaviorSubject<boolean>(false);
   isLoading$ = this._isLoading.asObservable();
+
+  OnDestroy$: Subject<void> = new Subject<void>();
 
   formDataResult$!: Observable<Subscription>;
 
@@ -35,6 +38,7 @@ export class DataPreviewComponent implements OnInit {
   ngOnInit(): void {
     this.dataApi.formData$
       .pipe(
+        takeUntil(this.OnDestroy$),
         tap(() => {
           console.log(1);
           this.showLoader();
@@ -69,5 +73,10 @@ export class DataPreviewComponent implements OnInit {
 
   hideLoader() {
     this._isLoading.next(false);
+  }
+
+  ngOnDestroy(): void {
+    this.OnDestroy$.next();
+    this.OnDestroy$.complete();
   }
 }

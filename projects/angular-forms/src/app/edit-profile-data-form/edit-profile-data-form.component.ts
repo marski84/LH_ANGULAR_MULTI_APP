@@ -1,12 +1,27 @@
 import { IAccountType } from './../models/IAccountType';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
 import {
   FormBuilder,
   Validators,
   FormControl,
   FormGroup,
 } from '@angular/forms';
-import { delay, map, switchMap, Subscription, debounceTime } from 'rxjs';
+import {
+  delay,
+  map,
+  switchMap,
+  Subscription,
+  debounceTime,
+  takeUntil,
+  Subject,
+} from 'rxjs';
 import { FakeApiService } from '../services/fake-api.service';
 import { IFormData } from '../models/IFormData';
 
@@ -15,10 +30,12 @@ import { IFormData } from '../models/IFormData';
   templateUrl: './edit-profile-data-form.component.html',
   styleUrls: ['./edit-profile-data-form.component.scss'],
 })
-export class EditProfileDataFormComponent implements OnInit {
+export class EditProfileDataFormComponent implements OnInit, OnDestroy {
   @Input() accountTypeDict!: IAccountType[];
 
   formChangesSubscription!: Subscription;
+
+  private onDestroy$: Subject<void> = new Subject<void>();
 
   editDataForm = this.fb.group({
     userName: ['', Validators.required],
@@ -47,6 +64,7 @@ export class EditProfileDataFormComponent implements OnInit {
   }
 
   constructor(private fb: FormBuilder, private dataApi: FakeApiService) {}
+
   // doda onDestroy
   ngOnInit() {
     // console.log(this.emailCtrl);
@@ -67,6 +85,7 @@ export class EditProfileDataFormComponent implements OnInit {
 
     this.formChangesSubscription = this.editFormCtrl.valueChanges
       .pipe(
+        takeUntil(this.onDestroy$),
         debounceTime(500),
         map((value) => {
           if (this.editFormCtrl.valid) {
@@ -80,5 +99,10 @@ export class EditProfileDataFormComponent implements OnInit {
 
   onSubmit(formData: any) {
     console.log(formData);
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 }

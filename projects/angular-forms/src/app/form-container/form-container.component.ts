@@ -1,18 +1,18 @@
 import { FakeApiService } from './../services/fake-api.service';
 import { IAccountType } from './../models/IAccountType';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { takeUntil, Subject, tap } from 'rxjs';
+import { takeUntil, Subject, tap, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-form-container',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
 })
-export class FormContainerComponent implements OnInit {
+export class FormContainerComponent implements OnInit, OnDestroy {
   typeOfAccount!: IAccountType[];
 
-  onDestroy$ = new Subject();
+  private onDestroy$: Subject<void> = new Subject<void>();
 
   formData: any;
 
@@ -26,5 +26,10 @@ export class FormContainerComponent implements OnInit {
         tap((data) => (this.typeOfAccount = data))
       )
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 }
