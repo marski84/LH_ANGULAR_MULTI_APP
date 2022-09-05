@@ -10,6 +10,7 @@ import {
   Subscription,
   finalize,
   BehaviorSubject,
+  debounceTime,
 } from 'rxjs';
 import { IFormData } from '../models/IFormData';
 import { FakeApiService } from '../services/fake-api.service';
@@ -43,6 +44,8 @@ export class DataPreviewComponent implements OnInit {
           console.log(1);
           this.showLoader();
         }),
+        debounceTime(500),
+
         map((data) => {
           this.parseData(data)
             .pipe(

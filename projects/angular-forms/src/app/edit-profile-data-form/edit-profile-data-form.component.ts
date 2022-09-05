@@ -1,12 +1,5 @@
 import { IAccountType } from './../models/IAccountType';
-import {
-  Component,
-  Input,
-  OnInit,
-  Output,
-  EventEmitter,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -14,13 +7,17 @@ import {
   FormGroup,
 } from '@angular/forms';
 import {
-  delay,
   map,
   switchMap,
   Subscription,
   debounceTime,
   takeUntil,
   Subject,
+  filter,
+  tap,
+  of,
+  Observable,
+  switchAll,
 } from 'rxjs';
 import { FakeApiService } from '../services/fake-api.service';
 import { IFormData } from '../models/IFormData';
@@ -65,10 +62,7 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private dataApi: FakeApiService) {}
 
-  // doda onDestroy
   ngOnInit() {
-    // console.log(this.emailCtrl);
-
     this.accountTypeCtrl.valueChanges
       .pipe(
         map((ctrlValue) => {
@@ -83,17 +77,21 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.formChangesSubscription = this.editFormCtrl.valueChanges
+    this.editFormCtrl.valueChanges
       .pipe(
         takeUntil(this.onDestroy$),
         debounceTime(500),
-        map((value) => {
+
+        filter((formData) => {
           if (this.editFormCtrl.valid) {
-            console.log(value);
-            this.dataApi.sendFormData(value);
+            return formData;
           }
-        })
+        }),
+        map((result) => of(result)),
+        switchAll(),
+        map((result) => this.dataApi.sendFormData(result))
       )
+
       .subscribe();
   }
 

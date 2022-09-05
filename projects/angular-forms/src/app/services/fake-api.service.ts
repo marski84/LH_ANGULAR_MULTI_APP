@@ -21,7 +21,7 @@ export class FakeApiService {
     return of(this._typeOfContactData);
   }
 
-  sendFormData(formData: IFormData) {
-    this._formDataSubject.next(formData);
+  sendFormData(formData: any) {
+    return this._formDataSubject.next(formData);
   }
 }

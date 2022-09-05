@@ -10,7 +10,7 @@ import { takeUntil, Subject, tap, finalize } from 'rxjs';
   styleUrls: ['./form-container.component.scss'],
 })
 export class FormContainerComponent implements OnInit, OnDestroy {
-  typeOfAccount!: IAccountType[];
+  typeOfAccountArray!: IAccountType[];
 
   private onDestroy$: Subject<void> = new Subject<void>();
 
@@ -23,7 +23,7 @@ export class FormContainerComponent implements OnInit, OnDestroy {
       .getTypeOfContactDictionary()
       .pipe(
         takeUntil(this.onDestroy$),
-        tap((data) => (this.typeOfAccount = data))
+        tap((data) => (this.typeOfAccountArray = data))
       )
       .subscribe();
   }
