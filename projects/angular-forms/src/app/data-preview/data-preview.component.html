@@ -1,5 +1,3 @@
-<div>{{formData}}</div>
-
 <div *ngIf="isLoading$ | async">
     <mat-progress-spinner
         class="example-margin"
@@ -10,4 +8,8 @@
     </mat-progress-spinner>
 </div>
 
-<div>{{formDataResult$ | async}}</div>
+<div *ngIf="formDataResult$ | async as formData then dataTemplate; else noDataTemplate"></div>
+<div>{{formDataResult$ | async }}</div>
+
+<ng-template #dataTemplate>{{formData}}</ng-template>
+<ng-template #noDataTemplate>No value provided</ng-template>

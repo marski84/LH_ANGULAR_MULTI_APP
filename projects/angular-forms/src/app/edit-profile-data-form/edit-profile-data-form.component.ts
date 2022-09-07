@@ -14,13 +14,8 @@ import {
   takeUntil,
   Subject,
   filter,
-  tap,
-  of,
-  Observable,
-  switchAll,
 } from 'rxjs';
 import { FakeApiService } from '../services/fake-api.service';
-import { IFormData } from '../models/IFormData';
 
 @Component({
   selector: 'edit-profile-data-form',
@@ -66,13 +61,7 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
     this.accountTypeCtrl.valueChanges
       .pipe(
         map((ctrlValue) => {
-          if (ctrlValue === 'company') {
-            const nipNumber = this.fb.control('', Validators.required);
-
-            this.editFormCtrl.addControl('nipNumber', nipNumber);
-          } else {
-            this.editFormCtrl.removeControl('nipNumber');
-          }
+          this.handleAccountTypeControl(ctrlValue);
         })
       )
       .subscribe();
@@ -87,16 +76,19 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
             return formData;
           }
         }),
-        map((result) => of(result)),
-        switchAll(),
-        map((result) => this.dataApi.sendFormData(result))
+        switchMap((data) => this.dataApi.sendFormData(data))
       )
-
       .subscribe();
   }
 
-  onSubmit(formData: any) {
-    console.log(formData);
+  handleAccountTypeControl(controlSelectedValue: string) {
+    if (controlSelectedValue === 'company') {
+      const nipNumber = this.fb.control('', Validators.required);
+
+      this.editFormCtrl.addControl('nipNumber', nipNumber);
+    } else {
+      this.editFormCtrl.removeControl('nipNumber');
+    }
   }
 
   ngOnDestroy(): void {

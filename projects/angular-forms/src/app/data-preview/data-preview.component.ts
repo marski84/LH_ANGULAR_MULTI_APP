@@ -11,10 +11,11 @@ import {
   finalize,
   BehaviorSubject,
   debounceTime,
+  concatMap,
 } from 'rxjs';
 import { IFormData } from '../models/IFormData';
 import { FakeApiService } from '../services/fake-api.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, switchMap, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'data-preview',
@@ -28,7 +29,7 @@ export class DataPreviewComponent implements OnInit {
 
   OnDestroy$: Subject<void> = new Subject<void>();
 
-  formDataResult$!: Observable<Subscription>;
+  formDataResult$!: Observable<string>;
 
   constructor(private dataApi: FakeApiService) {}
 
@@ -41,20 +42,14 @@ export class DataPreviewComponent implements OnInit {
       .pipe(
         takeUntil(this.OnDestroy$),
         tap(() => {
-          console.log(1);
           this.showLoader();
         }),
         debounceTime(500),
-
-        map((data) => {
-          this.parseData(data)
-            .pipe(
-              map((formData) => {
-                this.formData = formData;
-              }),
-              finalize(() => this.hideLoader())
-            )
-            .subscribe();
+        switchMap(
+          (data: IFormData) => (this.formDataResult$ = this.parseData(data))
+        ),
+        tap(() => {
+          this.hideLoader();
         })
       )
       .subscribe();

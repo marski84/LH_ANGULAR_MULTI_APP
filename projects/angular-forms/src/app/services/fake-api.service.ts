@@ -1,5 +1,5 @@
 import { IAccountType } from './../models/IAccountType';
-import { of, Subject } from 'rxjs';
+import { of, Subject, Observable, EMPTY } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IFormData } from '../models/IFormData';
 
@@ -21,7 +21,8 @@ export class FakeApiService {
     return of(this._typeOfContactData);
   }
 
-  sendFormData(formData: any) {
-    return this._formDataSubject.next(formData);
+  sendFormData(formData: any): Observable<IFormData> {
+    this._formDataSubject.next(formData);
+    return EMPTY;
   }
 }
