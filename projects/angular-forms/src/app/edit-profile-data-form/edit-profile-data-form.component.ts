@@ -16,6 +16,7 @@ import {
   filter,
 } from 'rxjs';
 import { FakeApiService } from '../services/fake-api.service';
+import { ValidateNip } from '../../../../modules/shared/custom-validators/nip.validator';
 
 @Component({
   selector: 'edit-profile-data-form',
@@ -33,6 +34,7 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
     userName: ['', Validators.required],
     email: ['', Validators.required],
     accountType: ['', Validators.required],
+    nipNumberCustom: [''],
   });
 
   get editFormCtrl() {
@@ -53,6 +55,10 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
 
   get nipNumberCtrl() {
     return this.editFormCtrl.get(['nipNumber']) as FormControl;
+  }
+
+  get customNipCtrl() {
+    return this.editFormCtrl.get(['nipNumberCustom']) as FormControl;
   }
 
   constructor(private fb: FormBuilder, private dataApi: FakeApiService) {}
@@ -83,12 +89,20 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
 
   handleAccountTypeControl(controlSelectedValue: string) {
     if (controlSelectedValue === 'company') {
-      const nipNumber = this.fb.control('', Validators.required);
+      const nipNumber = this.fb.control('', [
+        Validators.required,
+        Validators.maxLength(10),
+        ValidateNip,
+      ]);
 
       this.editFormCtrl.addControl('nipNumber', nipNumber);
     } else {
       this.editFormCtrl.removeControl('nipNumber');
     }
+  }
+
+  onSubmit() {
+    console.log(this.editDataForm.value);
   }
 
   ngOnDestroy(): void {

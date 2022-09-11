@@ -1,5 +1,6 @@
 import {
   AbstractControl,
+  ControlValueAccessor,
   FormControl,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
@@ -26,7 +27,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
     },
   ],
 })
-export class CustomMatInputComponent implements OnInit, Validator {
+export class CustomMatInputComponent implements OnInit {
   @Input() control!: FormControl;
   @Input() inputLabel?: string;
   @Input() placeHolder?: string;
@@ -36,42 +37,9 @@ export class CustomMatInputComponent implements OnInit, Validator {
 
   @ViewChild('input') input!: ElementRef;
 
-  disabled: boolean = false;
-
   constructor() {}
 
   ngOnInit(): void {
     console.log(this.isNipControl);
-  }
-
-  onChange: (value: any) => void = () => {};
-  onTouched: () => void = () => {};
-
-  writeValue(value: any): void {
-    this.input.nativeElement.value = value;
-    console.log(value);
-  }
-
-  registerOnChange(fn: (value: any) => void): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(disabled: boolean): void {
-    this.disabled = disabled;
-  }
-
-  validate(control: AbstractControl): ValidationErrors | null {
-    if (this.isNipControl) {
-      const nipValue = control.value;
-      console.log(nipValue);
-      return {
-        ok: 'ok',
-      };
-    }
-    return Validators.required(control);
   }
 }

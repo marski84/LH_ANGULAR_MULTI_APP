@@ -1,5 +1,8 @@
 <div>
-    <form [formGroup]="editDataForm">
+    <form
+        [formGroup]="editDataForm"
+        (submit)="onSubmit()"
+    >
 
         <custom-mat-input
             class="custom-input"
@@ -35,6 +38,12 @@
                 [isNipControl]="true"
             ></custom-mat-input>
         </div>
+
+        <!-- <div>
+            <custom-nip-input [formControl]="customNipCtrl"></custom-nip-input>
+            <button type="submit">submit</button>
+        </div> -->
+
         <data-preview></data-preview>
 
     </form>
