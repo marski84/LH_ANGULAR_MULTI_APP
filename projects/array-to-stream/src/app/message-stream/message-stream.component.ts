@@ -19,6 +19,11 @@ interface IAccountRecord {
   amount: number;
 }
 
+interface ILoanRecord {
+  amount: number;
+  forPayment: number;
+}
+
 @Component({
   selector: 'app-message-stream',
   templateUrl: './message-stream.component.html',
@@ -62,7 +67,7 @@ export class MessageStreamComponent implements OnInit {
   source$ = from(this.array);
 
   accountValue = 0;
-  loans = [];
+  loans: ILoanRecord[] = [];
 
   sourceWithZip$ = zip(this.source$, this.timer).pipe(
     tap((value) => console.log(value)),
@@ -72,7 +77,7 @@ export class MessageStreamComponent implements OnInit {
   sourceWithConcatMap$ = this.source$.pipe(
     concatMap((value) => of(value).pipe(delay(2000))),
     // tap((value: any) => console.log(value))
-    finalize(() => console.log('valueAmount na koniec: ' + this.accountValue))
+    finalize(() => console.log(this.loans))
   );
 
   // firstIncomeStream$ = this.sourceWithZip$.pipe(
@@ -84,18 +89,11 @@ export class MessageStreamComponent implements OnInit {
     mergeMap((value) =>
       concat(
         of(value).pipe(
-          map(
-            (value) => (this.accountValue = this.accountValue + value.amount)
-          ),
-          tap(() => console.log(this.accountValue))
+          map((value) => (this.accountValue = this.accountValue + value.amount))
         ),
-        of(value).pipe(
-          tap((value) =>
-            console.log(
-              this.createLogObject(value.id, value.amount, this.accountValue)
-            )
-          )
-        )
+        of(value)
+          .pipe(map((value) => this.handleIncome(value)))
+          .pipe(tap((value) => console.log(value)))
       )
     )
   );
@@ -105,61 +103,47 @@ export class MessageStreamComponent implements OnInit {
     mergeMap((value) =>
       concat(
         of(value).pipe(
-          map(
-            (value) => (this.accountValue = this.accountValue - value.amount)
-          ),
-          tap(() => console.log(this.accountValue))
+          map((value) => (this.accountValue = this.accountValue - value.amount))
         ),
-        of(value).pipe(
-          tap((value) =>
-            console.log(
-              this.createLogObject(value.id, value.amount, this.accountValue)
-            )
-          )
-        )
+        of(value)
+          .pipe(map((value) => this.handleOutCome(value)))
+          .pipe(tap((value) => console.log(value)))
       )
     )
   );
 
-  private createLogObject(id: any, incomeAmount: any, total: any) {
+  private handleOutCome(value: IAccountRecord) {
+    const { id, type, amount } = value;
+
     const logger = {
       id: id,
-      income: incomeAmount,
-      total: total,
+      outcome: amount,
+      total: this.accountValue,
+    };
+
+    if (this.accountValue < 0) {
+      const loan = {
+        amount: amount,
+        forPayment: id,
+      };
+      this.loans.push(loan);
+    }
+
+    return logger;
+  }
+
+  private handleIncome(value: IAccountRecord) {
+    const { id, type, amount } = value;
+
+    const logger = {
+      id: id,
+      income: amount,
+      total: this.accountValue,
     };
     return logger;
   }
 
-  // private handleAccountChange(value: IAccountRecord) {
-  //   from(value).mergeMap((value) =>
-  //     concat(
-  //       of(value).pipe(
-  //         map(
-  //           (value) => (this.accountValue = this.accountValue + value.amount)
-  //         ),
-  //         tap(() => console.log(this.accountValue))
-  //       ),
-  //       of(value).pipe(
-  //         tap((value) =>
-  //           console.log(
-  //             this.createLogObject(value.id, value.amount, this.accountValue)
-  //           )
-  //         )
-  //       )
-  //     )
-  //   );
-  // }
-
   constructor() {}
-
-  // symulacja wyniku:
-  // id: 1. income: 100, total: 0
-  // id: 2. income: 100, total: 100
-  // id: 3. outcome: 100, total: 200
-  // id: 5. outcome: 500, total: 100
-  // id: 6. outcome: 100, total: 100
-  // id: 7. income: 100, total: 0
-  // 100 [ { amount: 500, forPayment: 5 } ]
 
   ngOnInit(): void {
     // this.sourceWithZip$.subscribe();
