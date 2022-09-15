@@ -8,7 +8,7 @@ import { IFormData } from '../models/IFormData';
 })
 export class FakeApiService {
   private _formDataSubject = new Subject<IFormData>();
-  formData$ = this._formDataSubject.asObservable();
+  formDataChanged$ = this._formDataSubject.asObservable();
 
   private _typeOfContactData: IAccountType[] = [
     { value: 'person', viewValue: 'Personal account' },

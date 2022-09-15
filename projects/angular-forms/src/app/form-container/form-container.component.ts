@@ -10,10 +10,7 @@ import { takeUntil, Subject, tap } from 'rxjs';
 })
 export class FormContainerComponent implements OnInit, OnDestroy {
   typeOfAccountArray!: IAccountType[];
-
   private onDestroy$: Subject<void> = new Subject<void>();
-
-  formData: any;
 
   constructor(private dataApi: FakeApiService) {}
 

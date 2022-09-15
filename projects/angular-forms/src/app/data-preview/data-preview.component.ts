@@ -26,31 +26,26 @@ export class DataPreviewComponent implements OnInit {
   formData!: string;
   private _isLoading = new BehaviorSubject<boolean>(false);
   isLoading$ = this._isLoading.asObservable();
+  // isLoading$ = new Subject<boolean>();
 
-  OnDestroy$: Subject<void> = new Subject<void>();
+  private OnDestroy$: Subject<void> = new Subject<void>();
 
-  formDataResult$!: Observable<string>;
-
-  constructor(private dataApi: FakeApiService) {}
+  formDataResult!: string;
 
   color: ThemePalette = 'primary';
   mode: ProgressSpinnerMode = 'indeterminate';
   value = 50;
 
+  constructor(private dataApi: FakeApiService) {}
+
   ngOnInit(): void {
-    this.dataApi.formData$
+    this.dataApi.formDataChanged$
       .pipe(
         takeUntil(this.OnDestroy$),
-        tap(() => {
-          this.showLoader();
-        }),
-        debounceTime(500),
-        switchMap(
-          (data: IFormData) => (this.formDataResult$ = this.parseData(data))
-        ),
-        tap(() => {
-          this.hideLoader();
-        })
+        tap(() => this._isLoading.next(true)),
+        switchMap((data: IFormData) => this.parseData(data)),
+        tap((parsedData) => (this.formDataResult = parsedData)),
+        tap(() => this._isLoading.next(false))
       )
       .subscribe();
   }
@@ -63,14 +58,6 @@ export class DataPreviewComponent implements OnInit {
     return of(res).pipe(
       delay(2000) // simulation of calculation proccess
     );
-  }
-
-  showLoader() {
-    this._isLoading.next(true);
-  }
-
-  hideLoader() {
-    this._isLoading.next(false);
   }
 
   ngOnDestroy(): void {

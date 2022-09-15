@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import {
   map,
+  tap,
   switchMap,
   Subscription,
   debounceTime,
@@ -25,9 +26,6 @@ import { ValidateNip } from '../../../../modules/shared/custom-validators/nip.va
 })
 export class EditProfileDataFormComponent implements OnInit, OnDestroy {
   @Input() accountTypeDict!: IAccountType[];
-
-  formChangesSubscription!: Subscription;
-
   private onDestroy$: Subject<void> = new Subject<void>();
 
   editDataForm = this.fb.group({
@@ -66,28 +64,41 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.accountTypeCtrl.valueChanges
       .pipe(
-        map((ctrlValue) => {
-          this.handleAccountTypeControl(ctrlValue);
-        })
+        tap((ctrlValue) => this.handleAccountTypeControl(ctrlValue)),
       )
       .subscribe();
 
+
+    // [1,2,3,4,5]
+    //przefiltruj .filter(v => {
+      //if( v> 3){return v*2}
+    // })
+    // pomnóż *2
+
+    // zmiana wartości na 1 => strzał do backendu
+    // kolejna zmiana ale po 0.5s
+
+    // kalkulacja na backendzie 5s
+
+    // swtichMap => 1raz
+    // concatMap => 2raz 0.5s 1s 5.5s 10.5s
+    // mergeMap => 2raz 0.5s 1s 5.5s 6s
     this.editFormCtrl.valueChanges
       .pipe(
         takeUntil(this.onDestroy$),
         debounceTime(500),
-
-        filter((formData) => {
-          if (this.editFormCtrl.valid) {
-            return formData;
-          }
-        }),
+        //przefiltrować czy form jest valid
+        filter(() => this.editFormCtrl.valid),
         switchMap((data) => this.dataApi.sendFormData(data))
       )
       .subscribe();
+
+      //Output => jeżeli tylko parent jest zainteresowany
+      //Subject => jeżeli różne komponenty się intereują
   }
 
   handleAccountTypeControl(controlSelectedValue: string) {
+    // można bezpieczny switch
     if (controlSelectedValue === 'company') {
       const nipNumber = this.fb.control('', [
         Validators.required,
