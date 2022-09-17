@@ -5,18 +5,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ArrayStreamSubscriptionComponent } from './array-stream-subscription/array-stream-subscription.component';
 import { MessageStreamComponent } from './message-stream/message-stream.component';
+import { SubjectComponent } from './subject/subject.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     ArrayStreamSubscriptionComponent,
-    MessageStreamComponent
+    MessageStreamComponent,
+    SubjectComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, HttpClientModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

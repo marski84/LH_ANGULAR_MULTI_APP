@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   map,
@@ -18,6 +19,7 @@ import {
   debounceTime,
   finalize,
   merge,
+  forkJoin,
 } from 'rxjs';
 import { ArrayToStreamService } from '../array-to-stream.service';
 
@@ -27,7 +29,10 @@ import { ArrayToStreamService } from '../array-to-stream.service';
   styleUrls: ['./array-stream-subscription.component.scss'],
 })
 export class ArrayStreamSubscriptionComponent implements OnInit {
-  constructor(private arrayService: ArrayToStreamService) {}
+  constructor(
+    private arrayService: ArrayToStreamService,
+    private http: HttpClient
+  ) {}
 
   // this.arrayStream.getStringArray();
   // concat nie łączy w żaden sposób wartości w strumieniu a łączy strumienie
@@ -43,17 +48,41 @@ export class ArrayStreamSubscriptionComponent implements OnInit {
   // switchMap/mergeMap/concatMap =>róznicach
 
   ngOnInit(): void {
-    this.arrayService.arrayStreamEmitted$.pipe(
-      skip(2),
-      concatMap((value) =>
-        concat(
-          of(value).pipe(map((value) => value)),
-          of(value).pipe(map((value) => value.toUpperCase()))
-        ).pipe(delay(2000))
-      ),
-      finalize(() => console.log('ended'))
-    );
+    // this.arrayService.arrayStreamEmitted$
+    //   .pipe(
+    //     skip(2),
+    //     concatMap((value) =>
+    //       concat(
+    //         // of(value).pipe(map((value) => value)),
+    //         of(value)
+    //           .pipe(tap((value) => value))
+    //           .pipe(map((value) => value.toUpperCase()))
+    //       ).pipe(delay(2000))
+    //     ),
+    //     finalize(() => console.log('ended'))
+    //   )
+    //   .subscribe((value) => console.log(value));
+
+    this.arrayService.arrayStream$;
+    // .pipe(
+    //   tap((value) => console.log(value)),
+    //   map((value) => value.toUpperCase()),
+    //   concatMap((value) => {
+    //     return of(value).pipe(delay(2000));
+    //   })
+    // )
     // .subscribe((value) => console.log(value));
+
+    of('hound', 'mastiff', 'retriever') //outer observable
+      .pipe(
+        concatMap((breed) => {
+          const url = 'https://dog.ceo/api/breed/' + breed + '/list';
+          return this.http.get<any>(url); //inner observable
+        })
+      );
+    // .subscribe((data) => {
+    //   console.log(data);
+    // });
   }
 
   // service.lastElementEmitted$.pipe()

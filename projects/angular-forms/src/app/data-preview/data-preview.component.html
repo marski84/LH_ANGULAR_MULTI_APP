@@ -9,7 +9,6 @@
 </div>
 
 <div *ngIf="formDataResult as formData then dataTemplate; else noDataTemplate"></div>
-<!-- <div>{{formDataResult }}</div> -->
 
 <ng-template #dataTemplate>{{formData}}</ng-template>
 <ng-template #noDataTemplate>No value provided</ng-template>

@@ -1,13 +1,4 @@
-import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormControl,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  Validators,
-} from '@angular/forms';
+import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 @Component({
@@ -39,7 +30,5 @@ export class CustomMatInputComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.isNipControl);
-  }
+  ngOnInit(): void {}
 }

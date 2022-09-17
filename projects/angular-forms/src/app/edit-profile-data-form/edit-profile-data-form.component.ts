@@ -63,15 +63,12 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.accountTypeCtrl.valueChanges
-      .pipe(
-        tap((ctrlValue) => this.handleAccountTypeControl(ctrlValue)),
-      )
+      .pipe(tap((ctrlValue) => this.handleAccountTypeControl(ctrlValue)))
       .subscribe();
-
 
     // [1,2,3,4,5]
     //przefiltruj .filter(v => {
-      //if( v> 3){return v*2}
+    //if( v> 3){return v*2}
     // })
     // pomnóż *2
 
@@ -87,14 +84,13 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.onDestroy$),
         debounceTime(500),
-        //przefiltrować czy form jest valid
         filter(() => this.editFormCtrl.valid),
         switchMap((data) => this.dataApi.sendFormData(data))
       )
       .subscribe();
 
-      //Output => jeżeli tylko parent jest zainteresowany
-      //Subject => jeżeli różne komponenty się intereują
+    //Output => jeżeli tylko parent jest zainteresowany
+    //Subject => jeżeli różne komponenty się intereują
   }
 
   handleAccountTypeControl(controlSelectedValue: string) {
