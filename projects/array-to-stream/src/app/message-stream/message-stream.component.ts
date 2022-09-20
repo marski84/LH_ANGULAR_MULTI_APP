@@ -40,7 +40,7 @@ export class MessageStreamComponent implements OnInit, OnDestroy {
   );
 
   outcome = this.messageService.outcomeMessages$.pipe(
-    tap((value) => (this.accountValue = this.accountValue - value.amount)),
+    tap((value) => (this.accountValue = this.accountValue + value.amount)),
     map((value) => this.handleOutCome(value)),
     tap((value) => console.log(value)),
     finalize(() => {
@@ -55,8 +55,8 @@ export class MessageStreamComponent implements OnInit, OnDestroy {
   );
 
   ngOnInit(): void {
-    this.dataMessages.push(this.income.subscribe());
-    this.dataMessages.push(this.outcome.subscribe());
+    // this.dataMessages.push(this.income.subscribe());
+    // this.dataMessages.push(this.outcome.subscribe());
   }
 
   ngOnDestroy(): void {
@@ -72,13 +72,11 @@ export class MessageStreamComponent implements OnInit, OnDestroy {
       total: this.accountValue,
     };
 
-    if (this.accountValue < 0) {
-      const loan = {
-        amount: amount,
-        forPayment: id,
-      };
-      this.loans.push(loan);
-    }
+    const loan = {
+      amount: amount,
+      forPayment: id,
+    };
+    this.loans.push(loan);
 
     return logger;
   }

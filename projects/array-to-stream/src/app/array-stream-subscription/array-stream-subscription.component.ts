@@ -63,23 +63,23 @@ export class ArrayStreamSubscriptionComponent implements OnInit {
     //   )
     //   .subscribe((value) => console.log(value));
 
-    this.arrayService.arrayStream$;
-    // .pipe(
-    //   tap((value) => console.log(value)),
-    //   map((value) => value.toUpperCase()),
-    //   concatMap((value) => {
-    //     return of(value).pipe(delay(2000));
-    //   })
-    // )
-    // .subscribe((value) => console.log(value));
-
-    of('hound', 'mastiff', 'retriever') //outer observable
+    this.arrayService.arrayStream$
       .pipe(
-        concatMap((breed) => {
-          const url = 'https://dog.ceo/api/breed/' + breed + '/list';
-          return this.http.get<any>(url); //inner observable
-        })
-      );
+        skip(2),
+        tap((value) => console.log(value)),
+        map((value) => value.toUpperCase()),
+        tap((value) => console.log(value)),
+        finalize(() => console.log('Stream finished!!'))
+      )
+      .subscribe();
+
+    // of('hound', 'mastiff', 'retriever') //outer observable
+    //   .pipe(
+    //     concatMap((breed) => {
+    //       const url = 'https://dog.ceo/api/breed/' + breed + '/list';
+    //       return this.http.get<any>(url); //inner observable
+    //     })
+    //   );
     // .subscribe((data) => {
     //   console.log(data);
     // });
