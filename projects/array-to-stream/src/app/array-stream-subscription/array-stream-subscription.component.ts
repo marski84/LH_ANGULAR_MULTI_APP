@@ -63,15 +63,14 @@ export class ArrayStreamSubscriptionComponent implements OnInit {
     //   )
     //   .subscribe((value) => console.log(value));
 
-    this.arrayService.arrayStream$
-      .pipe(
-        skip(2),
-        tap((value) => console.log(value)),
-        map((value) => value.toUpperCase()),
-        tap((value) => console.log(value)),
-        finalize(() => console.log('Stream finished!!'))
-      )
-      .subscribe();
+    this.arrayService.arrayStream$.pipe(
+      skip(2),
+      tap((value) => console.log(value)),
+      map((value) => value.toUpperCase()),
+      tap((value) => console.log(value)),
+      finalize(() => console.log('Stream finished!!'))
+    );
+    // .subscribe();
 
     // of('hound', 'mastiff', 'retriever') //outer observable
     //   .pipe(
