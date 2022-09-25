@@ -15,7 +15,7 @@ import {
 } from 'rxjs';
 import { IAccountRecord } from './IAccountRecord';
 
-interface ILoanRecord {
+export interface ILoanRecord {
   amount: number;
   forPayment: number;
 }
@@ -26,37 +26,25 @@ interface ILoanRecord {
   styleUrls: ['./message-stream.component.scss'],
 })
 export class MessageStreamComponent implements OnInit, OnDestroy {
-  accountValue = 0;
-  loans: ILoanRecord[] = [];
-
   constructor(private messageService: MessageService) {}
 
   dataMessages: Subscription[] = [];
 
-  income = this.messageService.incomeMessages$.pipe(
-    tap((value) => (this.accountValue = this.accountValue + value.amount)),
+  income$ = this.messageService.incomeMessages$.pipe(
+    tap((value) => (this.messageService.changeAccountBalance = value.amount)),
     map((value) => this.handleIncome(value)),
     tap((value) => console.log(value))
   );
 
-  outcome = this.messageService.outcomeMessages$.pipe(
-    tap((value) => (this.accountValue = this.accountValue + value.amount)),
+  outcome$ = this.messageService.outcomeMessages$.pipe(
+    // tap((value) => (this.messageService.changeAccountBalance = -value.amount)),
     map((value) => this.handleOutCome(value)),
-    tap((value) => console.log(value)),
-    finalize(() => {
-      console.log('Finished, account balance: ' + this.accountValue),
-        this.loans.forEach((loan) =>
-          console.log(
-            'loan amount: ' + loan.amount,
-            'loan id: ' + loan.forPayment
-          )
-        );
-    })
+    tap((value) => console.log(value))
   );
 
   ngOnInit(): void {
-    // this.dataMessages.push(this.income.subscribe());
-    // this.dataMessages.push(this.outcome.subscribe());
+    this.dataMessages.push(this.income$.subscribe());
+    this.dataMessages.push(this.outcome$.subscribe());
   }
 
   ngOnDestroy(): void {
@@ -66,18 +54,41 @@ export class MessageStreamComponent implements OnInit, OnDestroy {
   private handleOutCome(value: IAccountRecord) {
     const { id, type, amount } = value;
 
+    this.messageService.changeAccountBalance = -amount;
+
+    if (this.messageService.accountValue - amount < 0) {
+      const newBalance = amount + this.messageService.accountValue;
+      console.log(amount, newBalance, this.messageService.accountValue);
+
+      this.messageService.changeAccountBalance =
+        this.messageService.accountValue + amount;
+
+      // this.messageService.changeAccountBalance = newBalance;
+      //   this.messageService.accountValue + amount;
+
+      const loan = {
+        amount: amount,
+        forPayment: id,
+      };
+      this.messageService.loansBalance.push(loan);
+
+      const logger = {
+        id: id,
+        outcome: amount,
+        total: this.messageService.accountValue,
+      };
+      return logger;
+    }
+
     const logger = {
       id: id,
       outcome: amount,
-      total: this.accountValue,
+      total: this.messageService.accountValue,
     };
 
-    const loan = {
-      amount: amount,
-      forPayment: id,
-    };
-    this.loans.push(loan);
+    console.log('wtf');
 
+    this.messageService.changeAccountBalance = amount;
     return logger;
   }
 
@@ -87,7 +98,7 @@ export class MessageStreamComponent implements OnInit, OnDestroy {
     const logger = {
       id: id,
       income: amount,
-      total: this.accountValue,
+      total: this.messageService.accountValue,
     };
     return logger;
   }

@@ -29,7 +29,5 @@ export class ArrayToStreamService {
     concatMap((value) => of(value).pipe(delay(2000)))
   );
 
-  //https://www.google.com/search?q=rxjs+delay+each+emission&oq=rxjs+delay+eacg&aqs=chrome.1.69i57j0i13i19j0i19i22i30j0i8i13i19i30.7415j0j7&sourceid=chrome&ie=UTF-8
-
   constructor() {}
 }

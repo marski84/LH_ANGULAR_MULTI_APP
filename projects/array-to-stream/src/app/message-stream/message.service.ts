@@ -10,8 +10,11 @@ import {
   from,
   filter,
   interval,
+  takeLast,
 } from 'rxjs';
 import { IAccountRecord } from './IAccountRecord';
+import { ILoanRecord } from './message-stream.component';
+import { take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -50,19 +53,40 @@ export class MessageService {
     },
   ];
 
-  source$ = from(this._array);
-  timer = interval(1000);
+  private _loans: ILoanRecord[] = [];
+  private _accountBalance: number = 0;
 
-  sourceWithZip$ = zip(this.source$, this.timer).pipe(
-    tap((value) => console.log(value)),
-    share()
+  set changeAccountBalance(value: number) {
+    this._accountBalance = this._accountBalance + value;
+  }
+
+  get accountValue() {
+    return this._accountBalance;
+  }
+
+  get loansBalance() {
+    return this._loans;
+  }
+
+  private source$ = from(this._array);
+  private timer = interval(1000);
+
+  private sourceWithZip$ = zip(this.source$, this.timer).pipe(
+    tap((value) => console.log(value))
   );
 
-  private _paymentsMessages$ = this.source$.pipe(
-    concatMap((value) => of(value).pipe(delay(2000)))
+  _paymentsMessages$ = this.source$.pipe(
+    concatMap((value) => of(value).pipe(delay(2000))),
+    share(),
+    // takeLast(1),
+    finalize(() => {
+      console.log('emission finished');
+      console.log('final account balance: ' + this.accountValue);
+      console.log(
+        'loans: ' + this.loansBalance.forEach((loan) => console.log(loan))
+      );
+    })
   );
-
-  constructor() {}
 
   incomeMessages$ = this._paymentsMessages$.pipe(
     filter((value: IAccountRecord) => value.type === 'income')
@@ -71,4 +95,6 @@ export class MessageService {
   outcomeMessages$ = this._paymentsMessages$.pipe(
     filter((value: IAccountRecord) => value.type === 'outcome')
   );
+
+  constructor() {}
 }

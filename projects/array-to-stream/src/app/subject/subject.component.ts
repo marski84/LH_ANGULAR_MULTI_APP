@@ -1,6 +1,6 @@
-import { AjaxResponse } from 'rxjs/ajax';
+import { AjaxError, AjaxResponse } from 'rxjs/ajax';
 import { PostalService } from './postal.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   tap,
   concatMap,
@@ -10,46 +10,44 @@ import {
   map,
   filter,
   Observable,
+  EMPTY,
 } from 'rxjs';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-subject',
   templateUrl: './subject.component.html',
   styleUrls: ['./subject.component.scss'],
 })
-export class SubjectComponent implements OnInit {
+export class SubjectComponent implements OnInit, OnDestroy {
   postalCodeData: any[] = []; // postalCode + tablica places( sama nazwa miejsca )
+
+  onDestroy$: Subject<void> = new Subject();
 
   constructor(private postalService: PostalService) {}
 
   ngOnInit(): void {
-    this.postalService.postalCodeEmitted$.pipe(
-      tap((value) => console.log(value))
-    );
-    // .subscribe();
-
-    this.postalService.postalCodeEmitted$
-      .pipe(
-        concatMap((postalCode) => {
-          return this.postalService.getPostalCodeDetails(postalCode);
-        }),
-        catchError((err: HttpErrorResponse) => throwError(err)),
-        tap((err: any) => this.postalService.apiError$.next(err)),
-        filter((response: AjaxResponse<Object>) => response.status === 200)
-      )
+    this.postalService
+      .getData()
+      .pipe()
       .subscribe((response) =>
-        this.postalService.newPostalDataAppears$.next(response.response)
+        this.postalService.newPostalDataAppears$.next(response)
       );
 
-    this.postalService.newPostalDataAppears$.subscribe((data) =>
-      this.postalCodeData.push(data)
-    );
+    this.postalService.newPostalDataAppears$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((data) => this.postalCodeData.push(data));
 
-    this.postalService.apiError$.subscribe((value) =>
-      console.log('err: ' + value)
-    );
+    this.postalService.apiError$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((value) => console.log('err: ' + value));
 
     console.log(this.postalCodeData);
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 }
