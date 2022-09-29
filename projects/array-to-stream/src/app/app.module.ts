@@ -7,6 +7,7 @@ import { ArrayStreamSubscriptionComponent } from './array-stream-subscription/ar
 import { MessageStreamComponent } from './message-stream/message-stream.component';
 import { SubjectComponent } from './subject/subject.component';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,12 @@ import { HttpClientModule } from '@angular/common/http';
     MessageStreamComponent,
     SubjectComponent,
   ],
-  imports: [BrowserModule, HttpClientModule, AppRoutingModule],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

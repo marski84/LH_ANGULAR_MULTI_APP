@@ -1,4 +1,4 @@
-import { ProductColumnsDef } from '../models/ProductColumnsDef';
+import { TableColumn } from './../models/TableColumn';
 import { Component, OnInit } from '@angular/core';
 import { MockProductDataService } from '../services/mock-product-data.service';
 import { ProductInterface } from '../models/ProductInterface';
@@ -11,10 +11,12 @@ import { first } from 'rxjs';
 })
 export class ProductModuleComponent implements OnInit {
   products!: ProductInterface[];
-  productColumnsDef: ProductColumnsDef[] = [
+
+  productColumnsDef: TableColumn[] = [
     {
       name: 'Product name',
       dataKey: 'name',
+      isSortable: true,
     },
     {
       name: 'Short product description',

@@ -10,11 +10,9 @@ import {
   from,
   filter,
   interval,
-  takeLast,
 } from 'rxjs';
 import { IAccountRecord } from './IAccountRecord';
 import { ILoanRecord } from './message-stream.component';
-import { take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

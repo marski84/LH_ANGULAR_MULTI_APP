@@ -1,3 +1,4 @@
+import { Contact } from './../models/Contact.enum';
 import { IAccountType } from './../models/IAccountType';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import {
@@ -94,8 +95,7 @@ export class EditProfileDataFormComponent implements OnInit, OnDestroy {
   }
 
   handleAccountTypeControl(controlSelectedValue: string) {
-    // można bezpieczny switch
-    if (controlSelectedValue === 'company') {
+    if (controlSelectedValue === Contact[0]) {
       const nipNumber = this.fb.control('', [
         Validators.required,
         Validators.maxLength(10),

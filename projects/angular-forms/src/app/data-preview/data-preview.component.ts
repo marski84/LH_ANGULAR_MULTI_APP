@@ -1,21 +1,10 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
-import {
-  delay,
-  map,
-  Observable,
-  of,
-  tap,
-  Subscription,
-  finalize,
-  BehaviorSubject,
-  debounceTime,
-  concatMap,
-} from 'rxjs';
+import { delay, Observable, of, tap, BehaviorSubject } from 'rxjs';
 import { IFormData } from '../models/IFormData';
 import { FakeApiService } from '../services/fake-api.service';
-import { Subject, takeUntil, switchMap, EMPTY } from 'rxjs';
+import { Subject, takeUntil, switchMap } from 'rxjs';
 
 @Component({
   selector: 'data-preview',
@@ -23,10 +12,8 @@ import { Subject, takeUntil, switchMap, EMPTY } from 'rxjs';
   styleUrls: ['./data-preview.component.scss'],
 })
 export class DataPreviewComponent implements OnInit {
-  formData!: string;
   private _isLoading = new BehaviorSubject<boolean>(false);
   isLoading$ = this._isLoading.asObservable();
-  // isLoading$ = new Subject<boolean>();
 
   private OnDestroy$: Subject<void> = new Subject<void>();
 

@@ -1,56 +1,107 @@
-import { ProductColumnsDef } from './../models/ProductColumnsDef';
+import { ProductInterface } from './../models/ProductInterface';
+import { TableColumn } from './../models/TableColumn';
 import {
+  AfterViewInit,
   Component,
-  ContentChild,
   Input,
+  ViewChild,
   OnInit,
-  TemplateRef,
+  EventEmitter,
+  Output,
+  AfterContentInit,
+  ContentChildren,
+  QueryList,
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
+import {
+  MatColumnDef,
+  MatTable,
+  MatTableDataSource,
+} from '@angular/material/table';
+import {
+  AbstractTableDataSource,
+  AbstractTableItem,
+} from './abstract-table-datasource';
+import { CdkColumnDef } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-abstract-table',
   templateUrl: './abstract-table.component.html',
   styleUrls: ['./abstract-table.component.scss'],
 })
+export class AbstractTableComponent
+  implements OnInit, AfterViewInit, AfterContentInit
+{
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
+  @ContentChildren(MatColumnDef) columnDefs?: QueryList<MatColumnDef>;
 
-// * Przyjmuje tablice obiektów i wyświetla je w formie tabelki
-// * Obsługuje takie dane w obiekcie jak string, number, boolean, data.
-// * Przy każdym row posiada wbudowane przyciski takie jak remove oraz edit które emitują zdarzenia do parenta.
-// * Przyjmuje od parenta opcjonalne customowe button'y które są wyświetlane na początku lub końcu każdego z item'ów tabelki(content projection).
-export class AbstractTableComponent implements OnInit {
-  matPaginator: any;
-  matSort: any;
+  dataSource = new MatTableDataSource<any>([]);
+  displayedColumns!: string[];
 
-  @Input() tableColumnsDefinition: any;
+  @Input() isPageable = false;
+  @Input() isSortable = false;
+  @Input() isFilterable = false;
+  @Input() rowActionIcon?: string;
+  @Input() paginationSizes: number[] = [5, 10, 15];
+  @Input() defaultPageSize = this.paginationSizes[1];
+  @Input() tableColumns!: TableColumn[];
 
-  @Input() set tableData(data: {}[]) {
-    this.setTableDataSource(data);
+  // @Input() set tableColumns(columnsData: TableColumn[]) {}
+  @Input() set data(data: any) {
+    this.setTableDataSoure(data);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
-  @ContentChild('customProperties') customProperties:
-    | TemplateRef<any>
-    | undefined;
+  @Output() sortData: EventEmitter<any> = new EventEmitter();
+  @Output() rowAction: EventEmitter<any> = new EventEmitter<any>();
 
-  columnsToDisplay!: string[];
-
-  tableDataSource = new MatTableDataSource<Array<{}>>([]);
+  // https://tomaszs2.medium.com/dead-simple-content-projection-in-angular-f5969c675003
 
   constructor() {}
 
   ngOnInit(): void {
-    const columnNames = this.tableColumnsDefinition.map(
-      (column: ProductColumnsDef) => column.name
-    );
-    this.columnsToDisplay = columnNames;
+    console.log(this.tableColumns);
 
-    console.log(this.tableDataSource);
-    console.log(this.tableColumnsDefinition);
+    const columnNames = this.tableColumns.map((column) => column.name);
+    if (this.rowActionIcon) {
+      this.displayedColumns = [this.rowActionIcon, ...columnNames];
+      console.log(this.displayedColumns);
+    } else {
+      this.displayedColumns = columnNames;
+    }
+  }
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 
-  setTableDataSource(data: any) {
-    this.tableDataSource = new MatTableDataSource<Array<{}>>(data);
-    this.tableDataSource.paginator = this.matPaginator;
-    this.tableDataSource.sort = this.matSort;
+  ngAfterContentInit(): void {
+    console.log(this.columnDefs);
+
+    if (this.columnDefs) {
+      this.columnDefs.forEach((columnDef: CdkColumnDef) => {
+        console.log(columnDef);
+
+        this.table.addColumnDef(columnDef);
+      });
+    }
+  }
+
+  setTableDataSoure(data: any) {
+    this.dataSource = new MatTableDataSource<any>(data);
+  }
+
+  sortTableData(sortParameters: Sort) {
+    console.log(sortParameters);
+    sortParameters.active = this.data.find(
+      (column: ProductInterface) => column.name === sortParameters.active
+    );
+
+    console.log();
+
+    this.sortData.emit(sortParameters);
   }
 }

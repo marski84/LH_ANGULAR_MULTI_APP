@@ -1,8 +1,32 @@
 <p>product-module works!</p>
 
-<app-abstract-table
+<!-- <app-abstract-table
     [tableData]="products"
     [tableColumnsDefinition]="productColumnsDef"
 >
     <button>ok</button>
-</app-abstract-table>
+</app-abstract-table> -->
+<div>
+    <app-abstract-table
+        [data]="products"
+        [tableColumns]="productColumnsDef"
+        [isPageable]="true"
+        [paginationSizes]="[2,3,4]"
+    >
+
+        <ng-container matColumnDef="id">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+            >
+                id
+            </th>
+            <td
+                mat-cell
+                *matCellDef="let element"
+            >
+                {{element}}
+            </td>
+        </ng-container>
+    </app-abstract-table>
+</div>

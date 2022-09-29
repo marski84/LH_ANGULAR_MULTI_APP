@@ -1,18 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { concat, concatMap, mergeMap, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MessageService } from './message.service';
-import {
-  delay,
-  filter,
-  finalize,
-  from,
-  interval,
-  map,
-  of,
-  share,
-  tap,
-  zip,
-} from 'rxjs';
+import { map, tap } from 'rxjs';
 import { IAccountRecord } from './IAccountRecord';
 
 export interface ILoanRecord {

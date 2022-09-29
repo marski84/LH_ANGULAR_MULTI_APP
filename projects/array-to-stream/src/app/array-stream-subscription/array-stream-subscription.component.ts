@@ -1,26 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import {
-  map,
-  tap,
-  take,
-  skip,
-  delay,
-  takeWhile,
-  distinctUntilChanged,
-  concatMap,
-  combineLatest,
-  debounce,
-  interval,
-  mergeMap,
-  from,
-  of,
-  concat,
-  debounceTime,
-  finalize,
-  merge,
-  forkJoin,
-} from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { map, tap, skip, finalize } from 'rxjs';
 import { ArrayToStreamService } from '../array-to-stream.service';
 
 @Component({
@@ -35,13 +15,15 @@ export class ArrayStreamSubscriptionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.arrayService.arrayStream$.pipe(
-      skip(2),
-      tap((value) => console.log(value)),
-      map((value) => value.toUpperCase()),
-      tap((value) => console.log(value)),
-      finalize(() => console.log('Stream finished!!'))
-    );
+    this.arrayService.arrayStream$
+      .pipe(
+        skip(2),
+        tap((value) => console.log(value)),
+        map((value) => value.toUpperCase()),
+        tap((value) => console.log(value)),
+        finalize(() => console.log('Stream finished!!'))
+      )
+      .subscribe();
   }
 
   // service.lastElementEmitted$.pipe()
