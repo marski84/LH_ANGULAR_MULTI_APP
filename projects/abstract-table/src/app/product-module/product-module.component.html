@@ -14,19 +14,51 @@
         [paginationSizes]="[2,3,4]"
     >
 
-        <ng-container matColumnDef="id">
+        <ng-container
+            matColumnDef="demo"
+            class="definicja"
+        >
             <th
                 mat-header-cell
                 *matHeaderCellDef
             >
-                id
+                Remove button
             </th>
             <td
                 mat-cell
                 *matCellDef="let element"
             >
-                {{element}}
+                <button (click)="breakStuff(element.name)">Remove {{element.name}}</button>
             </td>
         </ng-container>
+
+        <ng-container
+            matColumnDef="button"
+            class="Remove"
+        >
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+            >
+                Additional
+            </th>
+            <td
+                mat-cell
+                *matCellDef="let element"
+            >
+                <button (click)="breakStuff(element.name)">Remove {{element.name}}</button>
+            </td>
+        </ng-container>
+
+        <!-- <ng-template let-user>
+            <button
+                mat-raised-button
+                color="primary"
+                type="button"
+            >
+                Delete
+            </button>
+        </ng-template> -->
+
     </app-abstract-table>
 </div>

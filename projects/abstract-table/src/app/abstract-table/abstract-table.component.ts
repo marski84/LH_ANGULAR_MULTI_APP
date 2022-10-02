@@ -11,6 +11,8 @@ import {
   AfterContentInit,
   ContentChildren,
   QueryList,
+  ContentChild,
+  TemplateRef,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -19,11 +21,12 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
-import {
-  AbstractTableDataSource,
-  AbstractTableItem,
-} from './abstract-table-datasource';
+
 import { CdkColumnDef } from '@angular/cdk/table';
+
+export interface ViewContext<T> {
+  $implicit: T;
+}
 
 @Component({
   selector: 'app-abstract-table',
@@ -83,9 +86,9 @@ export class AbstractTableComponent
 
     if (this.columnDefs) {
       this.columnDefs.forEach((columnDef: CdkColumnDef) => {
-        console.log(columnDef);
-
         this.table.addColumnDef(columnDef);
+        this.displayedColumns.push(columnDef.name);
+        console.log(this.table);
       });
     }
   }
@@ -103,5 +106,9 @@ export class AbstractTableComponent
     console.log();
 
     this.sortData.emit(sortParameters);
+  }
+
+  getContext(user: any): ViewContext<any> {
+    return { $implicit: user };
   }
 }

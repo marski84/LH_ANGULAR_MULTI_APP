@@ -42,7 +42,11 @@ export class ProductModuleComponent implements OnInit {
   ngOnInit(): void {
     this.dataService
       .getProductList()
-      .pipe(first())
+      .pipe()
       .subscribe((productList) => (this.products = productList));
+  }
+
+  breakStuff(event: Event) {
+    console.log(event);
   }
 }
