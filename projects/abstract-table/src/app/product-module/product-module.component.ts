@@ -1,8 +1,9 @@
 import { TableColumn } from './../models/TableColumn';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MockProductDataService } from '../services/mock-product-data.service';
 import { ProductInterface } from '../models/ProductInterface';
 import { first } from 'rxjs';
+import { MatTable } from '@angular/material/table';
 
 @Component({
   selector: 'app-product-module',
@@ -11,6 +12,8 @@ import { first } from 'rxjs';
 })
 export class ProductModuleComponent implements OnInit {
   products!: ProductInterface[];
+
+  @ViewChild(MatTable, { static: false }) abstractTable!: MatTable<any>;
 
   productColumnsDef: TableColumn[] = [
     {
@@ -40,13 +43,29 @@ export class ProductModuleComponent implements OnInit {
   constructor(private dataService: MockProductDataService) {}
 
   ngOnInit(): void {
-    this.dataService
-      .getProductList()
-      .pipe()
-      .subscribe((productList) => (this.products = productList));
+    this.dataService.getProductList();
+
+    this.dataService.products$.pipe().subscribe((productList) => {
+      console.log(productList);
+
+      this.products = productList;
+      console.log(this.products);
+    });
   }
 
-  breakStuff(event: Event) {
+  handleRowDelete(event: Event) {
     console.log(event);
+  }
+
+  handleRowEdit(event: Event) {
+    console.log(event);
+  }
+
+  removeProduct(productId: number) {
+    // this.dataService.removeProduct(productId);
+    // this.dataService.getProductList();
+    // this.myTable.dataSource = this.products;
+    console.log(this.abstractTable);
+    this.abstractTable.renderRows();
   }
 }

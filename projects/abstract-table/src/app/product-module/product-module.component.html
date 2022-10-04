@@ -12,6 +12,10 @@
         [tableColumns]="productColumnsDef"
         [isPageable]="true"
         [paginationSizes]="[2,3,4]"
+        [removeButton]="'remove'"
+        [editButton]="'edit'"
+        (rowDataDeleted)="handleRowDelete($event)"
+        [additionalColumns]="['definicja', 'Remove']"
     >
 
         <ng-container
@@ -22,13 +26,13 @@
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Remove button
+                Remove buttonasdsd
             </th>
             <td
                 mat-cell
                 *matCellDef="let element"
             >
-                <button (click)="breakStuff(element.name)">Remove {{element.name}}</button>
+                <button (click)="removeProduct(element.id)">Remove</button>
             </td>
         </ng-container>
 
@@ -46,19 +50,9 @@
                 mat-cell
                 *matCellDef="let element"
             >
-                <button (click)="breakStuff(element.name)">Remove {{element.name}}</button>
+                <button>Remove {{element.name}}</button>
             </td>
         </ng-container>
-
-        <!-- <ng-template let-user>
-            <button
-                mat-raised-button
-                color="primary"
-                type="button"
-            >
-                Delete
-            </button>
-        </ng-template> -->
 
     </app-abstract-table>
 </div>
