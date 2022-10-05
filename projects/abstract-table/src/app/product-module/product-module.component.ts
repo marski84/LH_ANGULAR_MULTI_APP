@@ -49,17 +49,18 @@ export class ProductModuleComponent implements OnInit {
       console.log(productList);
 
       this.products = productList;
-      console.log(this.products);
+
+      setTimeout(() => {
+        console.log(this.products);
+      }, 1000);
     });
   }
 
-  handleRowDelete(event: Event) {
-    console.log(event);
+  handleRowDelete(dataAfterRemoval: ProductInterface[]) {
+    this.dataService.updateProductList(dataAfterRemoval);
   }
 
-  handleRowEdit(event: Event) {
-    console.log(event);
-  }
+  handleRowEdit(dataAfterRemoval: ProductInterface[]) {}
 
   removeProduct(productId: number) {
     // this.dataService.removeProduct(productId);

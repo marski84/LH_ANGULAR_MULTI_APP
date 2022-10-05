@@ -23,6 +23,8 @@ import {
 } from '@angular/material/table';
 
 import { CdkColumnDef } from '@angular/cdk/table';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { TableItemEditFormComponent } from './table-item-edit-form/table-item-edit-form.component';
 
 @Component({
   selector: 'app-abstract-table',
@@ -39,6 +41,7 @@ export class AbstractTableComponent
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns!: string[];
+  itemEditDialogRef?: MatDialogRef<TableItemEditFormComponent>;
 
   @Input() editButton: string = '';
   @Input() removeButton: string = '';
@@ -65,7 +68,7 @@ export class AbstractTableComponent
 
   // https://tomaszs2.medium.com/dead-simple-content-projection-in-angular-f5969c675003
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     console.log(this.tableColumns);
@@ -124,10 +127,15 @@ export class AbstractTableComponent
     const indexInData = this.dataSource.data.findIndex(
       (data) => data.id === elementId
     );
-
+    this.rowDataDeleted.emit(this.dataSource.data);
     this.dataSource.data.splice(indexInData, 1);
     this.refreshData();
+  }
 
-    this.rowDataDeleted.emit(this.dataSource.data);
+  editItem(elementId: number) {
+    this.itemEditDialogRef = this.dialog.open(TableItemEditFormComponent, {
+      minHeight: '400px',
+      minWidth: '300px',
+    });
   }
 }
