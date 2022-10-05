@@ -132,10 +132,13 @@ export class AbstractTableComponent
     this.refreshData();
   }
 
-  editItem(elementId: number) {
+  editItem(element: ProductInterface) {
     this.itemEditDialogRef = this.dialog.open(TableItemEditFormComponent, {
-      minHeight: '400px',
-      minWidth: '300px',
+      minHeight: '800px',
+      minWidth: '500px',
+      data: {
+        elementId: element,
+      },
     });
   }
 }

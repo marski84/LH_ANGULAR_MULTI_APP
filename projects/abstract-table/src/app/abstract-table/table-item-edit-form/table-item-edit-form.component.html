@@ -1,3 +1,9 @@
-<p>
-  table-item-edit-form works!
-</p>
+<div>
+    <form [formGroup]="editForm">
+
+        <div *ngFor="let field of formFields">
+            <label>{{field}}</label>
+        </div>
+
+    </form>
+</div>
