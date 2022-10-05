@@ -15,7 +15,7 @@ import {
 export class TableItemEditFormComponent implements OnInit {
   formFields: any[] = [];
 
-  editForm = this.fb.group({ form: this.fb.array([]) });
+  editForm = this.fb.group({});
 
   get formArray() {
     return this.editForm.get(['form']) as FormArray;
@@ -26,14 +26,6 @@ export class TableItemEditFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder
   ) {}
-
-  // {
-  //     "id": 2,
-  //     "name": "Chalk",
-  //     "description": "Greatly increases your grip",
-  //     "lastModificationDate": "2022-10-05T16:40:08.069Z",
-  //     "availableInStock": true
-  // }
 
   ngOnInit() {
     console.log(this.data);
@@ -48,10 +40,7 @@ export class TableItemEditFormComponent implements OnInit {
     console.log(formFields);
 
     formFields.forEach((field) => {
-      // this.formArray.push(this.fb.control('', Validators.required));
-
-      this.formArray.push(this.fb.control())
-      field: this.fb.control('')
+      this.editForm.registerControl(field, this.fb.control(''));
     });
 
     console.log(this.editForm);
