@@ -15,6 +15,7 @@
         [removeButton]="'remove'"
         [editButton]="'edit'"
         (rowDataDeleted)="handleRowDelete($event)"
+        (rowDataEdited)="handleRowEdit($event)"
         [additionalColumns]="['definicja', 'Remove']"
     >
 

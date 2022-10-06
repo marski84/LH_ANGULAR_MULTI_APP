@@ -65,6 +65,7 @@ export class AbstractTableComponent
   @Output() sortData: EventEmitter<any> = new EventEmitter();
   @Output() rowAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDataDeleted: EventEmitter<any> = new EventEmitter<any>();
+  @Output() rowDataEdited: EventEmitter<any> = new EventEmitter<any>();
 
   // https://tomaszs2.medium.com/dead-simple-content-projection-in-angular-f5969c675003
 
@@ -140,5 +141,22 @@ export class AbstractTableComponent
         elementId: element,
       },
     });
+
+    this.itemEditDialogRef
+      .afterClosed()
+      .subscribe((result: { event: { id: number } }) => {
+        if (result.event) {
+          const editedData = result.event;
+
+          const indexInData = this.dataSource.data.findIndex(
+            (data) => data.id === editedData.id
+          );
+
+          console.log(indexInData);
+          this.dataSource.data[0] = editedData;
+          this.rowDataEdited.emit(this.dataSource.data);
+          this.refreshData();
+        }
+      });
   }
 }

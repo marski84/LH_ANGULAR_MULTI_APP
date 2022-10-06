@@ -59,10 +59,11 @@ export class TableItemEditFormComponent implements OnInit {
   }
 
   update() {
-    console.log('update');
+    this.dialogRef.close({ event: this.editForm.value });
   }
 
   close() {
+    this.dialogRef.close({ event: null });
     console.log('close');
   }
 }

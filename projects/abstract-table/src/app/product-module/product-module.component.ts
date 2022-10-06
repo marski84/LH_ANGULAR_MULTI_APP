@@ -60,7 +60,10 @@ export class ProductModuleComponent implements OnInit {
     this.dataService.updateProductList(dataAfterRemoval);
   }
 
-  handleRowEdit(dataAfterRemoval: ProductInterface[]) {}
+  handleRowEdit(dataAfterEdit: ProductInterface[]) {
+    console.log('edited: ');
+    console.log(dataAfterEdit);
+  }
 
   removeProduct(productId: number) {
     // this.dataService.removeProduct(productId);
