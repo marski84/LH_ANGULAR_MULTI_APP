@@ -39,10 +39,30 @@ export class TableItemEditFormComponent implements OnInit {
     const values = Object.values(formattedData);
     console.log(formFields);
 
-    formFields.forEach((field) => {
-      this.editForm.registerControl(field, this.fb.control(''));
+    formFields.forEach((field, index) => {
+      // this.editForm.registerControl(field, this.fb.control(''));
+      this.registerFormControl(field, values[index]);
     });
 
     console.log(this.editForm);
+  }
+
+  private registerFormControl(controlName: string, ctrlValue: string) {
+    console.log(controlName, ctrlValue);
+
+    const ctrl = this.fb.control(ctrlValue, Validators.required);
+    this.editForm.addControl(controlName, ctrl);
+  }
+
+  onSubmit(formValue: any) {
+    console.log(formValue);
+  }
+
+  update() {
+    console.log('update');
+  }
+
+  close() {
+    console.log('close');
   }
 }

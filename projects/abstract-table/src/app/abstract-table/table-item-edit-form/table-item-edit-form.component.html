@@ -1,9 +1,45 @@
 <div>
-    <form [formGroup]="editForm">
+    <h1 mat-dialog-title>Title</h1>
+    <form
+        [formGroup]="editForm"
+        (submit)="onSubmit(editForm.value)"
+    >
 
-        <div *ngFor="let field of formFields">
-            <label>{{field}}</label>
+        <div
+            mat-dialog-content
+            *ngFor="let field of formFields"
+            class="example-container"
+        >
+            <mat-form-field appearance="fill">
+                <mat-label>{{field}}</mat-label>
+                <input
+                    matInput
+                    [formControlName]="field"
+                >
+
+            </mat-form-field>
+
+            <mat-error *ngIf="field.touched && field.hasError('required')">This field is required</mat-error>
+
         </div>
 
+        <div mat-dialog-actions>
+            <button
+                mat-button
+                (click)="update()"
+            >
+                Update
+            </button>
+            <button
+                mat-button
+                (click)="close()"
+                mat-flat-button
+                color="warn"
+            >
+                Cancel
+            </button>
+        </div>
+
+        <button mat-raised-button>submit</button>
     </form>
 </div>

@@ -38,6 +38,7 @@ import { TableItemEditFormComponent } from './abstract-table/table-item-edit-for
     MatSortModule,
     MatDialogModule,
     BrowserAnimationsModule,
+    MaterialModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
