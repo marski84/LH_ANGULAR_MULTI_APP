@@ -1,4 +1,4 @@
-import { TableColumn } from './../models/TableColumn';
+import { TableColumn } from '../models/TableColumn';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MockProductDataService } from '../services/mock-product-data.service';
 import { ProductInterface } from '../models/ProductInterface';

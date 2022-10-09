@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProductModuleComponent } from './product-module/product-module.component';
-import { WholesalerModuleComponent } from './wholesaler-module/wholesaler-module.component';
+import { ProductModuleComponent } from './product/product-module.component';
+import { WholesalerModuleComponent } from './modules/wholesaler-module/wholesaler/wholesaler-module.component';
 import { ContainerComponent } from './container/container.component';
 
 const routes: Routes = [
