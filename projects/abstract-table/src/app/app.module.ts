@@ -13,34 +13,26 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DataKeyPipe } from './pipes/data-key.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AbstractTableComponent } from './abstract-table/abstract-table.component';
-import { TableItemEditFormComponent } from './abstract-table/table-item-edit-form/table-item-edit-form.component';
+// import { AbstractTableComponent } from './abstract-table/abstract-table.component';
+// import { TableItemEditFormComponent } from './abstract-table/table-item-edit-form/table-item-edit-form.component';
 import { WholesalerModule } from './modules/wholesaler-module/wholesaler.module';
 import { ProductModule } from './modules/product-module/product.module';
+import { AbstractTableModule } from './modules/abstract-table/abstract-table.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     ContainerComponent,
-    AbstractTableComponent,
     ProductModuleComponent,
     WholesalerModuleComponent,
-    TableItemEditFormComponent,
-    DataKeyPipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     MaterialModule,
-    SharedModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDialogModule,
-    BrowserAnimationsModule,
-    MaterialModule,
     WholesalerModule,
     ProductModule,
+    AbstractTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

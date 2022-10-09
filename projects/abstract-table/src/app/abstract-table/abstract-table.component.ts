@@ -24,7 +24,7 @@ import {
 
 import { CdkColumnDef } from '@angular/cdk/table';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TableItemEditFormComponent } from './table-item-edit-form/table-item-edit-form.component';
+import { TableItemEditFormComponent } from '../modules/abstract-table/abstract-table/table-item-edit-form/table-item-edit-form.component';
 
 @Component({
   selector: 'app-abstract-table',
