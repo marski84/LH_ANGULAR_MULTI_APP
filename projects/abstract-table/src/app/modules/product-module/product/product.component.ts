@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { first, Subject, takeUntil } from 'rxjs';
 import { MatTable } from '@angular/material/table';
-import { MockProductDataService } from '../../services/mock-product-data.service';
 import { ProductInterface } from '../models/ProductInterface';
-import { TableColumn } from '../../modules/abstract-table/models/TableColumn';
+import { MockProductDataService } from '../../../services/mock-product-data.service';
+import { TableColumn } from '../models/TableColumn';
 
 @Component({
   selector: 'app-product-module',

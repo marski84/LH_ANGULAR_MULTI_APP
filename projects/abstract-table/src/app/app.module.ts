@@ -5,8 +5,6 @@ import { AppComponent } from './app.component';
 import { ContainerComponent } from './container/container.component';
 import { MaterialModule } from '../../../modules/material/material.module';
 import { SharedModule } from '../../../modules/shared/shared.module';
-import { ProductModuleComponent } from './product/product-module.component';
-import { WholesalerModuleComponent } from './modules/wholesaler-module/wholesaler/wholesaler-module.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -20,12 +18,7 @@ import { ProductModule } from './modules/product-module/product.module';
 import { AbstractTableModule } from './modules/abstract-table/abstract-table.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ContainerComponent,
-    ProductModuleComponent,
-    WholesalerModuleComponent,
-  ],
+  declarations: [AppComponent, ContainerComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

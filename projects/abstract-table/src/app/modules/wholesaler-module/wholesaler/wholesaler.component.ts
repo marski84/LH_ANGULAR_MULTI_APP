@@ -9,10 +9,10 @@ import {
 
 @Component({
   selector: 'app-wholesaler-module',
-  templateUrl: './wholesaler-module.component.html',
-  styleUrls: ['./wholesaler-module.component.css'],
+  templateUrl: './wholesaler.component.html',
+  styleUrls: ['./wholesaler.component.css'],
 })
-export class WholesalerModuleComponent implements OnInit, AfterContentInit {
+export class WholesalerComponent implements OnInit, AfterContentInit {
   constructor() {}
 
   @ContentChild('defaultTabButtons') defaultTabButtons!: TemplateRef<any>;

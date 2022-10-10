@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProductModuleComponent } from './product/product-module.component';
-import { WholesalerModuleComponent } from './modules/wholesaler-module/wholesaler/wholesaler-module.component';
+import { WholesalerComponent } from './modules/wholesaler-module/wholesaler/wholesaler.component';
 import { ContainerComponent } from './container/container.component';
+import { ProductComponent } from './modules/product-module/product/product.component';
 
 const routes: Routes = [
   { path: '', component: ContainerComponent },
-  { path: 'product', component: ProductModuleComponent },
-  { path: 'wholesaler', component: WholesalerModuleComponent },
+  { path: 'product', component: ProductComponent },
+  { path: 'wholesaler', component: WholesalerComponent },
 ];
 
 @NgModule({
