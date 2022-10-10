@@ -1,6 +1,6 @@
-import { ProductInterface } from './../models/ProductInterface';
 import { Injectable } from '@angular/core';
 import { of, ReplaySubject } from 'rxjs';
+import { ProductInterface } from '../modules/product-module/models/ProductInterface';
 
 @Injectable({
   providedIn: 'root',

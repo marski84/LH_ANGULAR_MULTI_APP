@@ -5,5 +5,6 @@ import { WholesalerComponent } from './wholesaler/wholesaler.component';
 @NgModule({
   declarations: [WholesalerComponent],
   imports: [CommonModule],
+  exports: [WholesalerComponent],
 })
 export class WholesalerModule {}

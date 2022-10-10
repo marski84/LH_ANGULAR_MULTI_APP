@@ -15,7 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { TableItemEditFormComponent } from './abstract-table/table-item-edit-form/table-item-edit-form.component';
 import { WholesalerModule } from './modules/wholesaler-module/wholesaler.module';
 import { ProductModule } from './modules/product-module/product.module';
-import { AbstractTableModule } from './modules/abstract-table/abstract-table.module';
+import { AbstractTableModule } from './modules/abstract-table-module/abstract-table.module';
 
 @NgModule({
   declarations: [AppComponent, ContainerComponent],
