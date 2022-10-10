@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MockProductDataService } from '../services/mock-product-data.service';
-import { ProductInterface } from '../models/ProductInterface';
 import { first, Subject, takeUntil } from 'rxjs';
 import { MatTable } from '@angular/material/table';
-import { TableColumn } from '../modules/abstract-table/models/TableColumn';
+import { MockProductDataService } from '../../services/mock-product-data.service';
+import { ProductInterface } from '../models/ProductInterface';
+import { TableColumn } from '../../modules/abstract-table/models/TableColumn';
 
 @Component({
   selector: 'app-product-module',
-  templateUrl: './product-module.component.html',
-  styleUrls: ['./product-module.component.scss'],
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.scss'],
 })
-export class ProductModuleComponent implements OnInit, OnDestroy {
+export class ProductComponent implements OnInit, OnDestroy {
   products!: ProductInterface[];
 
   @ViewChild(MatTable, { static: false }) abstractTable!: MatTable<any>;

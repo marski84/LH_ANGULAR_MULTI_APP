@@ -1,5 +1,3 @@
-import { ProductInterface } from './../models/ProductInterface';
-import { TableColumn } from './../models/TableColumn';
 import {
   AfterViewInit,
   Component,
@@ -24,7 +22,8 @@ import {
 
 import { CdkColumnDef } from '@angular/cdk/table';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TableItemEditFormComponent } from '../modules/abstract-table/abstract-table/table-item-edit-form/table-item-edit-form.component';
+import { TableItemEditFormComponent } from './table-item-edit-form/table-item-edit-form.component';
+import { TableColumn } from '../models/TableColumn';
 
 @Component({
   selector: 'app-abstract-table',
@@ -72,8 +71,6 @@ export class AbstractTableComponent
   constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    console.log(this.tableColumns);
-
     const columnNames = this.tableColumns.map((column) => column.name);
 
     if (this.editButton && this.removeButton) {
@@ -112,7 +109,7 @@ export class AbstractTableComponent
   sortTableData(sortParameters: Sort) {
     console.log(sortParameters);
     sortParameters.active = this.data.find(
-      (column: ProductInterface) => column.name === sortParameters.active
+      (column: any) => column.name === sortParameters.active
     );
 
     console.log();
@@ -133,7 +130,7 @@ export class AbstractTableComponent
     this.refreshData();
   }
 
-  editItem(element: ProductInterface) {
+  editItem(element: any) {
     this.itemEditDialogRef = this.dialog.open(TableItemEditFormComponent, {
       minHeight: '800px',
       minWidth: '500px',
