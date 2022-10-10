@@ -24,6 +24,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TableItemEditFormComponent } from './table-item-edit-form/table-item-edit-form.component';
 import { TableColumn } from '../models/TableColumn';
+import { filter, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-abstract-table',
@@ -102,7 +103,7 @@ export class AbstractTableComponent
     }
   }
 
-  setTableDataSoure(data: any) {
+  private setTableDataSoure(data: any) {
     this.dataSource = new MatTableDataSource<any>(data);
   }
 
@@ -141,19 +142,21 @@ export class AbstractTableComponent
 
     this.itemEditDialogRef
       .afterClosed()
-      .subscribe((result: { event: { id: number } }) => {
-        if (result.event) {
-          const editedData = result.event;
+      .pipe(
+        filter((result) => result.event),
+        map((value: any) => this.handleEditDataEmission(value))
+      )
+      .subscribe();
+  }
 
-          const indexInData = this.dataSource.data.findIndex(
-            (data) => data.id === editedData.id
-          );
+  private handleEditDataEmission(data: any) {
+    const editedData = data.event;
 
-          console.log(indexInData);
-          this.dataSource.data[0] = editedData;
-          this.rowDataEdited.emit(this.dataSource.data);
-          this.refreshData();
-        }
-      });
+    const indexInData = this.dataSource.data.findIndex(
+      (data) => data.id === editedData.id
+    );
+    this.dataSource.data[indexInData] = editedData;
+    this.rowDataEdited.emit(this.dataSource.data);
+    this.refreshData();
   }
 }

@@ -1,11 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-table-item-edit-form',
@@ -28,28 +23,23 @@ export class TableItemEditFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.data);
-    this.formFields = { ...this.data };
     const formattedData = Object.values({ ...this.data })[0] as Object;
-    // const b = Object.values(a);
-    console.log(formattedData);
-
-    const formFields = Object.keys(formattedData);
-    this.formFields = formFields;
+    // prepare data
+    const formFieldsKeys = Object.keys(formattedData);
+    this.formFields = formFieldsKeys;
     const values = Object.values(formattedData);
-    console.log(formFields);
 
-    formFields.forEach((field, index) => {
-      // this.editForm.registerControl(field, this.fb.control(''));
+    this.formFields.forEach((field, index) => {
       this.registerFormControl(field, values[index]);
-    });
 
-    console.log(this.editForm);
+      // disable edition of unique id
+      if (index === 0) {
+        this.editForm.get([field])?.disable();
+      }
+    });
   }
 
   private registerFormControl(controlName: string, ctrlValue: string) {
-    console.log(controlName, ctrlValue);
-
     const ctrl = this.fb.control(ctrlValue, Validators.required);
     this.editForm.addControl(controlName, ctrl);
   }
@@ -59,7 +49,7 @@ export class TableItemEditFormComponent implements OnInit {
   }
 
   update() {
-    this.dialogRef.close({ event: this.editForm.value });
+    this.dialogRef.close({ event: this.editForm.getRawValue() });
   }
 
   close() {
