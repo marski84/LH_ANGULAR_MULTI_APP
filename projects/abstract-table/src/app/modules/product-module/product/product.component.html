@@ -1,5 +1,6 @@
 <div>
     <app-abstract-table
+        #abstractTable
         [data]="products"
         [tableColumns]="productColumnsDef"
         [isPageable]="true"
@@ -9,6 +10,7 @@
         (rowDataDeleted)="handleRowDelete($event)"
         (rowDataEdited)="handleRowEdit($event)"
         [additionalColumns]="['definicja', 'Remove']"
+        (sortDataEmitted)="handleSort($event)"
     >
 
         <!-- <ng-container

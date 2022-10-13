@@ -55,6 +55,7 @@ export class AbstractTableComponent
   @Input() tableColumns!: TableColumn[];
 
   @Input() set data(data: any) {
+    console.log('input data:');
     console.log(data);
 
     this.setTableDataSoure(data);
@@ -62,7 +63,7 @@ export class AbstractTableComponent
     this.dataSource.paginator = this.paginator;
   }
 
-  @Output() sortData: EventEmitter<any> = new EventEmitter();
+  @Output() sortDataEmitted: EventEmitter<any> = new EventEmitter();
   @Output() rowAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDataDeleted: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDataEdited: EventEmitter<any> = new EventEmitter<any>();
@@ -108,17 +109,22 @@ export class AbstractTableComponent
   }
 
   sortTableData(sortParameters: Sort) {
-    console.log(sortParameters);
-    sortParameters.active = this.data.find(
-      (column: any) => column.name === sortParameters.active
+    sortParameters.active = this.tableColumns.find(
+      (column) => column.name === sortParameters.active
+    )!.dataKey;
+
+    const keyName = sortParameters.active as string;
+    console.log(keyName);
+    this.dataSource.data.sort((a: any, b: any) =>
+      a[keyName].toLocaleString().localeCompare(b[keyName].toLocaleString())
     );
 
-    console.log();
+    this.refreshData();
 
-    this.sortData.emit(sortParameters);
+    // this.sortDataEmitted.emit(sortParameters);
   }
 
-  private refreshData() {
+  refreshData() {
     this.data = this.dataSource.data;
   }
 
@@ -149,7 +155,7 @@ export class AbstractTableComponent
       .subscribe();
   }
 
-  private handleEditDataEmission(data: any) {
+  private handleEditDataEmission<T extends { id: number }>(data: { event: T }) {
     const editedData = data.event;
 
     const indexInData = this.dataSource.data.findIndex(

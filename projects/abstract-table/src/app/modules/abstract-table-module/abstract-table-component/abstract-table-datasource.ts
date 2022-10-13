@@ -95,7 +95,7 @@ export class AbstractTableDataSource extends DataSource<any> {
 
     return data.sort((a, b) => {
       const isAsc = this.sort?.direction === 'asc';
-      switch (this.sort?.active) {
+      switch (this.sort?.active) {  
         case 'name':
           return compare(a.name, b.name, isAsc);
         case 'id':
