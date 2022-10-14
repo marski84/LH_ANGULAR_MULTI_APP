@@ -104,7 +104,7 @@ export class AbstractTableComponent
     }
   }
 
-  private setTableDataSoure(data: any) {
+  setTableDataSoure(data: any) {
     this.dataSource = new MatTableDataSource<any>(data);
   }
 
@@ -112,16 +112,7 @@ export class AbstractTableComponent
     sortParameters.active = this.tableColumns.find(
       (column) => column.name === sortParameters.active
     )!.dataKey;
-
-    const keyName = sortParameters.active as string;
-    console.log(keyName);
-    this.dataSource.data.sort((a: any, b: any) =>
-      a[keyName].toLocaleString().localeCompare(b[keyName].toLocaleString())
-    );
-
-    this.refreshData();
-
-    // this.sortDataEmitted.emit(sortParameters);
+    this.sortDataEmitted.emit(sortParameters);
   }
 
   refreshData() {
@@ -129,12 +120,10 @@ export class AbstractTableComponent
   }
 
   removeItem(elementId: number) {
-    const indexInData = this.dataSource.data.findIndex(
-      (data) => data.id === elementId
-    );
-    this.rowDataDeleted.emit(this.dataSource.data);
-    this.dataSource.data.splice(indexInData, 1);
-    this.refreshData();
+    // const indexInData = this.dataSource.data.findIndex(
+    //   (data) => data.id === elementId
+    // );
+    this.rowDataDeleted.emit(elementId);
   }
 
   editItem(element: any) {
@@ -158,11 +147,6 @@ export class AbstractTableComponent
   private handleEditDataEmission<T extends { id: number }>(data: { event: T }) {
     const editedData = data.event;
 
-    const indexInData = this.dataSource.data.findIndex(
-      (data) => data.id === editedData.id
-    );
-    this.dataSource.data[indexInData] = editedData;
-    this.rowDataEdited.emit(this.dataSource.data);
-    this.refreshData();
+    this.rowDataEdited.emit(editedData);
   }
 }

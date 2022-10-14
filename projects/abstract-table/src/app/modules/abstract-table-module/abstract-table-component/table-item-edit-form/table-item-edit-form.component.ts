@@ -49,7 +49,7 @@ export class TableItemEditFormComponent implements OnInit {
   }
 
   update() {
-    this.dialogRef.close({ event: this.editForm.getRawValue });
+    this.dialogRef.close({ event: this.editForm.getRawValue() });
   }
 
   close() {

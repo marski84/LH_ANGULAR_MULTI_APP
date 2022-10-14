@@ -69,9 +69,9 @@ export class MockProductDataService {
     // return this
   }
 
-  updateProductList(productList: ProductInterface[]) {
-    this.productList = productList;
-    this.productListSubject$.next(this.productList);
+  updateProduct(product: ProductInterface) {
+    const productIndex = this.getProductIndex(product.id);
+    this.productList[productIndex] = product;
   }
 
   private getProductIndex(productId: number) {

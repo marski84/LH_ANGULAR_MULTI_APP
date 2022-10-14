@@ -23,7 +23,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   products!: ProductInterface[];
 
   @ViewChild('abstractTable', { static: false })
-  abstractTable!: MatTable<AbstractTableComponent>;
+  abstractTable!: AbstractTableComponent;
 
   // @ViewChild(MatTable, { static: false }) abstractTable!: MatTable<any>;
 
@@ -65,25 +65,26 @@ export class ProductComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((productList) => {
         console.log('updated');
+        console.log(productList);
 
         this.products = productList;
       });
   }
 
-  handleRowDelete(dataAfterRemoval: ProductInterface[]) {
-    this.dataService.updateProductList(dataAfterRemoval);
+  handleRowDelete(productId: number) {
+    this.dataService.removeProduct(productId);
+    this.abstractTable.refreshData();
   }
 
-  handleRowEdit(dataAfterEdit: ProductInterface[]) {
-    console.log('edited: ');
-    console.log(dataAfterEdit);
+  handleRowEdit(dataAfterEdit: ProductInterface) {
+    this.dataService.updateProduct(dataAfterEdit);
+    this.abstractTable.refreshData();
   }
 
   handleSort(sortParameters: Sort) {
     console.log(sortParameters);
     console.log(this.products);
 
-    // {active: 'Short product description', direction: 'asc'}
     const keyName = sortParameters.active as string;
     console.log(keyName);
     this.products.sort((a: ProductInterface, b: ProductInterface) =>
@@ -91,9 +92,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         .toLocaleString()
         .localeCompare(b[keyName as keyof ProductInterface].toLocaleString())
     );
-    console.log(this.abstractTable);
-
-    this.cd.markForCheck();
+    this.abstractTable.refreshData();
   }
 
   ngOnDestroy(): void {
