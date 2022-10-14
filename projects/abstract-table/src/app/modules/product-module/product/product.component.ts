@@ -85,14 +85,38 @@ export class ProductComponent implements OnInit, OnDestroy {
     console.log(sortParameters);
     console.log(this.products);
 
-    const keyName = sortParameters.active as string;
-    console.log(keyName);
-    this.products.sort((a: ProductInterface, b: ProductInterface) =>
-      a[keyName as keyof ProductInterface]
-        .toLocaleString()
-        .localeCompare(b[keyName as keyof ProductInterface].toLocaleString())
-    );
-    this.abstractTable.refreshData();
+    const { active, direction } = sortParameters;
+
+    const keyName = active as string;
+    const sortDirection = direction;
+
+    switch (sortDirection) {
+      case 'asc':
+        this.products.sort((a: ProductInterface, b: ProductInterface) =>
+          a[keyName as keyof ProductInterface]
+            .toLocaleString()
+            .localeCompare(
+              b[keyName as keyof ProductInterface].toLocaleString()
+            )
+        );
+        this.abstractTable.refreshData();
+        break;
+      case 'desc':
+      case 'asc':
+        this.products.sort((a: ProductInterface, b: ProductInterface) =>
+          b[keyName as keyof ProductInterface]
+            .toLocaleString()
+            .localeCompare(
+              a[keyName as keyof ProductInterface].toLocaleString()
+            )
+        );
+        this.abstractTable.refreshData();
+        break;
+      default:
+        this.dataService.getProductList();
+        this.abstractTable.refreshData();
+        return;
+    }
   }
 
   ngOnDestroy(): void {

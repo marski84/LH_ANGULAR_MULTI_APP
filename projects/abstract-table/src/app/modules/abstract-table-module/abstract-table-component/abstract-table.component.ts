@@ -120,9 +120,6 @@ export class AbstractTableComponent
   }
 
   removeItem(elementId: number) {
-    // const indexInData = this.dataSource.data.findIndex(
-    //   (data) => data.id === elementId
-    // );
     this.rowDataDeleted.emit(elementId);
   }
 
