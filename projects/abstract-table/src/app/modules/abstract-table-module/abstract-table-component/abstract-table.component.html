@@ -85,10 +85,12 @@
             >
                 <button mat-raised-button>Edit</button>
             </td>
+
         </ng-container>
 
-        <!-- <ng-content select=".definicja"></ng-content> -->
-        <!-- <ng-content select=".remove"></ng-content> -->
+        <ng-content select=".definicja"></ng-content>
+        <ng-content select=".Remove"></ng-content>
+
         <div *ngFor="let columnName of additionalColumns">
             <ng-content select=".columnName"></ng-content>
         </div>

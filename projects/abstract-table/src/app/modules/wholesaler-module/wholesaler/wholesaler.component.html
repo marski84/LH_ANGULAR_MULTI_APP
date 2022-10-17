@@ -1,26 +1,15 @@
-<ng-template #customTabButtons>
-    <div class="custom-class">
-        <button
-            class="tab-button"
-            (click)="login()"
-        >
-            {{loginText}}
-        </button>
-        <button
-            class="tab-button"
-            (click)="signUp()"
-        >
-            {{signUpText}}
-        </button>
-    </div>
-</ng-template>
+<div>
+    <!-- #abstractTable
+        [data]="products"
+        [tableColumns]="productColumnsDef"
+        [isPageable]="true"
+        [paginationSizes]="[2,5,10]"
+        [removeButton]="'remove'"
+        [editButton]="'edit'"
+        (rowDataDeleted)="handleRowDelete($event)"
+        (rowDataEdited)="handleRowEdit($event)"
+        [additionalColumns]="['definicja', 'Remove']"
+        (sortDataEmitted)="handleSort($event)" -->
 
-<!-- <ng-container [ngTemplateOutlet]="customTabButtons"></ng-container> -->
-
-<ng-template
-    #estimateTemplate
-    let-lessonsCounter="estimate"
->
-    <div></div>
-</ng-template>
-<ng-container *ngTemplateOutlet="estimateTemplate;context:ctx"></ng-container>
+    <app-abstract-table></app-abstract-table>
+</div>

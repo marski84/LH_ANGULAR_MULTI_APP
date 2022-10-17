@@ -33,7 +33,7 @@ export class TableItemEditFormComponent implements OnInit {
       this.registerFormControl(field, values[index]);
 
       // disable edition of unique id
-      if (index === 0) {
+      if (index === 0 || index === 4) {
         this.editForm.get([field])?.disable();
       }
     });

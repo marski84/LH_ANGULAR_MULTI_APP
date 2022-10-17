@@ -9,19 +9,20 @@
         [editButton]="'edit'"
         (rowDataDeleted)="handleRowDelete($event)"
         (rowDataEdited)="handleRowEdit($event)"
-        [additionalColumns]="['definicja', 'Remove']"
+        [additionalColumns]="['definicja', 'remove']"
         (sortDataEmitted)="handleSort($event)"
     >
+        <div class="definicja">dupa</div>
 
-        <!-- <ng-container
-            matColumnDef="demo"
+        <ng-container
+            matColumnDef="definicja"
             class="definicja"
         >
             <th
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Remove buttonasdsd
+                Header
             </th>
             <td
                 mat-cell
@@ -29,7 +30,7 @@
             >
                 <button>dodatkowa</button>
             </td>
-        </ng-container> -->
+        </ng-container>
 
         <!-- <ng-container
             matColumnDef="button"
@@ -45,7 +46,7 @@
                 mat-cell
                 *matCellDef="let element"
             >
-                <button>Remove {{element.name}}</button>
+                <button>Remove</button>
             </td>
         </ng-container> -->
 

@@ -37,7 +37,8 @@ export class AbstractTableComponent
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
-  @ContentChildren(MatColumnDef) columnDefs?: QueryList<MatColumnDef>;
+  @ContentChildren(MatColumnDef, {}) columnDefs?: QueryList<MatColumnDef>;
+  // @ContentChild() dupa: any;
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns!: string[];
@@ -88,13 +89,18 @@ export class AbstractTableComponent
     } else {
       this.displayedColumns = columnNames;
     }
+
+    console.log(this.additionalColumns);
   }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 
   ngAfterContentInit(): void {
+    console.log('tutaj:');
+
     console.log(this.columnDefs);
+    // console.log(this.dupa);
 
     if (this.columnDefs) {
       this.columnDefs.forEach((columnDef: CdkColumnDef) => {
