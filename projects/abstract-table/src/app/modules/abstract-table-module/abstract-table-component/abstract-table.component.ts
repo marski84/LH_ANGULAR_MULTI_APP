@@ -11,6 +11,7 @@ import {
   QueryList,
   ContentChild,
   TemplateRef,
+  ViewChildren,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -37,8 +38,8 @@ export class AbstractTableComponent
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
-  @ContentChildren(MatColumnDef, {}) columnDefs?: QueryList<MatColumnDef>;
-  // @ContentChild() dupa: any;
+  @ContentChildren(MatColumnDef, { read: MatColumnDef })
+  columnDefs?: QueryList<MatColumnDef>;
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns!: string[];
@@ -46,7 +47,6 @@ export class AbstractTableComponent
 
   @Input() editButton: string = '';
   @Input() removeButton: string = '';
-  @Input() additionalColumns: string[] = [];
   @Input() isPageable = false;
   @Input() isSortable = false;
   @Input() isFilterable = false;
@@ -86,11 +86,7 @@ export class AbstractTableComponent
       this.displayedColumns = [...columnNames, this.editButton];
     } else if (this.removeButton) {
       this.displayedColumns = [...columnNames, this.removeButton];
-    } else {
-      this.displayedColumns = columnNames;
     }
-
-    console.log(this.additionalColumns);
   }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -100,6 +96,7 @@ export class AbstractTableComponent
     console.log('tutaj:');
 
     console.log(this.columnDefs);
+
     // console.log(this.dupa);
 
     if (this.columnDefs) {
@@ -123,6 +120,9 @@ export class AbstractTableComponent
 
   refreshData() {
     this.data = this.dataSource.data;
+    this.table.renderRows();
+    // this.dataSource.connect().next(this.data);
+    // this.dataSource.data = this.data;
   }
 
   removeItem(elementId: number) {

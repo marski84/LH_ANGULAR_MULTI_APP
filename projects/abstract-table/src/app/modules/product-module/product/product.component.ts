@@ -119,6 +119,12 @@ export class ProductComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleAvailabilityStatus(elementId: number) {
+    this.dataService.handleProductAvailability(elementId);
+    this.dataService.getProductList();
+    this.abstractTable.refreshData();
+  }
+
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();

@@ -9,26 +9,26 @@
         [editButton]="'edit'"
         (rowDataDeleted)="handleRowDelete($event)"
         (rowDataEdited)="handleRowEdit($event)"
-        [additionalColumns]="['definicja', 'remove']"
         (sortDataEmitted)="handleSort($event)"
     >
-        <div class="definicja">dupa</div>
 
-        <ng-container
-            matColumnDef="definicja"
-            class="definicja"
-        >
+        <ng-container matColumnDef="Status handler">
             <th
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Header
+                Change status
             </th>
             <td
                 mat-cell
                 *matCellDef="let element"
             >
-                <button>dodatkowa</button>
+                <button
+                    (click)="handleAvailabilityStatus(element.id)"
+                    mat-raised-button
+                >
+                    Change availaibility
+                </button>
             </td>
         </ng-container>
 

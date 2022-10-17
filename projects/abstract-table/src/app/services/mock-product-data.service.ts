@@ -84,4 +84,13 @@ export class MockProductDataService {
     this.productList.splice(productIndex, 1);
     this.productListSubject$.next(this.productList);
   }
+
+  handleProductAvailability(productId: number) {
+    const productIndex = this.getProductIndex(productId);
+
+    this.productList[productIndex].availableInStock =
+      !this.productList[productIndex].availableInStock;
+
+    this.productListSubject$.next(this.productList);
+  }
 }
