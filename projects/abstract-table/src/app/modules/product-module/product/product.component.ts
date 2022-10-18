@@ -30,7 +30,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   // @ContentChild('abstractTable', { static: true })
   // abstractTable!: MatTable<ProductInterface>;
 
-  onDestroy$: Subject<void> = new Subject<void>();
+  private onDestroy$: Subject<void> = new Subject<void>();
 
   productColumnsDef: TableColumn[] = [
     {
@@ -53,14 +53,10 @@ export class ProductComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(
-    private dataService: MockProductDataService,
-    private cd: ChangeDetectorRef
-  ) {}
+  constructor(private dataService: MockProductDataService) {}
 
   ngOnInit(): void {
     this.dataService.getProductList();
-
     this.dataService.products$
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((productList) => {
@@ -68,17 +64,20 @@ export class ProductComponent implements OnInit, OnDestroy {
         console.log(productList);
 
         this.products = productList;
+        this.abstractTable.refreshData();
       });
   }
 
   handleRowDelete(productId: number) {
     this.dataService.removeProduct(productId);
-    this.abstractTable.refreshData();
   }
 
   handleRowEdit(dataAfterEdit: ProductInterface) {
     this.dataService.updateProduct(dataAfterEdit);
-    this.abstractTable.refreshData();
+  }
+
+  handleAvailabilityStatus(elementId: number) {
+    this.dataService.handleProductAvailability(elementId);
   }
 
   handleSort(sortParameters: Sort) {
@@ -99,7 +98,6 @@ export class ProductComponent implements OnInit, OnDestroy {
               b[keyName as keyof ProductInterface].toLocaleString()
             )
         );
-        this.abstractTable.refreshData();
         break;
       case 'desc':
       case 'asc':
@@ -110,19 +108,10 @@ export class ProductComponent implements OnInit, OnDestroy {
               a[keyName as keyof ProductInterface].toLocaleString()
             )
         );
-        this.abstractTable.refreshData();
         break;
       default:
         this.dataService.getProductList();
-        this.abstractTable.refreshData();
-        return;
     }
-  }
-
-  handleAvailabilityStatus(elementId: number) {
-    this.dataService.handleProductAvailability(elementId);
-    this.dataService.getProductList();
-    this.abstractTable.refreshData();
   }
 
   ngOnDestroy(): void {

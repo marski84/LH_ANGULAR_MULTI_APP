@@ -4,7 +4,9 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'dataKey',
 })
 export class DataKeyPipe implements PipeTransform {
-  transform(object: any, keyName: string, ...args: unknown[]): unknown {
+  transform(object: any, keyName: string, ...args: unknown[]): any {
+    console.log(object[keyName], 'zmiana wartości');
+
     return object[keyName];
   }
 }

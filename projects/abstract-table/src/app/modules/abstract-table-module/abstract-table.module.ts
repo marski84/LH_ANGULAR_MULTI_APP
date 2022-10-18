@@ -34,8 +34,6 @@ import { MatButtonModule } from '@angular/material/button';
     AbstractTableComponent,
     DataKeyPipe,
     TableItemEditFormComponent,
-    MatTableModule,
-    MatButtonModule,
   ],
 })
 export class AbstractTableModule {}

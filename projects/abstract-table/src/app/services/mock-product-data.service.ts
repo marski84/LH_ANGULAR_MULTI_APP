@@ -72,6 +72,7 @@ export class MockProductDataService {
   updateProduct(product: ProductInterface) {
     const productIndex = this.getProductIndex(product.id);
     this.productList[productIndex] = product;
+    this.productListSubject$.next(this.productList);
   }
 
   private getProductIndex(productId: number) {
@@ -87,9 +88,10 @@ export class MockProductDataService {
 
   handleProductAvailability(productId: number) {
     const productIndex = this.getProductIndex(productId);
+    const product = this.productList[productIndex];
 
-    this.productList[productIndex].availableInStock =
-      !this.productList[productIndex].availableInStock;
+    product.availableInStock = !product.availableInStock;
+    this.productList[productIndex] = {...product};
 
     this.productListSubject$.next(this.productList);
   }

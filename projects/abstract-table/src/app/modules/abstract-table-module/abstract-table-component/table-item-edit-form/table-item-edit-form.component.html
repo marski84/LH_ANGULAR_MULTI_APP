@@ -16,7 +16,7 @@
 
             </mat-form-field>
 
-            <mat-error *ngIf="field.touched && field.hasError('required')">This field is required</mat-error>
+            <mat-error *ngIf="editForm.get(field)!.touched && editForm.get(field)!.hasError('required')">This field is required</mat-error>
 
         </div>
 

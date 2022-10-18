@@ -12,6 +12,7 @@ import {
   ContentChild,
   TemplateRef,
   ViewChildren,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -43,7 +44,6 @@ export class AbstractTableComponent
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns!: string[];
-  itemEditDialogRef?: MatDialogRef<TableItemEditFormComponent>;
 
   @Input() editButton: string = '';
   @Input() removeButton: string = '';
@@ -62,6 +62,7 @@ export class AbstractTableComponent
     this.setTableDataSoure(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.cd.detectChanges();
   }
 
   @Output() sortDataEmitted: EventEmitter<any> = new EventEmitter();
@@ -71,23 +72,18 @@ export class AbstractTableComponent
 
   // https://tomaszs2.medium.com/dead-simple-content-projection-in-angular-f5969c675003
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    const columnNames = this.tableColumns.map((column) => column.name);
-
-    if (this.editButton && this.removeButton) {
-      this.displayedColumns = [
-        ...columnNames,
-        this.editButton,
-        this.removeButton,
-      ];
-    } else if (this.editButton) {
-      this.displayedColumns = [...columnNames, this.editButton];
-    } else if (this.removeButton) {
-      this.displayedColumns = [...columnNames, this.removeButton];
+    this.displayedColumns = this.tableColumns.map((column) => column.name);
+    if (this.editButton) {
+      this.displayedColumns.push(this.editButton);
+    }
+    if (this.removeButton) {
+      this.displayedColumns.push(this.removeButton);
     }
   }
+
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
@@ -130,7 +126,7 @@ export class AbstractTableComponent
   }
 
   editItem(element: any) {
-    this.itemEditDialogRef = this.dialog.open(TableItemEditFormComponent, {
+    const itemEditDialogRef = this.dialog.open(TableItemEditFormComponent, {
       minHeight: '800px',
       minWidth: '500px',
       data: {
@@ -138,7 +134,7 @@ export class AbstractTableComponent
       },
     });
 
-    this.itemEditDialogRef
+    itemEditDialogRef
       .afterClosed()
       .pipe(
         filter((result) => result.event),
@@ -149,7 +145,6 @@ export class AbstractTableComponent
 
   private handleEditDataEmission<T extends { id: number }>(data: { event: T }) {
     const editedData = data.event;
-
     this.rowDataEdited.emit(editedData);
   }
 }

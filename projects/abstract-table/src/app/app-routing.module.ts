@@ -10,6 +10,11 @@ const routes: Routes = [
   { path: 'wholesaler', component: WholesalerComponent },
 ];
 
+// 3mb (1mb per module/component)
+
+// lazy loading
+// 1mb - kolejnego modułu
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],

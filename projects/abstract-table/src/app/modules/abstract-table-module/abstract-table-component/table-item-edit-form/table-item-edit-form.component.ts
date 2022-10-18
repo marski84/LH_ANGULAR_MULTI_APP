@@ -8,8 +8,7 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./table-item-edit-form.component.scss'],
 })
 export class TableItemEditFormComponent implements OnInit {
-  formFields: any[] = [];
-
+  formFields: string[] = [];
   editForm = this.fb.group({});
 
   get formArray() {
@@ -23,18 +22,14 @@ export class TableItemEditFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const formattedData = Object.values({ ...this.data })[0] as Object;
-    // prepare data
-    const formFieldsKeys = Object.keys(formattedData);
-    this.formFields = formFieldsKeys;
-    const values = Object.values(formattedData);
+    this.formFields = Object.keys(this.data.elementId);
 
-    this.formFields.forEach((field, index) => {
-      this.registerFormControl(field, values[index]);
+    this.formFields.forEach((key, index) => {
+      this.registerFormControl(key, this.data.elementId[key]);
 
       // disable edition of unique id
       if (index === 0 || index === 4) {
-        this.editForm.get([field])?.disable();
+        this.editForm.get([key])?.disable();
       }
     });
   }
@@ -42,10 +37,6 @@ export class TableItemEditFormComponent implements OnInit {
   private registerFormControl(controlName: string, ctrlValue: string) {
     const ctrl = this.fb.control(ctrlValue, Validators.required);
     this.editForm.addControl(controlName, ctrl);
-  }
-
-  onSubmit(formValue: any) {
-    console.log(formValue);
   }
 
   update() {
