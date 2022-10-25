@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MaterialComponent } from './material.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,13 +16,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   imports: [],
   exports: [
-    // BrowserAnimationsModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     MatToolbarModule,
     MatButtonModule,
@@ -36,9 +37,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatSidenavModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDialogModule,
+    MatRadioModule,
+    MatCheckboxModule,
   ],
   declarations: [MaterialComponent],
 })

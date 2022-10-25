@@ -9,9 +9,6 @@ import {
   AfterContentInit,
   ContentChildren,
   QueryList,
-  ContentChild,
-  TemplateRef,
-  ViewChildren,
   ChangeDetectorRef,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -66,7 +63,6 @@ export class AbstractTableComponent
   }
 
   @Output() sortDataEmitted: EventEmitter<any> = new EventEmitter();
-  @Output() rowAction: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDataDeleted: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDataEdited: EventEmitter<any> = new EventEmitter<any>();
 
@@ -129,6 +125,8 @@ export class AbstractTableComponent
     const itemEditDialogRef = this.dialog.open(TableItemEditFormComponent, {
       minHeight: '800px',
       minWidth: '500px',
+      hasBackdrop: true,
+      disableClose: true,
       data: {
         elementId: element,
       },

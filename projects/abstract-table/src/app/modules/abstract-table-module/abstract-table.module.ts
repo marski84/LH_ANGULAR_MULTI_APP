@@ -27,13 +27,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatPaginatorModule,
     MatInputModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
+    // BrowserAnimationsModule,
     MatButtonModule,
   ],
-  exports: [
-    AbstractTableComponent,
-    DataKeyPipe,
-    TableItemEditFormComponent,
-  ],
+  exports: [AbstractTableComponent, DataKeyPipe, TableItemEditFormComponent],
 })
 export class AbstractTableModule {}

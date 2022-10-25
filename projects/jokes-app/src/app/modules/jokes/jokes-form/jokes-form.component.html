@@ -1,0 +1,29 @@
+<div>
+    <form
+        [formGroup]="jokesForm"
+        (submit)="onSubmit()"
+    >
+        <!-- formControlname="categoryFormCtrl.get([category]) as formControl" -->
+        <section>
+            <div [formGroup]="categoryFormCtrl">Select Joke category:</div>
+            <mat-checkbox
+                *ngFor="let category of categories"
+                class="example-margin"
+                [formControl]="anyTypeCtrl"
+                [value]="category"
+            >
+                {{category}}
+            </mat-checkbox>
+
+        </section>
+
+        <button
+            mat-raised-button
+            type="submit"
+        >
+            Submit
+        </button>
+
+    </form>
+
+</div>

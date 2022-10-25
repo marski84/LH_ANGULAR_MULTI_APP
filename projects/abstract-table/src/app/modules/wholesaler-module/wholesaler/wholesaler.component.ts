@@ -15,7 +15,9 @@ import {
 export class WholesalerComponent implements OnInit, AfterContentInit {
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('działam');
+  }
 
   ngAfterContentInit(): void {}
 }

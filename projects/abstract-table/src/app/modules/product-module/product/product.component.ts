@@ -64,7 +64,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         console.log(productList);
 
         this.products = productList;
-        this.abstractTable.refreshData();
+        if (this.abstractTable) this.abstractTable.refreshData();
       });
   }
 

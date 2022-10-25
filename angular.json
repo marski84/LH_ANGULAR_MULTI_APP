@@ -555,6 +555,7 @@
               "projects/jokes-app/src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/jokes-app/src/styles.scss"
             ],
             "scripts": []
@@ -623,6 +624,7 @@
               "projects/jokes-app/src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/jokes-app/src/styles.scss"
             ],
             "scripts": []

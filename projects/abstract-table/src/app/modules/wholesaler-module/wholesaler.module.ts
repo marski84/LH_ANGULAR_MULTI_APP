@@ -5,7 +5,9 @@ import { AbstractTableModule } from '../abstract-table-module/abstract-table.mod
 
 @NgModule({
   declarations: [WholesalerComponent],
-  imports: [CommonModule, AbstractTableModule],
+  imports: [
+    // AbstractTableModule
+  ],
   exports: [WholesalerComponent],
 })
 export class WholesalerModule {}

@@ -1,0 +1,24 @@
+<div class="input-container">
+    <mat-form-field>
+
+        <mat-label>{{inputLabel}}</mat-label>
+
+        <input
+            #input
+            [formControl]="control"
+            placeholder={{placeHolder}}
+            name="name"
+            matInput
+            maxlength="10"
+        >
+        <mat-error *ngIf="control.touched && control.hasError('required')">This field is required</mat-error>
+
+        <mat-error *ngIf="isNipControl && control.touched && control.hasError('invalidNipNumber')">Not a valid NIP number!</mat-error>
+
+    </mat-form-field>
+</div>
+
+<!-- <div>value: {{control.value}}</div>
+<div>touched: {{control.touched}}</div>
+<div>dirty: {{control.dirty}}</div>
+<div>error: {{control.hasError('required')}}</div> -->

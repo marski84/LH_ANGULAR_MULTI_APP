@@ -1,0 +1,17 @@
+<div>
+    <mat-form-field appearance="fill">
+        <mat-label>Account Type</mat-label>
+        <mat-select
+            [formControl]="control"
+            placeholder="Type of account"
+        >
+            <mat-option
+                [value]="value.value"
+                *ngFor="let value of selectValues"
+            >
+                {{value.viewValue}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="control.touched && control.hasError('required')">This field is required</mat-error>
+    </mat-form-field>
+</div>

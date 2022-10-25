@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DisplayComponent } from './display.component';
+import { CustomMatSelectComponent } from './custom-mat-select.component';
 
-describe('DisplayComponent', () => {
-  let component: DisplayComponent;
-  let fixture: ComponentFixture<DisplayComponent>;
+describe('CustomMatSelectComponent', () => {
+  let component: CustomMatSelectComponent;
+  let fixture: ComponentFixture<CustomMatSelectComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DisplayComponent ]
+      declarations: [ CustomMatSelectComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisplayComponent);
+    fixture = TestBed.createComponent(CustomMatSelectComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
