@@ -1,17 +1,26 @@
 <div>
     <mat-form-field appearance="fill">
-        <mat-label>Account Type</mat-label>
+        <mat-label>{{label}}</mat-label>
         <mat-select
             [formControl]="control"
-            placeholder="Type of account"
+            [multiple]="multiple"
+            placeholder="placeholder"
         >
             <mat-option
-                [value]="value.value"
                 *ngFor="let value of selectValues"
+                [value]="value.value"
             >
                 {{value.viewValue}}
             </mat-option>
         </mat-select>
+
+        <span
+            class="selected"
+            *ngIf="multiple && control.value.length > 0 "
+        >
+            <div *ngFor="let selectedValue of control.value">{{selectedValue | uppercase}}</div>
+        </span>
+
         <mat-error *ngIf="control.touched && control.hasError('required')">This field is required</mat-error>
     </mat-form-field>
 </div>

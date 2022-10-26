@@ -15,25 +15,17 @@ export class JokesFormComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   jokesForm: FormGroup = this.fb.group({
-    category: this.fb.group({
-      any: false,
-      programming: false,
-      Misc: false,
-      Dark: false,
-      Pun: false,
-      Spooky: false,
-      Christmas: false,
-    }),
-    language: [''],
+    category: ['', Validators.required],
+    type: ['', Validators.required],
     blacklist: [''],
   });
 
   get categoryFormCtrl() {
-    return this.jokesForm.get(['category']) as FormGroup;
+    return this.jokesForm.get(['category']) as FormControl;
   }
 
-  get anyTypeCtrl() {
-    return this.categoryFormCtrl.get(['any']) as FormControl;
+  get jokeTypeCtrl() {
+    return this.jokesForm.get(['type']) as FormControl;
   }
 
   get languageCtrl() {
@@ -54,11 +46,14 @@ export class JokesFormComponent implements OnInit {
     'Christmas',
   ];
 
+  jokeTypes = [
+    { value: 'single', viewValue: 'Single' },
+    { value: 'twopart', viewValue: 'Twopart' },
+  ];
+
   ngOnInit() {}
 
   onSubmit() {
     console.log(this.jokesForm.value);
-    console.log(this.jokesForm);
-    console.log(this.anyTypeCtrl);
   }
 }
