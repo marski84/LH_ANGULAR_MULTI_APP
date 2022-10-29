@@ -4,7 +4,7 @@ import {
   Validators,
   FormControl,
 } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-jokes-form',
@@ -12,12 +12,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./jokes-form.component.scss'],
 })
 export class JokesFormComponent implements OnInit {
+  @Output() formDataEmitted = new EventEmitter();
+
   constructor(private fb: FormBuilder) {}
 
   jokesForm: FormGroup = this.fb.group({
     category: ['', Validators.required],
     type: ['', Validators.required],
-    blacklist: [''],
+    blackList: [''],
   });
 
   get categoryFormCtrl() {
@@ -28,22 +30,18 @@ export class JokesFormComponent implements OnInit {
     return this.jokesForm.get(['type']) as FormControl;
   }
 
-  get languageCtrl() {
-    return this.jokesForm.get(['language']) as FormControl;
-  }
-
-  get blacklistCtrl() {
-    return this.jokesForm.get(['blacklist']) as FormControl;
+  get blackListCtrl() {
+    return this.jokesForm.get(['blackList']) as FormControl;
   }
 
   categories = [
-    'Any',
-    'Programming',
-    'Misc',
-    'Dark',
-    'Pun',
-    'Spooky',
-    'Christmas',
+    { value: 'any', viewValue: 'Any kind' },
+    { value: 'programming', viewValue: 'Programming' },
+    { value: 'misc', viewValue: 'Miscelanious' },
+    { value: 'dark', viewValue: 'Dark' },
+    { value: 'pun', viewValue: 'Punchline' },
+    { value: 'spooky', viewValue: 'Spooky' },
+    { value: 'christmas', viewValue: 'Christmas' },
   ];
 
   jokeTypes = [
@@ -51,9 +49,21 @@ export class JokesFormComponent implements OnInit {
     { value: 'twopart', viewValue: 'Twopart' },
   ];
 
+  blacklistCategories = [
+    { value: 'nsfw', viewValue: 'Work' },
+    { value: 'religious', viewValue: 'Religion' },
+    { value: 'political', viewValue: 'Politics' },
+    { value: 'racist', viewValue: 'Race' },
+    { value: 'sexist', viewValue: 'Sex' },
+    { value: 'explicit', viewValue: 'Explicit' },
+  ];
+
   ngOnInit() {}
 
   onSubmit() {
-    console.log(this.jokesForm.value);
+    if (this.jokesForm.valid) {
+      this.formDataEmitted.next(this.jokesForm.value);
+    }
+    return;
   }
 }

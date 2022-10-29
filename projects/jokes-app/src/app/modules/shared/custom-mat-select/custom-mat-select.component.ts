@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-interface IselectType {
+export interface IselectType {
   value: string;
   viewValue: string;
 }
@@ -22,7 +22,5 @@ export class CustomMatSelectComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.selectValues);
-  }
+  ngOnInit(): void {}
 }

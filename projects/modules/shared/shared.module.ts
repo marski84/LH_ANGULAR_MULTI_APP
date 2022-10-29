@@ -19,6 +19,7 @@ import { CustomNipInputComponent } from './custom-nip-input/custom-nip-input.com
     CustomMatInputComponent,
     CustomMatSelectComponent,
     CustomNipInputComponent,
+    CustomMatSpinnerComponent,
   ],
 
   providers: [],

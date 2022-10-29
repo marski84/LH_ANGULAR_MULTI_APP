@@ -18,7 +18,11 @@
             class="selected"
             *ngIf="multiple && control.value.length > 0 "
         >
-            <div *ngFor="let selectedValue of control.value">{{selectedValue | uppercase}}</div>
+            <mat-divider></mat-divider>
+            You have selected:
+            <div *ngFor="let selectedValue of control.value; let i = index">
+                {{i + 1}}. {{selectedValue | viewValuePipe: selectValues}}
+            </div>
         </span>
 
         <mat-error *ngIf="control.touched && control.hasError('required')">This field is required</mat-error>

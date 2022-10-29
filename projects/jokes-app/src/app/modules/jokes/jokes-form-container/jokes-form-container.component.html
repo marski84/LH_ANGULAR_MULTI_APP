@@ -1,4 +1,7 @@
-<app-jokes-form></app-jokes-form>
+<app-jokes-form
+    class="centered"
+    (formDataEmitted)="handleFormData($event)"
+></app-jokes-form>
 
-<app-display></app-display>
-<button (click)="getJokes()">Get Jokes</button>
+<app-display class="centered"></app-display>
+<!-- <button (click)="getJokes()">Get Jokes</button> -->

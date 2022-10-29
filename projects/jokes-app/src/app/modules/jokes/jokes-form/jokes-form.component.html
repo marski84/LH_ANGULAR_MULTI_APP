@@ -1,28 +1,18 @@
 <div class="form-container">
     <form
+        class="form"
         [formGroup]="jokesForm"
         (submit)="onSubmit()"
     >
 
         <section class="category-section">
-            <mat-form-field appearance="fill">
-                <mat-label>Selected joke categories</mat-label>
-                <mat-select
-                    [formControl]="categoryFormCtrl"
-                    multiple
-                >
-                    <mat-select-trigger></mat-select-trigger>
-                    <mat-option
-                        *ngFor="let category of categories"
-                        [value]="category"
-                    >
-                        {{category}}
-                    </mat-option>
-                </mat-select>
-                <span class="selected">
-                    <div *ngFor="let selectedCategory of categoryFormCtrl.value">{{selectedCategory | uppercase}}</div>
-                </span>
-            </mat-form-field>
+            <custom-mat-select
+                name="category-control"
+                [label]="'Select joke category'"
+                [control]="categoryFormCtrl"
+                [selectValues]="categories"
+                [multiple]="true"
+            ></custom-mat-select>
 
         </section>
 
@@ -34,17 +24,29 @@
                 [selectValues]="jokeTypes"
                 [multiple]="true"
             >
-
             </custom-mat-select>
-
         </section>
 
-        <button
-            mat-raised-button
-            type="submit"
-        >
-            Submit
-        </button>
+        <section>
+            <custom-mat-select
+                name="blacklisted-jokes-control"
+                [control]="blackListCtrl"
+                [label]="'I would rather not joke about..'"
+                [selectValues]="blacklistCategories"
+                [multiple]="true"
+            >
+            </custom-mat-select>
+        </section>
+
+        <div class="button-container">
+            <button
+                class="submit-button"
+                mat-raised-button
+                type="submit"
+            >
+                Make me laugh!
+            </button>
+        </div>
 
     </form>
 

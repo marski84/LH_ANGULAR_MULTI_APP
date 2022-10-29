@@ -6,6 +6,8 @@ import { DisplayComponent } from './display/display.component';
 import { JokesFormContainerComponent } from './jokes-form-container/jokes-form-container.component';
 import { JokesFormComponent } from './jokes-form/jokes-form.component';
 import { SharedModule } from '../shared/shared.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NetworkInterceptor } from './jokes-form-container/network.interceptor';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,9 @@ import { SharedModule } from '../shared/shared.module';
     JokesFormContainerComponent,
     DisplayComponent,
     MaterialModule,
+  ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: NetworkInterceptor, multi: true },
   ],
 })
 export class JokesModule {}

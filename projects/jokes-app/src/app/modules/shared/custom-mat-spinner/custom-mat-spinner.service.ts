@@ -9,4 +9,12 @@ export class CustomMatSpinnerService {
   isLoading$ = this._isLoading.asObservable();
 
   constructor() {}
+
+  show() {
+    this._isLoading.next(true);
+  }
+
+  hide() {
+    this._isLoading.next(false);
+  }
 }

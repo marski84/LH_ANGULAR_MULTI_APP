@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { JokesApiService } from './jokes-api.service';
-import { tap } from 'rxjs';
+import { map, tap } from 'rxjs';
+import { IjokeForm } from '../models/jokeForm.interface';
+import { HttpResponse } from '@angular/common/http';
+import { IjokeApiResponse } from '../models/jokeApiResponse.interface';
+import { IformattedJokeResponse } from '../models/formattedJokeResponse.interface';
 
 @Component({
   selector: 'app-jokes-form-container',
@@ -12,10 +16,36 @@ export class JokesFormContainerComponent implements OnInit {
 
   ngOnInit() {}
 
-  getJokes() {
+  private getJokes(formData: IjokeForm) {
     this.jokesApiService
-      .getJokes()
-      .pipe(tap((resp) => console.log(resp)))
+      .getJokes(formData)
+      .pipe(
+        map((data) => this.formatApiResponse(data)),
+        tap((resp) => this.jokesApiService.jokeDataSubject$.next(resp))
+      )
       .subscribe();
+  }
+
+  handleFormData(formData: IjokeForm) {
+    console.log(formData);
+
+    const { category, type, blackList } = formData;
+
+    console.log(category.join(','));
+
+    const blacklistFlags = blackList;
+    this.getJokes(formData);
+  }
+
+  formatApiResponse(apiResponse: IjokeApiResponse): IformattedJokeResponse {
+    console.log(apiResponse);
+    const formatedData = {
+      jokeCategory: apiResponse.category,
+      type: apiResponse.type,
+      joke: apiResponse.joke,
+      twoPartJokeQuostion: apiResponse.setup,
+      twoPartJokeAnswer: apiResponse.delivery,
+    };
+    return formatedData;
   }
 }

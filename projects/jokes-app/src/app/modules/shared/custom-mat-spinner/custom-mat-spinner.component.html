@@ -1,1 +1,4 @@
-<p>custom-mat-spinner works!</p>
+<mat-progress-spinner
+    [mode]="'indeterminate'"
+    *ngIf="loading$ | async"
+></mat-progress-spinner>

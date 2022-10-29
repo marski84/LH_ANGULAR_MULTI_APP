@@ -4,8 +4,23 @@
 }
 
 .form-container {
-  margin-left: 5%;
+  display: flex;
+  // justify-self: center;
+  // margin: auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
 }
 
 .category-section {
+}
+
+.button-container {
+  display: flex;
+}
+
+.submit-button {
+  margin: 0 auto;
 }
