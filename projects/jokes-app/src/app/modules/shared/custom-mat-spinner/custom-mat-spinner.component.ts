@@ -11,7 +11,5 @@ export class CustomMatSpinnerComponent implements OnInit {
   constructor(public loader: CustomMatSpinnerService) {}
   loading$ = this.loader.isLoading$;
 
-  ngOnInit(): void {
-    console.log('init');
-  }
+  ngOnInit(): void {}
 }

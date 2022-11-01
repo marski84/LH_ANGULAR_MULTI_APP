@@ -27,13 +27,6 @@ export class JokesFormContainerComponent implements OnInit {
   }
 
   handleFormData(formData: IjokeForm) {
-    console.log(formData);
-
-    const { category, type, blackList } = formData;
-
-    console.log(category.join(','));
-
-    const blacklistFlags = blackList;
     this.getJokes(formData);
   }
 

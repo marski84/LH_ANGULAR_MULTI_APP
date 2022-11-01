@@ -18,10 +18,8 @@ export class NetworkInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     this.spinnerService.show();
 
-    return next.handle(request).pipe(
-      finalize(() => {
-        return this.spinnerService.hide();
-      })
-    );
+    return next
+      .handle(request)
+      .pipe(finalize(() => this.spinnerService.hide()));
   }
 }

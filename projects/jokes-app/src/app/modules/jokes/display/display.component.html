@@ -4,16 +4,10 @@
     *ngIf="(jokeDataReceiver$ | async) as dataToDisplay "
 >
 
-    <div *ngIf="(isLoading$ |async)">
-        <!-- <mat-progress-spinner
-            class="example-margin"
-            [color]="color"
-            [mode]="mode"
-            [value]="value"
-        >
-        </mat-progress-spinner> -->
+    <div>
         <app-custom-mat-spinner></app-custom-mat-spinner>
     </div>
+
     <div
         class="display-container"
         *ngIf="dataToDisplay.type === 'single' then single else twopart "

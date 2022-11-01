@@ -1,3 +1,4 @@
+import { IjokeForm } from './../models/jokeForm.interface';
 import {
   FormBuilder,
   FormGroup,
@@ -12,7 +13,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./jokes-form.component.scss'],
 })
 export class JokesFormComponent implements OnInit {
-  @Output() formDataEmitted = new EventEmitter();
+  @Output() formDataEmitted = new EventEmitter<IjokeForm>();
 
   constructor(private fb: FormBuilder) {}
 
