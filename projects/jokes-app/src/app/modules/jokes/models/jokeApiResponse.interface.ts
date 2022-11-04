@@ -1,10 +1,12 @@
+import { JokeType } from './jokeType.enum';
+
 export interface IjokeApiResponse {
   error: boolean;
   category: string;
-  type: string;
+  type: JokeType;
   setup?: string;
   delivery?: string;
-  joke?: string;
+  joke?: JokeType;
   flags: {
     nsfw: boolean;
     religious: boolean;

@@ -7,7 +7,7 @@ import { CustomMatSelectComponent } from './custom-mat-select/custom-mat-select.
 import { CustomNipInputComponent } from './custom-nip-input/custom-nip-input.component';
 import { ViewValuePipePipe } from './custom-mat-select/view-value-pipe.pipe';
 import { CustomMatSpinnerComponent } from './custom-mat-spinner/custom-mat-spinner.component';
-const modules = [
+const components = [
   CustomMatInputComponent,
   CustomMatSelectComponent,
   CustomNipInputComponent,
@@ -15,9 +15,9 @@ const modules = [
   CustomMatSpinnerComponent,
 ];
 @NgModule({
-  declarations: [[...modules]],
-  imports: [CommonModule, MaterialModule],
-  exports: [[...modules]],
+  declarations: [...components],
+  imports: [MaterialModule, CommonModule],
+  exports: [...components, CommonModule],
 
   providers: [],
 })

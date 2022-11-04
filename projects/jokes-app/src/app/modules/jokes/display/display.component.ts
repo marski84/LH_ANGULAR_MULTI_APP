@@ -1,8 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
-import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { JokesApiService } from '../jokes-form-container/jokes-api.service';
+import { JokeType } from '../models/jokeType.enum';
 
 @Component({
   selector: 'app-display',
@@ -10,13 +8,10 @@ import { JokesApiService } from '../jokes-form-container/jokes-api.service';
   styleUrls: ['./display.component.scss'],
 })
 export class DisplayComponent implements OnInit {
-  constructor(private jokesApiService: JokesApiService) {}
-
-  color: ThemePalette = 'primary';
-  mode: ProgressSpinnerMode = 'indeterminate';
-  value = 50;
-
   jokeDataReceiver$ = this.jokesApiService.jokeData$;
 
+  jokerTypes = JokeType;
+
+  constructor(private jokesApiService: JokesApiService) {}
   ngOnInit(): void {}
 }

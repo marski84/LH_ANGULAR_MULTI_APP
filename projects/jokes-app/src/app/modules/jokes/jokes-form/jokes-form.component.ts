@@ -6,6 +6,9 @@ import {
   FormControl,
 } from '@angular/forms';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { DictionaryService } from './dictionary.service';
+import { tap } from 'rxjs';
+import { ISelectValue } from '../models/selectValue.interface';
 
 @Component({
   selector: 'app-jokes-form',
@@ -14,9 +17,6 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class JokesFormComponent implements OnInit {
   @Output() formDataEmitted = new EventEmitter<IjokeForm>();
-
-  constructor(private fb: FormBuilder) {}
-
   jokesForm: FormGroup = this.fb.group({
     category: ['', Validators.required],
     type: ['', Validators.required],
@@ -24,7 +24,7 @@ export class JokesFormComponent implements OnInit {
   });
 
   get categoryFormCtrl() {
-    return this.jokesForm.get(['category']) as FormControl;
+    return this.jokesForm.get('category') as FormControl;
   }
 
   get jokeTypeCtrl() {
@@ -35,35 +35,40 @@ export class JokesFormComponent implements OnInit {
     return this.jokesForm.get(['blackList']) as FormControl;
   }
 
-  categories = [
-    { value: 'any', viewValue: 'Any kind' },
-    { value: 'programming', viewValue: 'Programming' },
-    { value: 'misc', viewValue: 'Miscelanious' },
-    { value: 'dark', viewValue: 'Dark' },
-    { value: 'pun', viewValue: 'Punchline' },
-    { value: 'spooky', viewValue: 'Spooky' },
-    { value: 'christmas', viewValue: 'Christmas' },
-  ];
+  constructor(
+    private fb: FormBuilder,
+    private distionaryService: DictionaryService
+  ) {}
 
-  jokeTypes = [
-    { value: 'single', viewValue: 'Single' },
-    { value: 'twopart', viewValue: 'Twopart' },
-  ];
+  categories!: ISelectValue[];
+  jokeTypes!: ISelectValue[];
+  blacklistCategories!: ISelectValue[];
 
-  blacklistCategories = [
-    { value: 'nsfw', viewValue: 'Work' },
-    { value: 'religious', viewValue: 'Religion' },
-    { value: 'political', viewValue: 'Politics' },
-    { value: 'racist', viewValue: 'Race' },
-    { value: 'sexist', viewValue: 'Sex' },
-    { value: 'explicit', viewValue: 'Explicit' },
-  ];
+  ngOnInit() {
+    this.distionaryService
+      .getCategories()
+      .pipe(tap((jokeCategoriers) => (this.categories = jokeCategoriers)))
+      .subscribe();
 
-  ngOnInit() {}
+    this.distionaryService
+      .getJokeTypes()
+      .pipe(tap((jokeTypes) => (this.jokeTypes = jokeTypes)))
+      .subscribe();
+
+    this.distionaryService
+      .getBlackListCategories()
+      .pipe(
+        tap(
+          (blackListCategories) =>
+            (this.blacklistCategories = blackListCategories)
+        )
+      )
+      .subscribe();
+  }
 
   onSubmit() {
     if (this.jokesForm.valid) {
-      this.formDataEmitted.next(this.jokesForm.value);
+      this.formDataEmitted.emit(this.jokesForm.value);
     }
     return;
   }

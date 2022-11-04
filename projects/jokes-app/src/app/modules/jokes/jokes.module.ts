@@ -9,17 +9,16 @@ import { SharedModule } from '../shared/shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NetworkInterceptor } from './jokes-form-container/network.interceptor';
 
-const modules = [
+const components = [
   JokesFormComponent,
   JokesFormContainerComponent,
   DisplayComponent,
 ];
 
 @NgModule({
-  declarations: [[...modules]],
-
-  imports: [CommonModule, MaterialModule, ReactiveFormsModule, SharedModule],
-  exports: [[...modules], MaterialModule],
+  declarations: [...components],
+  imports: [MaterialModule, ReactiveFormsModule, SharedModule],
+  exports: [JokesFormContainerComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: NetworkInterceptor, multi: true },
   ],

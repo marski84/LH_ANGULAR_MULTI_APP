@@ -10,12 +10,13 @@
 
     <div
         class="display-container"
-        *ngIf="dataToDisplay.type === 'single' then single else twopart "
+        *ngIf="dataToDisplay.type === jokerTypes.single then single else twopart "
     ></div>
 
     <ng-template #single>
         <mat-card>{{dataToDisplay.joke}}</mat-card>
     </ng-template>
+
     <ng-template #twopart>
         <mat-card>
             <ul>

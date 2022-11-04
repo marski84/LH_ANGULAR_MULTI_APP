@@ -1,7 +1,8 @@
+import { JokeType } from './jokeType.enum';
 export interface IformattedJokeResponse {
   jokeCategory: string;
-  type: string;
-  joke: string | undefined;
-  twoPartJokeQuostion: string | undefined;
-  twoPartJokeAnswer: string | undefined;
+  type: JokeType;
+  joke?: string;
+  twoPartJokeQuostion?: string;
+  twoPartJokeAnswer?: string;
 }

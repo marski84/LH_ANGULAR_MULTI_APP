@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IjokeForm } from '../models/jokeForm.interface';
-import { Observable, ReplaySubject } from 'rxjs';
+import { map, Observable, ReplaySubject, tap } from 'rxjs';
 import { IjokeApiResponse } from '../models/jokeApiResponse.interface';
 import { IformattedJokeResponse } from '../models/formattedJokeResponse.interface';
 
@@ -9,36 +9,49 @@ import { IformattedJokeResponse } from '../models/formattedJokeResponse.interfac
   providedIn: 'root',
 })
 export class JokesApiService {
-  constructor(private http: HttpClient) {}
-
   jokeDataSubject$ = new ReplaySubject<IformattedJokeResponse>();
-
   readonly jokeData$: Observable<IformattedJokeResponse> =
     this.jokeDataSubject$.asObservable();
 
-  private setQueryParams(type: string[], blackList: string[]) {
-    let queryParams: HttpParams;
+  constructor(private http: HttpClient) {}
+
+  getJokes(formData: IjokeForm): Observable<IformattedJokeResponse> {
+    const { category, type, blackList } = formData;
+    const queryParams = this.returnQueryParams(type, blackList);
+
+    return this.http
+      .get<IjokeApiResponse>(
+        `https://v2.jokeapi.dev/joke/${category.join(',')}`,
+        {
+          params: queryParams,
+        }
+      )
+      .pipe(
+        map((data) => this.formatApiResponse(data)),
+        tap((formattedData) => this.jokeDataSubject$.next(formattedData))
+      );
+  }
+
+  private returnQueryParams(type: string[], blackList: string[]) {
+    let queryParams: HttpParams = new HttpParams().set('type', type.join(','));
+
     if (blackList.length) {
-      queryParams = new HttpParams()
-        .set('blacklistFlags', blackList.join(','))
-        .set('type', type.join(','));
-    } else {
-      queryParams = new HttpParams().set('type', type.join(','));
+      queryParams = queryParams.set('blacklistFlags', blackList.join(','));
     }
 
     return queryParams;
   }
 
-  getJokes(formData: IjokeForm): Observable<IjokeApiResponse> {
-    const { category, type, blackList } = formData;
-
-    const queryParams = this.setQueryParams(type, blackList);
-
-    return this.http.get<IjokeApiResponse>(
-      `https://v2.jokeapi.dev/joke/${category.join(',')}?`,
-      {
-        params: queryParams,
-      }
-    );
+  private formatApiResponse(
+    apiResponse: IjokeApiResponse
+  ): IformattedJokeResponse {
+    const formatedData = {
+      jokeCategory: apiResponse.category,
+      type: apiResponse.type,
+      joke: apiResponse.joke,
+      twoPartJokeQuostion: apiResponse.setup,
+      twoPartJokeAnswer: apiResponse.delivery,
+    };
+    return formatedData;
   }
 }
