@@ -1,7 +1,6 @@
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '../material/material.module';
 import { DisplayComponent } from './display/display.component';
 import { JokesFormContainerComponent } from './jokes-form-container/jokes-form-container.component';
 import { JokesFormComponent } from './jokes-form/jokes-form.component';
@@ -17,7 +16,7 @@ const components = [
 
 @NgModule({
   declarations: [...components],
-  imports: [MaterialModule, ReactiveFormsModule, SharedModule],
+  imports: [ReactiveFormsModule, SharedModule],
   exports: [JokesFormContainerComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: NetworkInterceptor, multi: true },
