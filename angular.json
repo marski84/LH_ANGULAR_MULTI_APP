@@ -699,6 +699,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "projects/crypto-app/src/proxy.conf.json",
+            "browserTarget": "projectname:build"
+          },
           "configurations": {
             "production": {
               "browserTarget": "CryptoApp:build:production"
@@ -731,6 +735,7 @@
               "projects/crypto-app/src/styles.scss"
             ],
             "scripts": []
+
           }
         }
       }

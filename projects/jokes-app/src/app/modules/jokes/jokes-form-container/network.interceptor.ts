@@ -46,9 +46,7 @@ export class NetworkInterceptor implements HttpInterceptor {
     //   );
 
     return next.handle(request).pipe(
-      debounceTime(5000),
-      distinctUntilChanged(),
-      // mergeMap(request => of(request).pipe(debounceTime(5000)),
+      switchMap((request) => of(request).pipe(debounceTime(500))),
       finalize(() => {
         this.count--;
         if (this.count === 0) {
