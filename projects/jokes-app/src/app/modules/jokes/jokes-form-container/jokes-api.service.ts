@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IjokeForm } from '../models/jokeForm.interface';
-import { map, Observable, ReplaySubject, tap } from 'rxjs';
+import { map, Observable, ReplaySubject, Subject, tap } from 'rxjs';
 import { IjokeApiResponse } from '../models/jokeApiResponse.interface';
 import { IformattedJokeResponse } from '../models/formattedJokeResponse.interface';
 
@@ -10,12 +10,14 @@ import { IformattedJokeResponse } from '../models/formattedJokeResponse.interfac
 })
 export class JokesApiService {
   jokeDataSubject$ = new ReplaySubject<IformattedJokeResponse>();
+  jokesDownloadingStarted$ = new Subject<void>();
   readonly jokeData$: Observable<IformattedJokeResponse> =
     this.jokeDataSubject$.asObservable();
 
   constructor(private http: HttpClient) {}
 
   getJokes(formData: IjokeForm): Observable<IformattedJokeResponse> {
+    this.jokesDownloadingStarted$.next();
     const { category, type, blackList } = formData;
     const queryParams = this.returnQueryParams(type, blackList);
 
