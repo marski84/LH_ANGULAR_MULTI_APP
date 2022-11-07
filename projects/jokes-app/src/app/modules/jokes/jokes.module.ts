@@ -1,6 +1,5 @@
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DisplayComponent } from './display/display.component';
 import { JokesFormContainerComponent } from './jokes-form-container/jokes-form-container.component';
 import { JokesFormComponent } from './jokes-form/jokes-form.component';
