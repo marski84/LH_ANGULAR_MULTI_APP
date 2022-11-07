@@ -1,13 +1,15 @@
 <mat-divider></mat-divider>
+
+
+<div class="spinner-container" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+  <app-custom-mat-spinner></app-custom-mat-spinner>
+</div>
+
 <div
     class="container"
-    *ngIf="(jokeDataReceiver$ | async) as dataToDisplay "
+    *ngIf="!isLoading && (jokeDataReceiver$ | async) as dataToDisplay "
 >
-
-    <div>
-        <app-custom-mat-spinner></app-custom-mat-spinner>
-    </div>
-
     <div
         class="display-container"
         *ngIf="dataToDisplay.type === jokerTypes.single then single else twopart "
@@ -26,5 +28,5 @@
         </mat-card>
 
     </ng-template>
-
 </div>
+
