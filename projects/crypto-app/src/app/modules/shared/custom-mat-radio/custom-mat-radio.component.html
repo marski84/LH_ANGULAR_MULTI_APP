@@ -1,0 +1,14 @@
+<label>{{label}}</label>
+<mat-radio-group
+    aria-labelledby="radio-group-label"
+    class="radio-group"
+    [formControl]="control"
+>
+    <mat-radio-button
+        class="radio-button"
+        *ngFor="let option of selectValues"
+        [value]="option.value"
+    >
+        {{option.viewValue}}
+    </mat-radio-button>
+</mat-radio-group>

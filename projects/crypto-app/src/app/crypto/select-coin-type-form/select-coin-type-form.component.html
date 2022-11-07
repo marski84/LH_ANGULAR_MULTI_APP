@@ -1,1 +1,28 @@
-<p>select-coin-type-form works!</p>
+<div class="form-container">
+    <form
+        [formGroup]="bitCoinForm"
+        (ngSubmit)="handleSubmit(bitCoinForm.value)"
+    >
+
+        <custom-mat-radio
+            [control]="bitCoinTypeCtrl"
+            [selectValues]="bitCoinList"
+            [label]="'Select bitcoin type'"
+        ></custom-mat-radio>
+
+        <custom-mat-radio
+            [control]="exchangeCurrencyTypeCtrl"
+            [selectValues]="currencyList"
+            [label]="'Select currency type'"
+        ></custom-mat-radio>
+
+        <button
+            mat-raised-button
+            type="submit"
+        >
+            Submit
+        </button>
+
+    </form>
+
+</div>

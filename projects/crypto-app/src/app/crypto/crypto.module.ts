@@ -8,12 +8,21 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
-import { SharedModule } from '../../../../jokes-app/src/app/modules/shared/shared.module';
+
 import { NetworkInterceptor } from './network.interceptor';
+import { SharedModule } from '../modules/shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [SelectCoinTypeFormComponent, DataContainerComponent],
-  imports: [CommonModule, SharedModule, HttpClientModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+  ],
   exports: [DataContainerComponent],
   providers: [
     CoinService,

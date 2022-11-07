@@ -4,10 +4,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CryptoModule } from './crypto/crypto.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, CryptoModule],
+  imports: [BrowserModule, AppRoutingModule, CryptoModule, BrowserAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
