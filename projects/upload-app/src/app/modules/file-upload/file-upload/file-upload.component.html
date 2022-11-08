@@ -50,5 +50,31 @@
     <div *ngFor="let file of uploadedFiles; let i = index">
         {{i +1}}. {{file.documentType}}: {{file.fileName}}
     </div>
+    <!-- <ngx-smart-modal
+        #fileTooBigModal
+        identifier="fileTooBigModal"
+        customClass=".nsm-dialog-animation-ltr"
+        class="modal"
+        [backdrop]="true"
+    >
+        <h1>Rozmiar pliku jest zbyt duzy</h1>
+        <div>Maksymalny rozmiar pliku to 10mb.</div>
+        <button
+            (click)="fileTooBigModal.close()"
+            mat-raised-button
+        >
+            Zamknij
+        </button>
+    </ngx-smart-modal>
+
+    <ngx-smart-modal
+        #fileTypeNotAllowed
+        identifier="fileTypeNotAllowed"
+    >
+        <h1>Typ pliku niezgodny ze standardem</h1>
+        <div>
+            Mozliwe jest załączanie plików typu .doc, .docx, .jpg, .pdf, .png
+        </div>
+    </ngx-smart-modal> -->
 
 </div>

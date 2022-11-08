@@ -1,5 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, delay, finalize, first, map, Subject, takeUntil, tap, timer } from 'rxjs';
+import {
+  combineLatest,
+  delay,
+  finalize,
+  first,
+  map,
+  Subject,
+  takeUntil,
+  tap,
+  timer,
+} from 'rxjs';
 import { JokesApiService } from '../jokes-form-container/jokes-api.service';
 import { JokeType } from '../models/jokeType.enum';
 
@@ -17,7 +27,9 @@ export class DisplayComponent implements OnInit, OnDestroy {
   constructor(private jokesApiService: JokesApiService) {}
 
   ngOnInit(): void {
-    this.jokesApiService.jokesDownloadingStarted$.pipe(takeUntil(this.onDestroy$)).subscribe(() => this.loadingState());
+    this.jokesApiService.jokesDownloadingStarted$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(() => this.loadingState());
   }
 
   loadingState() {
@@ -25,8 +37,8 @@ export class DisplayComponent implements OnInit, OnDestroy {
     combineLatest([timer(500), this.jokeDataReceiver$.pipe(first())])
       .pipe(
         takeUntil(this.onDestroy$),
-        map(x => x[1]),
-        finalize(() => (this.isLoading = false)),
+        map((x) => x[1]),
+        finalize(() => (this.isLoading = false))
       )
       .subscribe();
   }
