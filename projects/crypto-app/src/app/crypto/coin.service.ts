@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, take, Observable, of } from 'rxjs';
+import {
+  map,
+  take,
+  Observable,
+  of,
+  timer,
+  ReplaySubject,
+  interval,
+  tap,
+} from 'rxjs';
 import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
 import { bitCoinFormData } from './models/bitCoinFormData.interface';
@@ -15,6 +24,14 @@ export class CoinService {
   // https://api.kucoin.com/api/v2/symbols
 
   constructor(private httpService: HttpClient) {}
+
+  coinDataStream$: ReplaySubject<IcoinApiResponse> =
+    new ReplaySubject<IcoinApiResponse>(1);
+
+  refreshCrytoData$: ReplaySubject<IcoinApiResponse> =
+    new ReplaySubject<IcoinApiResponse>();
+
+  anyStream = interval(5000).pipe(tap(() => console.log('ok')));
 
   availabaleBitCoins: IselectValue[] = [
     {
@@ -68,7 +85,7 @@ export class CoinService {
   // Default: "usd"
   // returned data quote (available values: usd btc)
 
-  getbitCoinData(formData: bitCoinFormData): Observable<IcoinApiResponse> {
+  getbitCoinData$(formData: bitCoinFormData): Observable<IcoinApiResponse> {
     const { bitCoinType, exchangeCurrencyType } = formData;
     const params: HttpParams = new HttpParams().set(
       'quote',

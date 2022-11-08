@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription, tap } from 'rxjs';
+import {
+  combineLatest,
+  map,
+  Subscription,
+  tap,
+  timer,
+  switchMap,
+  takeUntil,
+  interval,
+} from 'rxjs';
 import { CoinService } from '../coin.service';
 import { IselectValue } from '../models/selectValue.interface';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
@@ -10,6 +19,7 @@ import { FormBuilder, Validators, FormControl } from '@angular/forms';
   styleUrls: ['./select-coin-type-form.component.scss'],
 })
 export class SelectCoinTypeFormComponent implements OnInit {
+  coinDataReceiver: any;
   constructor(private coinService: CoinService, private fb: FormBuilder) {}
 
   bitCoinList!: IselectValue[];
@@ -42,7 +52,14 @@ export class SelectCoinTypeFormComponent implements OnInit {
     this.bitCoinTypeCtrl.setValue(this.bitCoinList[0].value);
     this.exchangeCurrencyTypeCtrl.setValue(this.currencyList[0].value);
 
-    this.coinService.getbitCoinData(this.bitCoinForm.value).subscribe();
+    const coinData$ = this.coinService.getbitCoinData$(this.bitCoinForm.value);
+
+    interval(2000).pipe(tap(() => console.log('1')));
+
+    // this.coinService.getbitCoinData(this.bitCoinForm.value).subscribe();
+    this.coinService.coinDataStream$.subscribe();
+
+    // this.coinService.anyStream.subscribe();
   }
 
   handleSubmit(value: any) {

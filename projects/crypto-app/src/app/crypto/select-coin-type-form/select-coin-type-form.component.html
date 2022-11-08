@@ -24,5 +24,10 @@
         </button>
 
     </form>
+    <div *ngIf="coinDataReceiver | async as coinData">
+
+        <preview [data]="coinData"></preview>
+
+    </div>
 
 </div>

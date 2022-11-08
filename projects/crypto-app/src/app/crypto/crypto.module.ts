@@ -13,9 +13,10 @@ import { NetworkInterceptor } from './network.interceptor';
 import { SharedModule } from '../modules/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PreviewComponent } from './preview/preview.component';
 
 @NgModule({
-  declarations: [SelectCoinTypeFormComponent, DataContainerComponent],
+  declarations: [SelectCoinTypeFormComponent, DataContainerComponent, PreviewComponent],
   imports: [
     CommonModule,
     SharedModule,
