@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ModalComponent } from '../modal/modal.component';
 import { UploadService } from '../upload.service';
 
 @Component({
@@ -10,24 +11,21 @@ import { UploadService } from '../upload.service';
 })
 export class FileUploadComponent implements OnInit {
   constructor(
-    private uploadService: UploadService
-  ) // private dialogRef: MatDialogRef<any>
-  {}
-
-  @ViewChild('fileTooBigModal', { static: false }) fileTooBigModal: any;
+    private uploadService: UploadService,
+    private dialog: MatDialog
+  ) {}
 
   uploadedFiles: any[] = [];
   maxFileSize = 10485760;
   acceptedFiles = ['pdf', 'png', 'jpg', 'doc', 'docx', '.7z'];
 
-  animalControl = new FormControl(null, Validators.required);
   selectFormControl = new FormControl('', Validators.required);
 
   animals = [
-    { name: 'Dog', sound: 'Woof!' },
-    { name: 'Cat', sound: 'Meow!' },
-    { name: 'Cow', sound: 'Moo!' },
-    { name: 'Fox', sound: 'Wa-pa-pa-pa-pa-pa-pow!' },
+    { name: 'Kwestionariusz A' },
+    { name: 'Kwestionariusz B' },
+    { name: 'Kwestionariusz C' },
+    { name: 'Kwestionariusz D' },
   ];
 
   fileName = '';
@@ -40,11 +38,11 @@ export class FileUploadComponent implements OnInit {
     console.log(event);
 
     const file: File = event.target.files[0];
-    const documentType = this.animalControl.value;
+    const documentType = this.selectFormControl.value;
 
     if (file.size >= this.maxFileSize) {
       console.log('za duy plik');
-
+      this.openFileTooBigModal();
       return;
     }
 
@@ -55,7 +53,10 @@ export class FileUploadComponent implements OnInit {
       return acceptedFileType === fileType;
     });
 
-    console.log(isFileValid);
+    if (!isFileValid) {
+      this.openInvalidFileFormatModal();
+      return;
+    }
 
     if (file) {
       this.fileName = file.name;
@@ -63,7 +64,38 @@ export class FileUploadComponent implements OnInit {
         attachedFile: file,
         document: documentType,
       });
-      this.animalControl.reset();
+      this.selectFormControl.reset();
     }
+  }
+
+  private openFileTooBigModal() {
+    const modalConfig = {
+      autoFocus: true,
+      disableClose: true,
+      hasBackdrop: true,
+      width: '400px',
+      height: '200px',
+    };
+    const dialogRef = this.dialog.open(ModalComponent, modalConfig);
+    dialogRef.componentInstance.title = 'Plik jest za duzy!';
+
+    dialogRef.componentInstance.content = 'Maksymalny rozmiar pliku to 10mb!';
+    dialogRef.afterClosed().subscribe(() => this.selectFormControl.reset());
+  }
+
+  private openInvalidFileFormatModal() {
+    const modalConfig = {
+      autoFocus: true,
+      disableClose: true,
+      hasBackdrop: true,
+      width: '400px',
+      height: '200px',
+    };
+    const dialogRef = this.dialog.open(ModalComponent, modalConfig);
+    dialogRef.componentInstance.title = 'Nieprawidłowy format pliku';
+
+    dialogRef.componentInstance.content =
+      'Akceptowalne formaty to .doc, .docx, .jpg, .pdf .png';
+    dialogRef.afterClosed().subscribe(() => this.selectFormControl.reset());
   }
 }

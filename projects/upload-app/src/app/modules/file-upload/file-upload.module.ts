@@ -5,9 +5,10 @@ import { MaterialModule } from '../material/material.module';
 import { FileUploadContainerComponent } from './file-upload-container/file-upload-container.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NetworkInterceptor } from 'projects/upload-app/network.interceptor';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
-  declarations: [FileUploadComponent, FileUploadContainerComponent],
+  declarations: [FileUploadComponent, FileUploadContainerComponent, ModalComponent],
   imports: [CommonModule, MaterialModule, HttpClientModule],
   exports: [FileUploadContainerComponent],
   providers: [
