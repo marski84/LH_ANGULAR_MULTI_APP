@@ -23,9 +23,9 @@ export class FileUploadComponent implements OnInit {
 
   animals = [
     { name: 'Kwestionariusz A' },
-    { name: 'Kwestionariusz B' },
-    { name: 'Kwestionariusz C' },
-    { name: 'Kwestionariusz D' },
+    { name: 'Kwestionariusz okok' },
+    { name: 'Kwestionariusz barba' },
+    { name: 'Kwestionariusz slusarz' },
   ];
 
   fileName = '';

@@ -6,10 +6,22 @@ import { FileUploadContainerComponent } from './file-upload-container/file-uploa
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NetworkInterceptor } from 'projects/upload-app/network.interceptor';
 import { ModalComponent } from './modal/modal.component';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { NgxMatSelectModule } from 'ngx-mat-select';
 
 @NgModule({
-  declarations: [FileUploadComponent, FileUploadContainerComponent, ModalComponent],
-  imports: [CommonModule, MaterialModule, HttpClientModule],
+  declarations: [
+    FileUploadComponent,
+    FileUploadContainerComponent,
+    ModalComponent,
+  ],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    HttpClientModule,
+    NgxMatSelectSearchModule,
+    NgxMatSelectModule.forRoot({}),
+  ],
   exports: [FileUploadContainerComponent],
   providers: [
     {

@@ -25,6 +25,8 @@ export class SelectCoinTypeFormComponent implements OnInit {
   bitCoinList!: IselectValue[];
   currencyList!: IselectValue[];
 
+  bitCoinStreamSubscription$!: Subscription;
+
   bitCoinForm = this.fb.group({
     bitCoinType: ['', Validators.required],
     exchangeCurrencyType: ['', Validators.required],
@@ -52,17 +54,53 @@ export class SelectCoinTypeFormComponent implements OnInit {
     this.bitCoinTypeCtrl.setValue(this.bitCoinList[0].value);
     this.exchangeCurrencyTypeCtrl.setValue(this.currencyList[0].value);
 
-    const coinData$ = this.coinService.getbitCoinData$(this.bitCoinForm.value);
+    // initialize stream
+    this.bitCoinStreamSubscription$ = this.coinService
+      .getData(this.bitCoinForm.value)
+      .subscribe();
 
-    interval(2000).pipe(tap(() => console.log('1')));
+    this.coinService.coinDataStream$.subscribe((value) => console.log(value));
 
-    // this.coinService.getbitCoinData(this.bitCoinForm.value).subscribe();
-    this.coinService.coinDataStream$.subscribe();
+    this.bitCoinTypeCtrl.valueChanges
+      .pipe(tap((value) => this.handleBitCoinTypeChange(value)))
+      .subscribe();
 
-    // this.coinService.anyStream.subscribe();
+    this.exchangeCurrencyTypeCtrl.valueChanges
+      .pipe(tap((value: string) => this.handleExchangeCurrencyChange(value)))
+      .subscribe();
+
+    combineLatest([
+      this.coinService.coinDataStream$,
+      this.coinService.refreshCrytoData$,
+    ])
+      .pipe(tap((value) => console.log(value)))
+      .subscribe();
   }
 
   handleSubmit(value: any) {
     console.log(value);
+    this.coinService.getFreshCoinData(this.bitCoinForm.value);
+  }
+
+  private handleBitCoinTypeChange(value: string) {
+    console.log('ok');
+    this.bitCoinForm.value.bitCoinType = value;
+    this.handleStreamSubscirption();
+  }
+
+  private handleExchangeCurrencyChange(value: string) {
+    console.log('ok');
+    this.bitCoinForm.value.bitCoinType = value;
+    this.handleStreamSubscirption();
+  }
+
+  private handleStreamSubscirption() {
+    this.bitCoinStreamSubscription$.unsubscribe();
+    this.coinService.coinDataStream$.complete();
+    console.log(this.bitCoinForm.value);
+
+    this.bitCoinStreamSubscription$ = this.coinService
+      .getData(this.bitCoinForm.value)
+      .subscribe();
   }
 }

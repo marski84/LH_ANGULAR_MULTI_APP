@@ -13,6 +13,7 @@ import {
 import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
 import { bitCoinFormData } from './models/bitCoinFormData.interface';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -25,13 +26,9 @@ export class CoinService {
 
   constructor(private httpService: HttpClient) {}
 
-  coinDataStream$: ReplaySubject<IcoinApiResponse> =
-    new ReplaySubject<IcoinApiResponse>(1);
+  coinDataStream$: Subject<any> = new Subject<IcoinApiResponse>();
 
-  refreshCrytoData$: ReplaySubject<IcoinApiResponse> =
-    new ReplaySubject<IcoinApiResponse>();
-
-  anyStream = interval(5000).pipe(tap(() => console.log('ok')));
+  refreshCrytoData$: ReplaySubject<any> = new ReplaySubject<IcoinApiResponse>();
 
   availabaleBitCoins: IselectValue[] = [
     {
@@ -85,7 +82,9 @@ export class CoinService {
   // Default: "usd"
   // returned data quote (available values: usd btc)
 
-  getbitCoinData$(formData: bitCoinFormData): Observable<IcoinApiResponse> {
+  private getbitCoinData(
+    formData: bitCoinFormData
+  ): Observable<IcoinApiResponse> {
     const { bitCoinType, exchangeCurrencyType } = formData;
     const params: HttpParams = new HttpParams().set(
       'quote',
@@ -97,7 +96,27 @@ export class CoinService {
         `https://api.coinpaprika.com/v1/coins/${bitCoinType}/ohlcv/today`,
         { params: params }
       )
-      .pipe();
+      .pipe(
+        take(1),
+        tap((value) => this.coinDataStream$.next(value))
+      );
+  }
+
+  getData(formData: bitCoinFormData): Observable<number> {
+    return timer(0, 5000).pipe(
+      tap(() => this.getbitCoinData(formData)),
+      tap((value) => console.log(value)),
+      tap(() => console.log(formData)),
+      tap((value) => this.coinDataStream$.next(value)),
+      map((value) => value)
+    );
+  }
+
+  getFreshCoinData(formData: bitCoinFormData) {
+    // const actualData = this.getbitCoinData(formData)
+    // this.getData(formData);
+    this.refreshCrytoData$.next('ok');
+    this.refreshCrytoData$.complete();
   }
 
   getBitCoinList() {

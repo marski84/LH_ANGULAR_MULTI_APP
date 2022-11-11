@@ -8,10 +8,13 @@
         <mat-select
             [formControl]="selectFormControl"
             required
+            ngxMatSelect
+            #sf="ngxMatSelect"
+            [source]="animals"
         >
             <mat-option>--</mat-option>
             <mat-option
-                *ngFor="let animal of animals"
+                *ngFor="let animal of sf.filteredSource"
                 [value]="animal"
             >
                 {{animal.name}}
