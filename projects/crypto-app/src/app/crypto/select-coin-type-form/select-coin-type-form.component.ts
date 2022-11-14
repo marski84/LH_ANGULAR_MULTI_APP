@@ -1,17 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  combineLatest,
-  map,
-  Subscription,
-  tap,
-  timer,
-  switchMap,
-  takeUntil,
-  interval,
-} from 'rxjs';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { combineLatest, Subscription, tap } from 'rxjs';
 import { CoinService } from '../coin.service';
 import { IselectValue } from '../models/selectValue.interface';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
+import { bitCoinFormData } from '../models/bitCoinFormData.interface';
 
 @Component({
   selector: 'app-select-coin-type-form',
@@ -21,6 +13,8 @@ import { FormBuilder, Validators, FormControl } from '@angular/forms';
 export class SelectCoinTypeFormComponent implements OnInit {
   coinDataReceiver: any;
   constructor(private coinService: CoinService, private fb: FormBuilder) {}
+
+  @Output() coinFormDataEmitted: EventEmitter<any> = new EventEmitter<any>();
 
   bitCoinList!: IselectValue[];
   currencyList!: IselectValue[];
@@ -54,53 +48,44 @@ export class SelectCoinTypeFormComponent implements OnInit {
     this.bitCoinTypeCtrl.setValue(this.bitCoinList[0].value);
     this.exchangeCurrencyTypeCtrl.setValue(this.currencyList[0].value);
 
-    // initialize stream
-    this.bitCoinStreamSubscription$ = this.coinService
-      .getData(this.bitCoinForm.value)
-      .subscribe();
-
-    this.coinService.coinDataStream$.subscribe((value) => console.log(value));
-
     this.bitCoinTypeCtrl.valueChanges
-      .pipe(tap((value) => this.handleBitCoinTypeChange(value)))
+      .pipe(tap((value: string) => this.handleBitCoinTypeChange(value)))
       .subscribe();
 
     this.exchangeCurrencyTypeCtrl.valueChanges
       .pipe(tap((value: string) => this.handleExchangeCurrencyChange(value)))
       .subscribe();
 
-    combineLatest([
-      this.coinService.coinDataStream$,
-      this.coinService.refreshCrytoData$,
-    ])
-      .pipe(tap((value) => console.log(value)))
-      .subscribe();
+    // combineLatest([
+    //   this.coinService.coinDataStream$,
+    //   this.coinService.refreshCrytoData$,
+    // ])
+    //   .pipe(tap((value) => console.log(value)))
+    //   .subscribe();
   }
 
   handleSubmit(value: any) {
     console.log(value);
-    this.coinService.getFreshCoinData(this.bitCoinForm.value);
   }
 
   private handleBitCoinTypeChange(value: string) {
-    console.log('ok');
     this.bitCoinForm.value.bitCoinType = value;
-    this.handleStreamSubscirption();
+    this.coinFormDataEmitted.emit(this.bitCoinForm.value);
   }
 
   private handleExchangeCurrencyChange(value: string) {
-    console.log('ok');
-    this.bitCoinForm.value.bitCoinType = value;
-    this.handleStreamSubscirption();
+    this.bitCoinForm.value.exchangeCurrencyType = value;
+    this.coinFormDataEmitted.emit(this.bitCoinForm.value);
   }
 
-  private handleStreamSubscirption() {
-    this.bitCoinStreamSubscription$.unsubscribe();
-    this.coinService.coinDataStream$.complete();
-    console.log(this.bitCoinForm.value);
+  // todo: to delete
+  // private handleStreamSubscirption() {
+  //   this.bitCoinStreamSubscription$.unsubscribe();
+  //   this.coinService.coinDataStream$.complete();
+  //   console.log(this.bitCoinForm.value);
 
-    this.bitCoinStreamSubscription$ = this.coinService
-      .getData(this.bitCoinForm.value)
-      .subscribe();
-  }
+  //   this.bitCoinStreamSubscription$ = this.coinService
+  //     .getData(this.bitCoinForm.value)
+  //     .subscribe();
+  // }
 }

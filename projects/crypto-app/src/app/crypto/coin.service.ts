@@ -9,11 +9,12 @@ import {
   ReplaySubject,
   interval,
   tap,
+  share,
 } from 'rxjs';
 import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
 import { bitCoinFormData } from './models/bitCoinFormData.interface';
-import { Subject } from 'rxjs';
+import { Subject, switchMap, debounceTime } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -26,9 +27,13 @@ export class CoinService {
 
   constructor(private httpService: HttpClient) {}
 
-  coinDataStream$: Subject<any> = new Subject<IcoinApiResponse>();
+  coinDataStream$: Subject<IcoinApiResponse[]> = new Subject<
+    IcoinApiResponse[]
+  >();
 
   refreshCrytoData$: ReplaySubject<any> = new ReplaySubject<IcoinApiResponse>();
+
+  timeOfData$: Subject<Date> = new Subject<Date>();
 
   availabaleBitCoins: IselectValue[] = [
     {
@@ -84,7 +89,7 @@ export class CoinService {
 
   private getbitCoinData(
     formData: bitCoinFormData
-  ): Observable<IcoinApiResponse> {
+  ): Observable<IcoinApiResponse[]> {
     const { bitCoinType, exchangeCurrencyType } = formData;
     const params: HttpParams = new HttpParams().set(
       'quote',
@@ -92,22 +97,25 @@ export class CoinService {
     );
 
     return this.httpService
-      .get<IcoinApiResponse>(
+      .get<IcoinApiResponse[]>(
         `https://api.coinpaprika.com/v1/coins/${bitCoinType}/ohlcv/today`,
         { params: params }
       )
       .pipe(
         take(1),
-        tap((value) => this.coinDataStream$.next(value))
+        tap((value) => this.coinDataStream$.next(value)),
+        tap(() => this.timeOfData$.next(new Date()))
       );
   }
 
   getData(formData: bitCoinFormData): Observable<number> {
-    return timer(0, 5000).pipe(
-      tap(() => this.getbitCoinData(formData)),
+    return timer(0, 20000).pipe(
+      debounceTime(1000),
+      switchMap((value) => of(value)),
+      tap(() => this.getbitCoinData(formData).subscribe()),
       tap((value) => console.log(value)),
       tap(() => console.log(formData)),
-      tap((value) => this.coinDataStream$.next(value)),
+      // tap((value) => this.coinDataStream$.next(value)),
       map((value) => value)
     );
   }

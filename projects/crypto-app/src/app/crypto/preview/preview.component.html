@@ -1,1 +1,61 @@
-<p>preview works!</p>
+<div *ngIf="timeOfData$ | async as dataTime">
+    Data valid for: {{dataTime | date : 'long' }}
+</div>
+
+<mat-list>
+    <mat-list-item>
+        <mat-icon mat-list-icon>date_range</mat-icon>
+        Opening time: {{dataToView.time_open |date : 'medium'}}
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item>
+        <mat-icon>attach_money</mat-icon>
+        Opening value: {{dataToView.open}}
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item>
+        <mat-icon>arrow_downward</mat-icon>
+        Lowest: {{dataToView.low}}
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item>
+        <mat-icon>arrow_upward</mat-icon>
+        Highest: {{dataToView.high}}
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item>
+        <mat-icon>close</mat-icon>
+        Closing time: {{dataToView.time_close |date : 'medium'}}
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item>
+        <mat-icon>money</mat-icon>
+        Closing value: {{dataToView.close}}
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item>
+        <mat-icon>account_balance</mat-icon>
+        Market cap: {{dataToView.market_cap}}
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item>
+        <mat-icon>aspect_ratio</mat-icon>
+        Volume: {{dataToView.volume}}
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+</mat-list>
