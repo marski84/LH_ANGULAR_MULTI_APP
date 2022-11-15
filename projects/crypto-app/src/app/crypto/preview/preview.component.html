@@ -1,8 +1,18 @@
-<div *ngIf="timeOfData$ | async as dataTime">
+<div *ngIf="dataToView && timeOfData$ | async as dataTime">
     Data valid for: {{dataTime | date : 'long' }}
 </div>
 
 <mat-list>
+
+    <div>
+        <button
+            mat-raised-button
+            (click)="refreshData()"
+        >
+            Refresh data
+        </button>
+    </div>
+
     <mat-list-item>
         <mat-icon mat-list-icon>date_range</mat-icon>
         Opening time: {{dataToView.time_open |date : 'medium'}}

@@ -77,15 +77,4 @@ export class SelectCoinTypeFormComponent implements OnInit {
     this.bitCoinForm.value.exchangeCurrencyType = value;
     this.coinFormDataEmitted.emit(this.bitCoinForm.value);
   }
-
-  // todo: to delete
-  // private handleStreamSubscirption() {
-  //   this.bitCoinStreamSubscription$.unsubscribe();
-  //   this.coinService.coinDataStream$.complete();
-  //   console.log(this.bitCoinForm.value);
-
-  //   this.bitCoinStreamSubscription$ = this.coinService
-  //     .getData(this.bitCoinForm.value)
-  //     .subscribe();
-  // }
 }

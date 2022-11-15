@@ -15,6 +15,7 @@ import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
 import { bitCoinFormData } from './models/bitCoinFormData.interface';
 import { Subject, switchMap, debounceTime } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +26,8 @@ export class CoinService {
   // currencyList
   // https://api.kucoin.com/api/v2/symbols
 
+  formData!: bitCoinFormData;
+
   constructor(private httpService: HttpClient) {}
 
   coinDataStream$: Subject<IcoinApiResponse[]> = new Subject<
@@ -33,7 +36,7 @@ export class CoinService {
 
   refreshCrytoData$: ReplaySubject<any> = new ReplaySubject<IcoinApiResponse>();
 
-  timeOfData$: Subject<Date> = new Subject<Date>();
+  timeOfData$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
 
   availabaleBitCoins: IselectValue[] = [
     {
@@ -96,6 +99,8 @@ export class CoinService {
       exchangeCurrencyType
     );
 
+    this.formData = formData;
+
     return this.httpService
       .get<IcoinApiResponse[]>(
         `https://api.coinpaprika.com/v1/coins/${bitCoinType}/ohlcv/today`,
@@ -120,11 +125,16 @@ export class CoinService {
     );
   }
 
-  getFreshCoinData(formData: bitCoinFormData) {
-    // const actualData = this.getbitCoinData(formData)
-    // this.getData(formData);
+  getFreshCoinData() {
     this.refreshCrytoData$.next('ok');
+    this.getData(this.formData).subscribe();
     this.refreshCrytoData$.complete();
+    // combineLatest([
+    //   this.coinService.coinDataStream$,
+    //   this.coinService.refreshCrytoData$,
+    // ])
+    //   .pipe(tap((value) => console.log(value)))
+    //   .subscribe();
   }
 
   getBitCoinList() {
