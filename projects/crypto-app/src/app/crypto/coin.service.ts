@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   map,
@@ -10,25 +10,25 @@ import {
   interval,
   tap,
   share,
+  combineLatest,
+  filter,
 } from 'rxjs';
 import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
 import { bitCoinFormData } from './models/bitCoinFormData.interface';
-import { Subject, switchMap, debounceTime } from 'rxjs';
+import { Subject, switchMap, debounceTime, takeUntil } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CoinService {
+export class CoinService implements OnInit, OnDestroy {
   // https://api.kucoin.com/api/v1/market/stats?symbol=BTC-USDT
 
   // currencyList
   // https://api.kucoin.com/api/v2/symbols
 
   formData!: bitCoinFormData;
-
-  constructor(private httpService: HttpClient) {}
 
   coinDataStream$: Subject<IcoinApiResponse[]> = new Subject<
     IcoinApiResponse[]
@@ -38,7 +38,23 @@ export class CoinService {
 
   timeOfData$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
 
-  availabaleBitCoins: IselectValue[] = [
+  bitCoinTypeSubject$: BehaviorSubject<string> = new BehaviorSubject<string>(
+    ''
+  );
+  currencySubject$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  onDestroy$: Subject<void> = new Subject<void>();
+
+  constructor(private httpService: HttpClient) {}
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
+  private availabaleBitCoins: IselectValue[] = [
     {
       value: 'eth-ethereum',
       viewValue: 'Ethereum',
@@ -58,7 +74,7 @@ export class CoinService {
     { value: 'kava-kava', viewValue: 'Kava' },
   ];
 
-  exchangeCurrencyList: IselectValue[] = [
+  private exchangeCurrencyList: IselectValue[] = [
     {
       value: 'USD',
       viewValue: 'USD',
@@ -115,11 +131,12 @@ export class CoinService {
 
   getData(formData: bitCoinFormData): Observable<number> {
     return timer(0, 20000).pipe(
+      takeUntil(this.onDestroy$),
       debounceTime(1000),
       switchMap((value) => of(value)),
       tap(() => this.getbitCoinData(formData).subscribe()),
       tap((value) => console.log(value)),
-      tap(() => console.log(formData)),
+      // tap(() => console.log(formData)),
       // tap((value) => this.coinDataStream$.next(value)),
       map((value) => value)
     );
@@ -127,14 +144,31 @@ export class CoinService {
 
   getFreshCoinData() {
     this.refreshCrytoData$.next('ok');
-    this.getData(this.formData).subscribe();
+    this.handleSearch();
     this.refreshCrytoData$.complete();
-    // combineLatest([
-    //   this.coinService.coinDataStream$,
-    //   this.coinService.refreshCrytoData$,
-    // ])
-    //   .pipe(tap((value) => console.log(value)))
-    //   .subscribe();
+  }
+
+  handleSearch() {
+    return combineLatest([this.bitCoinTypeSubject$, this.currencySubject$])
+      .pipe(
+        take(1),
+        filter((queryParams: any) => {
+          if (queryParams[0].length && queryParams[1].length) {
+            return queryParams;
+          }
+          return;
+        }),
+        map(
+          ([bitCoinType, currency]) =>
+            new Object({
+              bitCoinType: bitCoinType,
+              exchangeCurrencyType: currency,
+            }) as bitCoinFormData
+        ),
+        tap((value) => console.log(value)),
+        tap((formData) => this.getData(formData).subscribe())
+      )
+      .subscribe();
   }
 
   getBitCoinList() {

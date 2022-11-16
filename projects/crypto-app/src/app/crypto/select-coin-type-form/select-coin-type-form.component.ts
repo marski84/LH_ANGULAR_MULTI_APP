@@ -45,8 +45,8 @@ export class SelectCoinTypeFormComponent implements OnInit {
       .pipe(tap((currencyList) => (this.currencyList = currencyList)))
       .subscribe();
 
-    this.bitCoinTypeCtrl.setValue(this.bitCoinList[0].value);
-    this.exchangeCurrencyTypeCtrl.setValue(this.currencyList[0].value);
+    // this.bitCoinTypeCtrl.setValue(this.bitCoinList[0].value);
+    // this.exchangeCurrencyTypeCtrl.setValue(this.currencyList[0].value);
 
     this.bitCoinTypeCtrl.valueChanges
       .pipe(tap((value: string) => this.handleBitCoinTypeChange(value)))
@@ -55,13 +55,6 @@ export class SelectCoinTypeFormComponent implements OnInit {
     this.exchangeCurrencyTypeCtrl.valueChanges
       .pipe(tap((value: string) => this.handleExchangeCurrencyChange(value)))
       .subscribe();
-
-    // combineLatest([
-    //   this.coinService.coinDataStream$,
-    //   this.coinService.refreshCrytoData$,
-    // ])
-    //   .pipe(tap((value) => console.log(value)))
-    //   .subscribe();
   }
 
   handleSubmit(value: any) {
@@ -70,11 +63,17 @@ export class SelectCoinTypeFormComponent implements OnInit {
 
   private handleBitCoinTypeChange(value: string) {
     this.bitCoinForm.value.bitCoinType = value;
-    this.coinFormDataEmitted.emit(this.bitCoinForm.value);
+    // this.coinFormDataEmitted.emit(this.bitCoinForm.value);
+
+    this.coinService.bitCoinTypeSubject$.next(value);
+    this.coinService.handleSearch();
   }
 
   private handleExchangeCurrencyChange(value: string) {
     this.bitCoinForm.value.exchangeCurrencyType = value;
-    this.coinFormDataEmitted.emit(this.bitCoinForm.value);
+    // this.coinFormDataEmitted.emit(this.bitCoinForm.value);
+
+    this.coinService.currencySubject$.next(value);
+    this.coinService.handleSearch();
   }
 }
