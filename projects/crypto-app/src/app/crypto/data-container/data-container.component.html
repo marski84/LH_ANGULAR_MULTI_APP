@@ -1,6 +1,5 @@
-<p>data-container works!</p>
 <app-select-coin-type-form (coinFormDataEmitted)="handleSubscription($event)"></app-select-coin-type-form>
 
-<div *ngIf="bitCoinStreamSubscription$ | async as data">
-    <preview [data]="data"></preview>
+<div *ngIf="bitCoinStreamSubscription$ | async as coinData">
+    <preview [data]="coinData"></preview>
 </div>

@@ -1,8 +1,5 @@
 <div class="form-container">
-    <form
-        [formGroup]="bitCoinForm"
-        (ngSubmit)="handleSubmit(bitCoinForm.value)"
-    >
+    <form [formGroup]="bitCoinForm">
 
         <custom-mat-radio
             [control]="bitCoinTypeCtrl"
@@ -15,13 +12,6 @@
             [selectValues]="currencyList"
             [label]="'Select currency type'"
         ></custom-mat-radio>
-
-        <!-- <button
-            mat-raised-button
-            type="submit"
-        >
-            Submit
-        </button> -->
 
     </form>
 

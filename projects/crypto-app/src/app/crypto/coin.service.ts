@@ -2,22 +2,19 @@ import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   map,
-  take,
   Observable,
   of,
   timer,
   ReplaySubject,
-  interval,
   tap,
-  share,
   combineLatest,
-  filter,
 } from 'rxjs';
 import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
 import { bitCoinFormData } from './models/bitCoinFormData.interface';
-import { Subject, switchMap, debounceTime, takeUntil } from 'rxjs';
+import { Subject, switchMap } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { apiResponse } from './models/apiResponse.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -28,27 +25,20 @@ export class CoinService implements OnInit, OnDestroy {
   // currencyList
   // https://api.kucoin.com/api/v2/symbols
 
-  formData!: bitCoinFormData;
+  coinDataStream$: Subject<IcoinApiResponse> = new Subject<IcoinApiResponse>();
 
-  coinDataStream$: Subject<IcoinApiResponse[]> = new Subject<
-    IcoinApiResponse[]
-  >();
+  refreshCrytoData$: ReplaySubject<void> = new ReplaySubject<void>();
 
-  refreshCrytoData$: ReplaySubject<any> = new ReplaySubject<IcoinApiResponse>();
-
-  timeOfData$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
-
-  bitCoinTypeSubject$: BehaviorSubject<string> = new BehaviorSubject<string>(
-    ''
-  );
-  currencySubject$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-
-  onDestroy$: Subject<void> = new Subject<void>();
+  private onDestroy$: Subject<void> = new Subject<void>();
+  // private timer$ = timer(0, 20000).pipe(
+  //   switchMap(() => this.getbitCoinData(formData)),
+  //   tap((value) => console.log(value)),
+  //   map((value) => value)
+  // );
 
   constructor(private httpService: HttpClient) {}
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
+  ngOnInit(): void {}
+
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();
@@ -86,89 +76,54 @@ export class CoinService implements OnInit, OnDestroy {
     },
   ];
 
-  // Get exchange by ID (USD,BTC)
-  // exports.exchange = async ( id, params = { quotes: "USD" } ) => {
-  //     return request( `/exchanges/${id}`, params );
-  // };
-
-  //   exports.today = async ( id = "btc-bitcoin", params = { quote: "USD" } ) => {
-  //     return request( `/coins/${id}/ohlcv/today/`, params );
-  // };
-
-  // PATH PARAMETERS
-  // coin_id
-  // required
-  // string
-  // Example: btc-bitcoin
-  // QUERY PARAMETERS
-  // quote
-  // string
-  // Default: "usd"
-  // returned data quote (available values: usd btc)
-
   private getbitCoinData(
     formData: bitCoinFormData
-  ): Observable<IcoinApiResponse[]> {
+  ): Observable<IcoinApiResponse> {
     const { bitCoinType, exchangeCurrencyType } = formData;
+
+    console.log(formData);
+
     const params: HttpParams = new HttpParams().set(
       'quote',
       exchangeCurrencyType
     );
 
-    this.formData = formData;
-
     return this.httpService
-      .get<IcoinApiResponse[]>(
+      .get<apiResponse[]>(
         `https://api.coinpaprika.com/v1/coins/${bitCoinType}/ohlcv/today`,
         { params: params }
       )
       .pipe(
-        take(1),
-        tap((value) => this.coinDataStream$.next(value)),
-        tap(() => this.timeOfData$.next(new Date()))
+        map((response) => {
+          return new Object({
+            coinData: response[0],
+            timeStamp: new Date(),
+          }) as IcoinApiResponse;
+        }),
+        tap((value) => this.coinDataStream$.next(value))
       );
   }
 
-  getData(formData: bitCoinFormData): Observable<number> {
+  getData(formData: bitCoinFormData): Observable<IcoinApiResponse> {
     return timer(0, 20000).pipe(
-      takeUntil(this.onDestroy$),
-      debounceTime(1000),
-      switchMap((value) => of(value)),
-      tap(() => this.getbitCoinData(formData).subscribe()),
-      tap((value) => console.log(value)),
-      // tap(() => console.log(formData)),
-      // tap((value) => this.coinDataStream$.next(value)),
-      map((value) => value)
+      switchMap(() => this.getbitCoinData(formData)),
+      tap((value) => console.log(value))
+      // map((value) => value)
     );
   }
 
-  getFreshCoinData() {
-    this.refreshCrytoData$.next('ok');
-    this.handleSearch();
-    this.refreshCrytoData$.complete();
-  }
+  // // 1. timer wyrzucić do properties'a tego serwisu
+  // // 2. dwie metody enable i disable
 
-  handleSearch() {
-    return combineLatest([this.bitCoinTypeSubject$, this.currencySubject$])
-      .pipe(
-        take(1),
-        filter((queryParams: any) => {
-          if (queryParams[0].length && queryParams[1].length) {
-            return queryParams;
-          }
-          return;
-        }),
-        map(
-          ([bitCoinType, currency]) =>
-            new Object({
-              bitCoinType: bitCoinType,
-              exchangeCurrencyType: currency,
-            }) as bitCoinFormData
-        ),
-        tap((value) => console.log(value)),
-        tap((formData) => this.getData(formData).subscribe())
-      )
-      .subscribe();
+  // enable() {
+  //   this.timer$.subscribe(); // zapisać wynik jako properties
+  // }
+  // disable() {
+  //   // tutaj usuwać sub'a
+  // }
+
+  getFreshCoinData() {
+    this.refreshCrytoData$.next();
   }
 
   getBitCoinList() {

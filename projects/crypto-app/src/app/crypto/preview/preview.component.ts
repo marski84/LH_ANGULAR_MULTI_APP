@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IcoinApiResponse } from '../models/coinApiResponse.interface';
 import { CoinService } from '../coin.service';
-import { combineLatest, Subject, Subscription, tap } from 'rxjs';
+import { combineLatest, Observable, Subject, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'preview',
@@ -10,28 +10,22 @@ import { combineLatest, Subject, Subscription, tap } from 'rxjs';
 })
 export class PreviewComponent implements OnInit {
   dataToView!: IcoinApiResponse;
+  timeOfData$!: Observable<Date>;
 
-  timeOfData$!: Subject<Date>;
+  @Input() set data(coinData: IcoinApiResponse) {
+    console.log(coinData);
 
-  @Input() set data(coinData: IcoinApiResponse[]) {
-    this.dataToView = coinData[0];
+    this.dataToView = coinData;
   }
 
   constructor(private coinService: CoinService) {}
 
   ngOnInit(): void {
-    console.log(this.data);
-    this.timeOfData$ = this.coinService.timeOfData$;
+    // console.log(this.data);
+    // this.timeOfData$ = this.coinService.timeOfData$.asObservable();
   }
 
   refreshData() {
     this.coinService.getFreshCoinData();
-
-    //   return combineLatest([
-    //     this.coinService.coinDataStream$,
-    //     this.coinService.refreshCrytoData$,
-    //   ])
-    //     .pipe(tap((value) => console.log(value)))
-    //     .subscribe();
   }
 }

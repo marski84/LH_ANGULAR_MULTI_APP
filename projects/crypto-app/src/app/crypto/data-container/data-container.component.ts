@@ -3,6 +3,7 @@ import { Subject, Subscription } from 'rxjs';
 import { CoinService } from '../coin.service';
 import { bitCoinFormData } from '../models/bitCoinFormData.interface';
 import { IcoinApiResponse } from '../models/coinApiResponse.interface';
+import { formDataTuple } from '../models/formDataTuple';
 
 @Component({
   selector: 'app-data-container',
@@ -10,25 +11,26 @@ import { IcoinApiResponse } from '../models/coinApiResponse.interface';
   styleUrls: ['./data-container.component.scss'],
 })
 export class DataContainerComponent implements OnInit {
+  bitCoinStreamSubscription$!: Subject<IcoinApiResponse>;
+  timerStreamSubscription!: Subscription;
   constructor(private coinService: CoinService) {}
-
-  bitCoinStreamSubscription$!: Subject<IcoinApiResponse[]>;
-  timerStreamSubscription$!: Subscription;
 
   ngOnInit(): void {
     this.bitCoinStreamSubscription$ = this.coinService.coinDataStream$;
   }
 
-  handleSubscription(formData: bitCoinFormData) {
+  handleSubscription(queryData: formDataTuple) {
+    const formData = {
+      bitCoinType: queryData[0],
+      exchangeCurrencyType: queryData[1],
+    };
+    console.log(formData);
+
     this.handleStreamSubscirption(formData);
   }
 
   private handleStreamSubscirption(formData: bitCoinFormData) {
-    if (this.timerStreamSubscription$) {
-      this.timerStreamSubscription$.unsubscribe();
-    }
-
-    this.timerStreamSubscription$ = this.coinService
+    this.timerStreamSubscription = this.coinService
       .getData(formData)
       .subscribe();
   }

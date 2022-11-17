@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { combineLatest, Subscription, tap } from 'rxjs';
+import { combineLatest, debounceTime, tap } from 'rxjs';
 import { CoinService } from '../coin.service';
 import { IselectValue } from '../models/selectValue.interface';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
-import { bitCoinFormData } from '../models/bitCoinFormData.interface';
+import { formDataTuple } from '../models/formDataTuple';
 
 @Component({
   selector: 'app-select-coin-type-form',
@@ -11,20 +11,16 @@ import { bitCoinFormData } from '../models/bitCoinFormData.interface';
   styleUrls: ['./select-coin-type-form.component.scss'],
 })
 export class SelectCoinTypeFormComponent implements OnInit {
-  coinDataReceiver: any;
-  constructor(private coinService: CoinService, private fb: FormBuilder) {}
-
-  @Output() coinFormDataEmitted: EventEmitter<any> = new EventEmitter<any>();
-
   bitCoinList!: IselectValue[];
   currencyList!: IselectValue[];
-
-  bitCoinStreamSubscription$!: Subscription;
 
   bitCoinForm = this.fb.group({
     bitCoinType: ['', Validators.required],
     exchangeCurrencyType: ['', Validators.required],
   });
+
+  @Output() coinFormDataEmitted: EventEmitter<formDataTuple> =
+    new EventEmitter<formDataTuple>();
 
   get bitCoinTypeCtrl() {
     return this.bitCoinForm.get('bitCoinType') as FormControl;
@@ -33,6 +29,8 @@ export class SelectCoinTypeFormComponent implements OnInit {
   get exchangeCurrencyTypeCtrl() {
     return this.bitCoinForm.get('exchangeCurrencyType') as FormControl;
   }
+
+  constructor(private coinService: CoinService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.coinService
@@ -45,35 +43,22 @@ export class SelectCoinTypeFormComponent implements OnInit {
       .pipe(tap((currencyList) => (this.currencyList = currencyList)))
       .subscribe();
 
-    // this.bitCoinTypeCtrl.setValue(this.bitCoinList[0].value);
-    // this.exchangeCurrencyTypeCtrl.setValue(this.currencyList[0].value);
+    this.initFormValueChangesListener();
+  }
 
-    this.bitCoinTypeCtrl.valueChanges
-      .pipe(tap((value: string) => this.handleBitCoinTypeChange(value)))
+  private handleFormData(data: formDataTuple) {
+    this.coinFormDataEmitted.emit(data);
+  }
+
+  private initFormValueChangesListener() {
+    combineLatest([
+      this.bitCoinTypeCtrl.valueChanges,
+      this.exchangeCurrencyTypeCtrl.valueChanges,
+    ])
+      .pipe(
+        debounceTime(2000),
+        tap((value) => this.handleFormData(value))
+      )
       .subscribe();
-
-    this.exchangeCurrencyTypeCtrl.valueChanges
-      .pipe(tap((value: string) => this.handleExchangeCurrencyChange(value)))
-      .subscribe();
-  }
-
-  handleSubmit(value: any) {
-    console.log(value);
-  }
-
-  private handleBitCoinTypeChange(value: string) {
-    this.bitCoinForm.value.bitCoinType = value;
-    // this.coinFormDataEmitted.emit(this.bitCoinForm.value);
-
-    this.coinService.bitCoinTypeSubject$.next(value);
-    this.coinService.handleSearch();
-  }
-
-  private handleExchangeCurrencyChange(value: string) {
-    this.bitCoinForm.value.exchangeCurrencyType = value;
-    // this.coinFormDataEmitted.emit(this.bitCoinForm.value);
-
-    this.coinService.currencySubject$.next(value);
-    this.coinService.handleSearch();
   }
 }
