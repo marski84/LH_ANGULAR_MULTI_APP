@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IcoinApiResponse } from '../models/coinApiResponse.interface';
 import { CoinService } from '../coin.service';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, tap, take } from 'rxjs';
 import { IqueryData } from '../models/queryData.interface';
 
 @Component({
@@ -32,12 +32,11 @@ export class PreviewComponent implements OnInit {
 
     this.coinService.coinDataStream$
       .pipe(
+        take(1),
         tap((value) =>
           console.log(`Actual price of coin: ${value.coinData.close}`)
         )
       )
       .subscribe();
-
-    this.coinService.coinDataStream$.unsubscribe();
   }
 }
