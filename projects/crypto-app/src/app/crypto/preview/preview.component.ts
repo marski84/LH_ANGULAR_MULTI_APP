@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IcoinApiResponse } from '../models/coinApiResponse.interface';
 import { CoinService } from '../coin.service';
-import { combineLatest, Observable, Subject, Subscription, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
+import { IqueryData } from '../models/queryData.interface';
 
 @Component({
   selector: 'preview',
@@ -13,19 +14,30 @@ export class PreviewComponent implements OnInit {
   timeOfData$!: Observable<Date>;
 
   @Input() set data(coinData: IcoinApiResponse) {
-    console.log(coinData);
-
     this.dataToView = coinData;
   }
 
   constructor(private coinService: CoinService) {}
 
-  ngOnInit(): void {
-    // console.log(this.data);
-    // this.timeOfData$ = this.coinService.timeOfData$.asObservable();
-  }
+  ngOnInit(): void {}
 
   refreshData() {
-    this.coinService.getFreshCoinData();
+    this.coinService.refreshCrytoData$
+      .pipe(
+        map((value: IqueryData) =>
+          this.coinService.handleStreamSubscription(value)
+        )
+      )
+      .subscribe();
+
+    this.coinService.coinDataStream$
+      .pipe(
+        tap((value) =>
+          console.log(`Actual price of coin: ${value.coinData.close}`)
+        )
+      )
+      .subscribe();
+
+    this.coinService.coinDataStream$.unsubscribe();
   }
 }

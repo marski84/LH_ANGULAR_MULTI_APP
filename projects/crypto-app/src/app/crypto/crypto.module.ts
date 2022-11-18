@@ -11,12 +11,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PreviewComponent } from './preview/preview.component';
 import { MaterialModule } from '../modules/material/material.module';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   declarations: [
     SelectCoinTypeFormComponent,
     DataContainerComponent,
     PreviewComponent,
+    ModalComponent,
   ],
   imports: [
     CommonModule,

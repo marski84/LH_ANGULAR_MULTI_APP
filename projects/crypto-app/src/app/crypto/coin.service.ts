@@ -1,5 +1,9 @@
 import { Injectable, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpParams,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import {
   map,
   Observable,
@@ -8,13 +12,18 @@ import {
   ReplaySubject,
   tap,
   combineLatest,
+  catchError,
+  retry,
 } from 'rxjs';
 import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
 import { bitCoinFormData } from './models/bitCoinFormData.interface';
-import { Subject, switchMap } from 'rxjs';
+import { Subject, switchMap, Subscription } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { apiResponse } from './models/apiResponse.interface';
+import { IqueryData } from './models/queryData.interface';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ModalComponent } from './modal/modal.component';
 
 @Injectable({
   providedIn: 'root',
@@ -22,17 +31,14 @@ import { apiResponse } from './models/apiResponse.interface';
 export class CoinService implements OnInit, OnDestroy {
   coinDataStream$: Subject<IcoinApiResponse> = new Subject<IcoinApiResponse>();
 
-  refreshCrytoData$: ReplaySubject<void> = new ReplaySubject<void>();
+  refreshCrytoData$: ReplaySubject<IqueryData> =
+    new ReplaySubject<IqueryData>();
 
   private onDestroy$: Subject<void> = new Subject<void>();
 
-  // private timer$ = timer(0, 20000).pipe(
-  //   switchMap(() => this.getbitCoinData(formData)),
-  //   tap((value) => console.log(value)),
-  //   map((value) => value)
-  // );
+  timer$!: Subscription;
 
-  constructor(private httpService: HttpClient) {}
+  constructor(private httpService: HttpClient, private dialog: MatDialog) {}
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
@@ -72,17 +78,7 @@ export class CoinService implements OnInit, OnDestroy {
     },
   ];
 
-  getData(formData: bitCoinFormData): Observable<IcoinApiResponse> {
-    return timer(0, 20000).pipe(
-      switchMap(() => this.getbitCoinData(formData)),
-      tap((value) => console.log(value))
-      // map((value) => value)
-    );
-  }
-
-  private getbitCoinData(
-    formData: bitCoinFormData
-  ): Observable<IcoinApiResponse> {
+  getbitCoinDataFromApi(formData: IqueryData) {
     const { bitCoinType, exchangeCurrencyType } = formData;
 
     console.log(formData);
@@ -98,28 +94,45 @@ export class CoinService implements OnInit, OnDestroy {
         { params: params }
       )
       .pipe(
-        map((response) => {
-          return new Object({
-            coinData: response[0],
-            timeStamp: new Date(),
-          }) as IcoinApiResponse;
-        }),
-        tap((value) => this.coinDataStream$.next(value))
-      );
+        retry(3),
+        map((response) => this.createResponseObject(response)),
+        tap((value) => this.coinDataStream$.next(value)),
+        catchError((error: HttpErrorResponse) => {
+          this.handleErrorModal(error);
+          return of(error);
+        })
+      )
+      .subscribe();
   }
 
-  // // 1. timer wyrzucić do properties'a tego serwisu
-  // // 2. dwie metody enable i disable
+  private createResponseObject(response: apiResponse[]) {
+    return new Object({
+      coinData: response[0],
+      timeStamp: new Date(),
+    }) as IcoinApiResponse;
+  }
 
-  // enable() {
-  //   this.timer$.subscribe(); // zapisać wynik jako properties
-  // }
-  // disable() {
-  //   // tutaj usuwać sub'a
-  // }
+  handleStreamSubscription(queryData: IqueryData) {
+    if (this.timer$) {
+      console.log('unsub');
+      this.timer$.unsubscribe();
+    }
 
-  getFreshCoinData() {
-    this.refreshCrytoData$.next();
+    this.timer$ = timer(0, 20000)
+      .pipe(tap(() => this.getbitCoinDataFromApi(queryData)))
+      .subscribe();
+  }
+
+  private handleErrorModal(errorData: any) {
+    const dialogConf: MatDialogConfig = {
+      width: '400px',
+      height: '400px',
+      hasBackdrop: true,
+      disableClose: false,
+      data: errorData,
+    };
+
+    this.dialog.open(ModalComponent, dialogConf);
   }
 
   getBitCoinList() {

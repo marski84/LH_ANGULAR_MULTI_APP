@@ -1,9 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { combineLatest, debounceTime, tap } from 'rxjs';
+import { combineLatest, debounceTime, map, tap } from 'rxjs';
 import { CoinService } from '../coin.service';
 import { IselectValue } from '../models/selectValue.interface';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { formDataTuple } from '../models/formDataTuple';
+import { IqueryData } from '../models/queryData.interface';
 
 @Component({
   selector: 'app-select-coin-type-form',
@@ -19,8 +20,8 @@ export class SelectCoinTypeFormComponent implements OnInit {
     exchangeCurrencyType: ['', Validators.required],
   });
 
-  @Output() coinFormDataEmitted: EventEmitter<formDataTuple> =
-    new EventEmitter<formDataTuple>();
+  @Output() coinFormDataEmitted: EventEmitter<IqueryData> =
+    new EventEmitter<IqueryData>();
 
   get bitCoinTypeCtrl() {
     return this.bitCoinForm.get('bitCoinType') as FormControl;
@@ -43,22 +44,27 @@ export class SelectCoinTypeFormComponent implements OnInit {
       .pipe(tap((currencyList) => (this.currencyList = currencyList)))
       .subscribe();
 
-    this.initFormValueChangesListener();
-  }
-
-  private handleFormData(data: formDataTuple) {
-    this.coinFormDataEmitted.emit(data);
-  }
-
-  private initFormValueChangesListener() {
     combineLatest([
       this.bitCoinTypeCtrl.valueChanges,
       this.exchangeCurrencyTypeCtrl.valueChanges,
     ])
       .pipe(
         debounceTime(2000),
+        map((value) => this.handleQueryFormat(value)),
         tap((value) => this.handleFormData(value))
       )
       .subscribe();
+  }
+
+  private handleFormData(data: IqueryData) {
+    this.coinFormDataEmitted.emit(data);
+  }
+
+  private handleQueryFormat(data: formDataTuple): IqueryData {
+    const queryData = {
+      bitCoinType: data[0],
+      exchangeCurrencyType: data[1],
+    };
+    return queryData;
   }
 }
