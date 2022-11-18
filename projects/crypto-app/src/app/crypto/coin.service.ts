@@ -20,16 +20,12 @@ import { apiResponse } from './models/apiResponse.interface';
   providedIn: 'root',
 })
 export class CoinService implements OnInit, OnDestroy {
-  // https://api.kucoin.com/api/v1/market/stats?symbol=BTC-USDT
-
-  // currencyList
-  // https://api.kucoin.com/api/v2/symbols
-
   coinDataStream$: Subject<IcoinApiResponse> = new Subject<IcoinApiResponse>();
 
   refreshCrytoData$: ReplaySubject<void> = new ReplaySubject<void>();
 
   private onDestroy$: Subject<void> = new Subject<void>();
+
   // private timer$ = timer(0, 20000).pipe(
   //   switchMap(() => this.getbitCoinData(formData)),
   //   tap((value) => console.log(value)),
@@ -76,6 +72,14 @@ export class CoinService implements OnInit, OnDestroy {
     },
   ];
 
+  getData(formData: bitCoinFormData): Observable<IcoinApiResponse> {
+    return timer(0, 20000).pipe(
+      switchMap(() => this.getbitCoinData(formData)),
+      tap((value) => console.log(value))
+      // map((value) => value)
+    );
+  }
+
   private getbitCoinData(
     formData: bitCoinFormData
   ): Observable<IcoinApiResponse> {
@@ -102,14 +106,6 @@ export class CoinService implements OnInit, OnDestroy {
         }),
         tap((value) => this.coinDataStream$.next(value))
       );
-  }
-
-  getData(formData: bitCoinFormData): Observable<IcoinApiResponse> {
-    return timer(0, 20000).pipe(
-      switchMap(() => this.getbitCoinData(formData)),
-      tap((value) => console.log(value))
-      // map((value) => value)
-    );
   }
 
   // // 1. timer wyrzucić do properties'a tego serwisu
