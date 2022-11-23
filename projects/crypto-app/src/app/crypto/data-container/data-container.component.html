@@ -1,4 +1,7 @@
-<app-select-coin-type-form (coinFormDataEmitted)="handleSubscription($event)"></app-select-coin-type-form>
+<app-select-coin-type-form
+    #coinDataForm
+    (coinFormDataEmitted)="catchFormChanged($event)"
+></app-select-coin-type-form>
 
 <div *ngIf="bitCoinStreamSubscription$ | async as coinData">
     <preview [data]="coinData"></preview>

@@ -22,21 +22,8 @@ export class PreviewComponent implements OnInit {
   ngOnInit(): void {}
 
   refreshData() {
-    this.coinService.refreshCrytoData$
-      .pipe(
-        map((value: IqueryData) =>
-          this.coinService.handleStreamSubscription(value)
-        )
-      )
-      .subscribe();
-
-    this.coinService.coinDataStream$
-      .pipe(
-        take(1),
-        tap((value) =>
-          console.log(`Actual price of coin: ${value.coinData.close}`)
-        )
-      )
-      .subscribe();
+    // emisja refreshCrytoData$
+    this.coinService.refreshCrytoData$.next();
+    // this.coinService.refreshCrytoData$.complete();
   }
 }

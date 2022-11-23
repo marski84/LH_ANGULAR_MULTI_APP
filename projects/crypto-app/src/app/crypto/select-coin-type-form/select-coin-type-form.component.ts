@@ -49,15 +49,11 @@ export class SelectCoinTypeFormComponent implements OnInit {
       this.exchangeCurrencyTypeCtrl.valueChanges,
     ])
       .pipe(
-        debounceTime(2000),
+        // debounceTime(2000),
         map((value) => this.handleQueryFormat(value)),
-        tap((value) => this.handleFormData(value))
+        tap((value) => this.coinFormDataEmitted.emit(value))
       )
       .subscribe();
-  }
-
-  private handleFormData(data: IqueryData) {
-    this.coinFormDataEmitted.emit(data);
   }
 
   private handleQueryFormat(data: formDataTuple): IqueryData {

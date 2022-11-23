@@ -14,6 +14,9 @@ import {
   combineLatest,
   catchError,
   retry,
+  forkJoin,
+  withLatestFrom,
+  merge,
 } from 'rxjs';
 import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
@@ -31,20 +34,14 @@ import { ModalComponent } from './modal/modal.component';
 export class CoinService implements OnInit, OnDestroy {
   coinDataStream$: Subject<IcoinApiResponse> = new Subject<IcoinApiResponse>();
 
-  refreshCrytoData$: ReplaySubject<IqueryData> =
-    new ReplaySubject<IqueryData>();
-
-  private onDestroy$: Subject<void> = new Subject<void>();
+  refreshCrytoData$: Subject<void> = new Subject<void>();
 
   timer$!: Subscription;
 
   constructor(private httpService: HttpClient, private dialog: MatDialog) {}
   ngOnInit(): void {}
 
-  ngOnDestroy(): void {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
-  }
+  ngOnDestroy(): void {}
 
   private availabaleBitCoins: IselectValue[] = [
     {
@@ -118,9 +115,33 @@ export class CoinService implements OnInit, OnDestroy {
       this.timer$.unsubscribe();
     }
 
-    this.timer$ = timer(0, 20000)
-      .pipe(tap(() => this.getbitCoinDataFromApi(queryData)))
+    // if (!queryData) {
+
+    //   // getbitCoinDataFromApi(getbitCoinDataFromApi)
+    // }
+
+    this.timer$ = merge(timer(0, 20000), this.refreshCrytoData$)
+      .pipe(
+        tap((value) => console.log(value)),
+        tap(() => this.getbitCoinDataFromApi(queryData))
+      )
       .subscribe();
+
+    // this.timer$ = timer(0, 20000)
+    // .pipe(
+    //   withLatestFrom(this.refreshCrytoData$),
+    //   tap((value) => console.log(value)),
+    //   tap(() => this.getbitCoinDataFromApi(queryData))
+    // )
+    // .subscribe();
+
+    // this.timer$ = this.refreshCrytoData$
+    //   .pipe(
+    //     withLatestFrom(timer(0, 20000)),
+    //     tap((value) => console.log(value)),
+    //     tap(() => this.getbitCoinDataFromApi(queryData))
+    //   )
+    //   .subscribe();
   }
 
   private handleErrorModal(errorData: any) {
