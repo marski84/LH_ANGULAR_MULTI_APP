@@ -16,7 +16,6 @@ export class NetworkInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     console.log(request);
-    // request.headers.
 
     return next.handle(request);
   }

@@ -1,28 +1,13 @@
-import { Injectable, OnInit, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HttpClient,
   HttpParams,
   HttpErrorResponse,
 } from '@angular/common/http';
-import {
-  map,
-  Observable,
-  of,
-  timer,
-  ReplaySubject,
-  tap,
-  combineLatest,
-  catchError,
-  retry,
-  forkJoin,
-  withLatestFrom,
-  merge,
-} from 'rxjs';
+import { map, of, timer, tap, catchError, retry, merge } from 'rxjs';
 import { IselectValue } from './models/selectValue.interface';
 import { IcoinApiResponse } from './models/coinApiResponse.interface';
-import { bitCoinFormData } from './models/bitCoinFormData.interface';
-import { Subject, switchMap, Subscription } from 'rxjs';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subject, Subscription } from 'rxjs';
 import { apiResponse } from './models/apiResponse.interface';
 import { IqueryData } from './models/queryData.interface';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -31,7 +16,7 @@ import { ModalComponent } from './modal/modal.component';
 @Injectable({
   providedIn: 'root',
 })
-export class CoinService implements OnInit, OnDestroy {
+export class CoinService {
   coinDataStream$: Subject<IcoinApiResponse> = new Subject<IcoinApiResponse>();
 
   refreshCrytoData$: Subject<void> = new Subject<void>();
@@ -39,9 +24,6 @@ export class CoinService implements OnInit, OnDestroy {
   timer$!: Subscription;
 
   constructor(private httpService: HttpClient, private dialog: MatDialog) {}
-  ngOnInit(): void {}
-
-  ngOnDestroy(): void {}
 
   private availabaleBitCoins: IselectValue[] = [
     {
@@ -115,33 +97,12 @@ export class CoinService implements OnInit, OnDestroy {
       this.timer$.unsubscribe();
     }
 
-    // if (!queryData) {
-
-    //   // getbitCoinDataFromApi(getbitCoinDataFromApi)
-    // }
-
     this.timer$ = merge(timer(0, 20000), this.refreshCrytoData$)
       .pipe(
         tap((value) => console.log(value)),
         tap(() => this.getbitCoinDataFromApi(queryData))
       )
       .subscribe();
-
-    // this.timer$ = timer(0, 20000)
-    // .pipe(
-    //   withLatestFrom(this.refreshCrytoData$),
-    //   tap((value) => console.log(value)),
-    //   tap(() => this.getbitCoinDataFromApi(queryData))
-    // )
-    // .subscribe();
-
-    // this.timer$ = this.refreshCrytoData$
-    //   .pipe(
-    //     withLatestFrom(timer(0, 20000)),
-    //     tap((value) => console.log(value)),
-    //     tap(() => this.getbitCoinDataFromApi(queryData))
-    //   )
-    //   .subscribe();
   }
 
   private handleErrorModal(errorData: any) {

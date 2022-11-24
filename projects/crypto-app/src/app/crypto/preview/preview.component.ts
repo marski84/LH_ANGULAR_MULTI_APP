@@ -22,8 +22,6 @@ export class PreviewComponent implements OnInit {
   ngOnInit(): void {}
 
   refreshData() {
-    // emisja refreshCrytoData$
     this.coinService.refreshCrytoData$.next();
-    // this.coinService.refreshCrytoData$.complete();
   }
 }

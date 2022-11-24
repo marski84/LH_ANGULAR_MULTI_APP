@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Subject, Subscription, tap, timer } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { CoinService } from '../coin.service';
 import { IcoinApiResponse } from '../models/coinApiResponse.interface';
 import { IqueryData } from '../models/queryData.interface';
@@ -14,14 +14,12 @@ export class DataContainerComponent implements OnInit {
   bitCoinStreamSubscription$: Subject<IcoinApiResponse> =
     this.coinService.coinDataStream$;
 
-  @ViewChild('coinDataForm', { static: true })
-  coinDataForm!: SelectCoinTypeFormComponent;
+  // @ViewChild('coinDataForm', { static: true })
+  // coinDataForm!: SelectCoinTypeFormComponent;
 
   constructor(private coinService: CoinService) {}
 
-  ngOnInit(): void {
-    console.log(this.coinDataForm);
-  }
+  ngOnInit(): void {}
 
   catchFormChanged(queryData: IqueryData) {
     this.coinService.handleStreamSubscription(queryData);
