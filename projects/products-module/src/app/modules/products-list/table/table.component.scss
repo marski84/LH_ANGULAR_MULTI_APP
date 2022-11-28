@@ -1,0 +1,35 @@
+th.mat-header-cell {
+  text-align: center;
+  align-content: center;
+  align-self: center;
+  margin: auto;
+  flex-direction: column;
+  width: auto;
+}
+
+th.mat-sort-header {
+  text-align: center;
+  margin: auto;
+  flex-direction: column;
+}
+
+.mat-header-row {
+  border-spacing: 8px;
+  color: red;
+  justify-content: center;
+}
+
+.mat-header-cell {
+  color: red;
+  justify-content: center;
+}
+
+.column {
+  color: red;
+  width: 50px;
+}
+
+.mat-sort-header-position-before {
+  flex-direction: row;
+  justify-content: center;
+}

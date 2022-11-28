@@ -1,0 +1,93 @@
+<div class="mat-elevation-z8 full-width-table">
+    <table
+        #abstractTable
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        (matSortChange)="sortTableData($event)"
+    >
+
+        <!-- start of columns -->
+        <ng-container>
+            <ng-container
+                class="column"
+                *ngFor="let column of tableColumns"
+                [matColumnDef]="column.name"
+            >
+
+                <ng-container *ngIf="column.isSortable; else nonSortable">
+                    <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        [mat-sort-header]="column.name"
+                        [arrowPosition]="column.position === 'right' ? 'before' : 'after'"
+                    >
+                        {{column.name}}
+                    </th>
+                </ng-container>
+
+                <ng-template #nonSortable>
+                    <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                    >
+                        {{column.name}}
+                    </th>
+                </ng-template>
+
+                <ng-container *ngIf="column.name === 'Edit'">
+                    <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                    >
+                        Edit
+                    </th>
+                    <td
+                        class="row"
+                        mat-cell
+                        *matCellDef="let element"
+                    >
+                        <button
+                            (click)="handleEdit(element)"
+                            mat-raised-button
+                        >
+                            Edit
+                        </button>
+                    </td>
+
+                </ng-container>
+
+                <!-- COLUMN DATA -->
+
+                <td
+                    class="row"
+                    mat-cell
+                    *matCellDef="let element"
+                >
+                    {{element | dataKey: column.dataKey}}
+                </td>
+
+            </ng-container>
+
+        </ng-container>
+
+        <tbody>
+            <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumns"
+            ></tr>
+            <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns;"
+            ></tr>
+
+        </tbody>
+
+    </table>
+
+    <mat-paginator
+        [pageSizeOptions]="pageSizeOptions"
+        showFirstLastButtons
+    >
+    </mat-paginator>
+</div>

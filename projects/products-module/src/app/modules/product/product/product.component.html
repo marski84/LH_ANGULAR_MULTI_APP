@@ -1,0 +1,21 @@
+id: ['', Validators.required],
+    title: ['', Validators.required],
+    price: ['', Validators.required],
+    description: ['', Validators.required],
+    category: ['', Validators.required],
+    image: ['', Validators.required],
+    rate: ['', Validators.required],
+    count: ['', Validators.required],
+<div>
+    <form [formGroup]="productForm">
+        <custom-mat-input [control]="idCtrl"></custom-mat-input>
+        <custom-mat-input [control]="titleCtrl"></custom-mat-input>
+        <custom-mat-input [control]="priceCtrl"></custom-mat-input>
+        <custom-mat-input [control]="descriptionCtrl"></custom-mat-input>
+        <custom-mat-input [control]="categoryCtrl"></custom-mat-input>
+        <custom-mat-input [control]="imageCtrl"></custom-mat-input>
+        <custom-mat-input [control]="rateCtrl"></custom-mat-input>
+        <custom-mat-input [control]="countCtrl"></custom-mat-input>
+
+    </form>
+</div>
