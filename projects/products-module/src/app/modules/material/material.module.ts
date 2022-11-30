@@ -14,12 +14,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 @NgModule({
   imports: [],
@@ -37,13 +37,20 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTableModule,
     MatMenuModule,
     MatSidenavModule,
-    MatDialogModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatCheckboxModule,
     MatSortModule,
     MatPaginatorModule,
+    MatDialogModule,
   ],
   declarations: [MaterialComponent],
+
+  providers: [
+    {
+      provide: MatDialogRef,
+      useValue: {},
+    },
+  ],
 })
 export class MaterialModule {}

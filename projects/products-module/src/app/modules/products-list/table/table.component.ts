@@ -9,6 +9,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { TableColumn } from '../models/TableColumn.interface';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ProductComponent } from '../../product/product/product.component';
 
 export interface PeriodicElement {
   name: string;
@@ -38,6 +40,13 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() isSortable = false;
   @Input() pageSizeOptions = [5, 10, 15, 20];
 
+  dialogConfig: MatDialogConfig = {
+    autoFocus: true,
+    closeOnNavigation: false,
+    hasBackdrop: true,
+    disableClose: false,
+  };
+
   setTableDataSoure(data: any) {
     console.log(data);
 
@@ -46,7 +55,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.displayedColumns = this.tableColumns.map(
@@ -60,5 +69,12 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   handleEdit(row: any) {
     console.log(row);
+  }
+
+  onNewProductInit() {
+    // this.dialogConfig.data = true;
+
+    console.log('ok');
+    this.dialog.open(ProductComponent, this.dialogConfig);
   }
 }
