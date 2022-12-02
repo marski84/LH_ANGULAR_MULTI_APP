@@ -5,18 +5,26 @@ import { HttpClientModule } from '@angular/common/http';
 import { TableComponent } from './table/table.component';
 import { MaterialModule } from '../material/material.module';
 import { DataKeyPipe } from './table/pipes/data-key.pipe';
-import { ProductsListRoutingModule } from './products-list/product-list-routing.module';
-import { ProductModule } from '../product/product.module';
+import { ProductsListRoutingModule } from './product-list-routing.module';
+import { SharedModule } from '../shared/shared.module';
+import { ProductComponent } from './product/product.component';
+import { ProductResolver } from './product.resolver';
 
 @NgModule({
-  declarations: [ProductsListComponent, TableComponent, DataKeyPipe],
+  declarations: [
+    ProductsListComponent,
+    TableComponent,
+    DataKeyPipe,
+    ProductComponent,
+  ],
   imports: [
     CommonModule,
     ProductsListRoutingModule,
     HttpClientModule,
     MaterialModule,
-    ProductModule,
+    SharedModule,
   ],
   exports: [ProductsListComponent],
+  providers: [ProductResolver],
 })
 export class ProductsListModule {}

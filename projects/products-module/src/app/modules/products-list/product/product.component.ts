@@ -30,7 +30,7 @@ export class ProductComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dictionaryService: DictionaryServiceService,
-    private dialogRef: MatDialogRef<any>, // @Inject(MAT_DIALOG_DATA) data?: boolean
+    private dialogRef: MatDialogRef<any>, //   boolean
     private acivatedRoute: ActivatedRoute,
     private router: Router // private activatedRouteSnapshot: ActivatedRouteSnapshot
   ) {
@@ -40,7 +40,17 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.acivatedRoute.data.subscribe((data) => console.log(data)));
+    console.log('init');
+
+    console.log(this.acivatedRoute.snapshot.data);
+
+    // console.log(
+    //   this.acivatedRoute.data.subscribe((data) =>
+    //     console.log(data?.['product'])
+    //   )
+    // );
+
+    // console.log(this.acivatedRoute.snapshot);
 
     // cold observable- take(1) in order to simulate dictionary api
     this.dictionaryService

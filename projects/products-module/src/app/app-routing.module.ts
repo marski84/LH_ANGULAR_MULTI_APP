@@ -3,11 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'products-list',
+    path: '',
     loadChildren: () =>
-      import(
-        './modules/products-list/products-list/product-list-routing.module'
-      ).then((module) => module.ProductsListRoutingModule),
+      import('./modules/products-list/product-list-routing.module').then(
+        (module) => module.ProductsListRoutingModule
+      ),
   },
 ];
 

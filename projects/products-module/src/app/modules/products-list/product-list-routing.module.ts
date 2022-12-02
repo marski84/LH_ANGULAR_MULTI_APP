@@ -1,17 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TableComponent } from '../table/table.component';
-import { ProductComponent } from '../../product/product/product.component';
-import { ProductResolverService } from '../product-resolver.service';
+import { ProductResolver } from './product.resolver';
+import { ProductComponent } from './product/product.component';
+import { TableComponent } from './table/table.component';
 
 const routes: Routes = [
   {
+    path: '',
+    component: TableComponent,
+  },
+
+  {
     path: 'edit/:id',
     component: ProductComponent,
-    data: { isNewProduct: false },
     resolve: [
       {
-        products: ProductResolverService,
+        product: ProductResolver,
       },
     ],
   },
@@ -22,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 export class ProductsListRoutingModule {}

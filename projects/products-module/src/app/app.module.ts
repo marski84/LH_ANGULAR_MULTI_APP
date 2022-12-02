@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ViewContainerComponent } from './view-container/view-container.component';
 import { ProductsListModule } from './modules/products-list/products-list.module';
-import { ProductModule } from './modules/product/product.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -14,7 +13,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     ProductsListModule,
-    ProductModule,
     BrowserAnimationsModule,
   ],
   providers: [],

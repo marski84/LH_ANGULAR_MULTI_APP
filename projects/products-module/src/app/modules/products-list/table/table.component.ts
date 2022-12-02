@@ -10,7 +10,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { TableColumn } from '../models/TableColumn.interface';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ProductComponent } from '../../product/product/product.component';
+import { ProductComponent } from '../product/product.component';
 
 export interface PeriodicElement {
   name: string;
@@ -68,7 +68,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   sortTableData(sortDirection: any) {}
 
   handleEdit(row: any) {
-    console.log(row);
+    this.dialog.open(ProductComponent, this.dialogConfig);
   }
 
   onNewProductInit() {

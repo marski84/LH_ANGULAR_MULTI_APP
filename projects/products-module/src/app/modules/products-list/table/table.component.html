@@ -48,6 +48,7 @@
                         *matCellDef="let element"
                     >
                         <button
+                            [routerLink]="['edit', element.id]"
                             (click)="handleEdit(element)"
                             mat-raised-button
                         >
