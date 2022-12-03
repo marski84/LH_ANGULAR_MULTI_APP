@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, tap } from 'rxjs';
 import { IProductApiResponse } from './models/productApiResponse.interface';
 import { IModifiedProductApiResponse } from './models/modifiedApiReponse.interface';
+import { ProductsListModule } from './products-list.module';
 
 @Injectable({
   providedIn: 'root',

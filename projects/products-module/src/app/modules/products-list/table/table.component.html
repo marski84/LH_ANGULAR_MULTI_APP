@@ -47,8 +47,9 @@
                         mat-cell
                         *matCellDef="let element"
                     >
+
                         <button
-                            [routerLink]="['edit', element.id]"
+                            [routerLink]="['/edit', element.id]"
                             (click)="handleEdit(element)"
                             mat-raised-button
                         >
@@ -99,3 +100,5 @@
         Add new product
     </button>
 </div>
+
+<router-outlet></router-outlet>

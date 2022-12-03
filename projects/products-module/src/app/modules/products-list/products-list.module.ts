@@ -8,7 +8,8 @@ import { DataKeyPipe } from './table/pipes/data-key.pipe';
 import { ProductsListRoutingModule } from './product-list-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { ProductComponent } from './product/product.component';
-import { ProductResolver } from './product.resolver';
+import { CustomErrorHandler } from '../../custom-error-handler.service';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
@@ -16,15 +17,16 @@ import { ProductResolver } from './product.resolver';
     TableComponent,
     DataKeyPipe,
     ProductComponent,
+    TestComponent,
   ],
   imports: [
     CommonModule,
-    ProductsListRoutingModule,
     HttpClientModule,
-    MaterialModule,
     SharedModule,
+    ProductsListRoutingModule,
+    MaterialModule,
   ],
   exports: [ProductsListComponent],
-  providers: [ProductResolver],
+  providers: [CustomErrorHandler],
 })
 export class ProductsListModule {}
