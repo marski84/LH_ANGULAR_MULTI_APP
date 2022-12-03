@@ -1,0 +1,29 @@
+<div
+    class="input-container"
+    [formGroup]="nipNumber"
+>
+    okok
+    <mat-form-field>
+
+        <mat-label></mat-label>
+        <input
+            [value]="nipValue"
+            formControlName="value"
+            #input
+            type="number"
+            name="name"
+            matInput
+            (input)="onInput(input.value)"
+            [disabled]="disabled"
+        >
+        <!-- <mat-error *ngIf="input.touched s&& input.hasError('required')">This field is required</mat-error> -->
+
+    </mat-form-field>
+</div>
+
+<div>input: {{input}}</div>
+
+<!-- <div>value: {{control.value}}</div>
+<div>touched: {{control.touched}}</div>
+<div>dirty: {{control.dirty}}</div>
+<div>error: {{control.hasError('required')}}</div> -->
