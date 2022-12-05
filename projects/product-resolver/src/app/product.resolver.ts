@@ -5,22 +5,23 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
 } from '@angular/router';
-import { catchError, EMPTY, Observable, of, tap } from 'rxjs';
+import { catchError, EMPTY, map, Observable, of, tap } from 'rxjs';
 import { ProductApiService } from './product-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductResolver implements Resolve<boolean> {
-  constructor(private productService: ProductApiService) {}
+  constructor(
+    private productService: ProductApiService,
+    private router: Router
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<any> {
-    console.log(route);
-
     return this.productService.getProduct(route.params?.['id']).pipe(
-      tap((value) => console.log('ok resolver')),
+      map((value) => value),
       catchError((error) => {
-        // this.router.navigate(['']);
+        this.router.navigate(['']);
         return EMPTY;
       })
     );

@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { DictionaryServiceService } from 'projects/products-module/src/app/modules/products-list/product/dictionary-service.service';
-import { take, tap } from 'rxjs';
+import { filter, map, mapTo, take, tap, switchMap } from 'rxjs';
+import { IModifiedProductApiResponse } from '../models/modifiedApiReponse.interface';
+import { ProductApiService } from '../product-api.service';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
 })
-export class ProductComponent implements OnInit {
-  formFields: any = [];
+export class ProductComponent implements OnInit, AfterViewInit {
+  formFields: string[] = [];
+  formData!: IModifiedProductApiResponse;
 
   productForm: FormGroup = this.fb.group({});
   newProductForm = true;
@@ -22,22 +25,30 @@ export class ProductComponent implements OnInit {
     private dictionaryService: DictionaryServiceService,
     private dialogRef: MatDialogRef<any>, //   boolean
     private acivatedRoute: ActivatedRoute,
+    private productService: ProductApiService,
     private router: Router // private activatedRouteSnapshot: ActivatedRouteSnapshot
   ) {
     // if (data) {
     //   this.newProductForm = data;
     // }
   }
+  ngAfterViewInit(): void {
+    // this.acivatedRoute.data
+    //   .pipe(
+    //     filter((data) => data['product'] !== undefined),
+    //     map((data) => {
+    //       const formData: IModifiedProductApiResponse = data['product'][0];
+    //       this.formData = formData;
+    //       return formData;
+    //     }),
+    //     tap((formData) => {
+    //       this.handleFormControlsInit(formData);
+    //     })
+    //   )
+    //   .subscribe();
+  }
 
   ngOnInit(): void {
-    console.log('init');
-
-    console.log(this.acivatedRoute.snapshot.data);
-
-    this.acivatedRoute.data.subscribe((data) => console.log(data?.['product']));
-
-    // console.log(this.acivatedRoute.snapshot);
-
     // cold observable- take(1) in order to simulate dictionary api
     this.dictionaryService
       .getFormParams()
@@ -47,28 +58,55 @@ export class ProductComponent implements OnInit {
       )
       .subscribe();
 
-    console.log();
+    this.acivatedRoute.data
+      .pipe(
+        filter((data) => data['product'] !== undefined),
+        tap((value) => console.log(value)),
+        map((data) => this.prepareFormData(data))
+      )
+      .subscribe();
 
+    this.handleFormControlsInit(this.formData);
+  }
+
+  private prepareFormData(data: {
+    [product: string]: IModifiedProductApiResponse[];
+  }) {
+    const formData: IModifiedProductApiResponse = data['product'][0];
+    this.formData = formData;
+
+    return formData;
+  }
+
+  private handleFormControlsInit(formData?: IModifiedProductApiResponse) {
     this.formFields.forEach((formField: string) => {
-      if (this.newProductForm && formField === 'id') {
+      if (formData) {
+        const controlValue =
+          formData[formField as keyof IModifiedProductApiResponse];
+        this.registerFormControl(formField, controlValue as string);
+      }
+
+      if (formField === 'id') {
         const id = faker.datatype.uuid();
         this.registerFormControl(formField, id);
         this.productForm.get('id')?.disable();
       }
       this.registerFormControl(formField);
     });
-
-    // id: faker.datatype.uuid(), console.log(this.productForm);
   }
 
   private registerFormControl(controlName: string, ctrlValue?: string) {
     const ctrl = this.fb.control(ctrlValue, Validators.required);
+
     this.productForm.addControl(controlName, ctrl);
   }
 
   closeDialog() {
+    this.router.navigate(['']);
     this.dialogRef.close();
   }
 
-  addProduct() {}
+  addProduct() {
+    return;
+  }
 }

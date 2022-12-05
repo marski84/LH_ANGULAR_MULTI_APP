@@ -1,23 +1,33 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { map, tap } from 'rxjs';
+import { Injectable, OnInit } from '@angular/core';
+import { map, tap, catchError, of, ReplaySubject, Observable } from 'rxjs';
 import { IModifiedProductApiResponse } from './models/modifiedApiReponse.interface';
 import { IProductApiResponse } from './models/productApiResponse.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductApiService {
+export class ProductApiService implements OnInit {
+  productDataReplaySubject$ = new ReplaySubject<
+    IModifiedProductApiResponse[]
+  >();
+
   private apiEndpoint = 'https://fakestoreapi.com/products';
 
   private altApi = 'https://jsonplaceholder.typicode.com/posts';
 
   constructor(private httpClient: HttpClient) {}
 
+  ngOnInit() {}
+
   getProducts() {
-    return this.httpClient
-      .get<IProductApiResponse[]>(this.apiEndpoint)
-      .pipe(map((response) => this.formatResponse(response)));
+    return this.httpClient.get<IProductApiResponse[]>(this.apiEndpoint).pipe(
+      tap(() => console.log('ok')),
+      map((response) => this.formatResponse(response)),
+      tap((formattedResponse) =>
+        this.productDataReplaySubject$.next(formattedResponse)
+      )
+    );
   }
 
   getProduct(id: number) {
@@ -25,7 +35,10 @@ export class ProductApiService {
       .get<IProductApiResponse>(`${this.apiEndpoint}/${id}`)
       .pipe(
         tap((value) => console.log(value)),
-        map((response) => this.formatResponse([response]))
+        map((response) => this.formatResponse([response])),
+        catchError((error) => {
+          return of(error);
+        })
       );
   }
 

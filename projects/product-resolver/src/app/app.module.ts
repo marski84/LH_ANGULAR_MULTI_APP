@@ -11,6 +11,7 @@ import { SharedModule } from './modules/shared/shared.module';
 import { DataKeyPipe } from './product-list/pipes/data-key.pipe';
 import { ViewContainerComponent } from './view-container/view-container.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     MaterialModule,
     SharedModule,
     HttpClientModule,
