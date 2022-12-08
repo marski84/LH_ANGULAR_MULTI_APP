@@ -7,8 +7,6 @@ import { ProductApiService } from '../product-api.service';
   styleUrls: ['./view-container.component.scss'],
 })
 export class ViewContainerComponent implements OnInit {
-  // https://www.youtube.com/watch?v=BLLO2x7_R5M
-
   constructor(private productService: ProductApiService) {
     return;
   }

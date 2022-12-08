@@ -85,12 +85,6 @@ export class AbstractTableComponent
   }
 
   ngAfterContentInit(): void {
-    console.log('tutaj:');
-
-    console.log(this.columnDefs);
-
-    // console.log(this.dupa);
-
     if (this.columnDefs) {
       this.columnDefs.forEach((columnDef: CdkColumnDef) => {
         this.table.addColumnDef(columnDef);
@@ -113,8 +107,6 @@ export class AbstractTableComponent
   refreshData() {
     this.data = this.dataSource.data;
     this.table.renderRows();
-    // this.dataSource.connect().next(this.data);
-    // this.dataSource.data = this.data;
   }
 
   removeItem(elementId: number) {

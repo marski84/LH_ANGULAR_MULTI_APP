@@ -1,20 +1,29 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  Output,
+} from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { TableColumn } from '../models/TableColumn.interface';
 import { ProductComponent } from '../product/product.component';
 import { ProductApiService } from '../product-api.service';
-import { map, catchError, EMPTY, of, tap } from 'rxjs';
+import { map, catchError, EMPTY, of, tap, filter } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { EventEmitter } from '@angular/core';
+import { IModifiedProductApiResponse } from '../models/modifiedApiReponse.interface';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
@@ -22,10 +31,7 @@ export class ProductListComponent implements OnInit {
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns!: string[];
 
-  // @Input() set data(data: any) {
-  //   this.setTableDataSoure(data);
-  // }
-  // @Input() tableColumns!: TableColumn[];
+  @Output() sortDataEmitted = new EventEmitter<Sort>();
 
   tableColumns: TableColumn[] = [
     {
@@ -87,6 +93,7 @@ export class ProductListComponent implements OnInit {
     this.dataSource = new MatTableDataSource<any>(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator
   }
 
   constructor(
@@ -100,9 +107,8 @@ export class ProductListComponent implements OnInit {
       (tableColumn) => tableColumn.name
     );
 
-    // this.productService.getProducts().subscribe();
-
-    this.productService.productDataReplaySubject$
+    this.productService
+      .getProductsData()
       .pipe(
         map((productList) => this.setTableDataSoure(productList)),
         tap(() => this.toastr.info('Succesfully retrieved data!', 'Success!')),
@@ -117,14 +123,49 @@ export class ProductListComponent implements OnInit {
       .subscribe();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
 
-  sortTableData(sortDirection: any) {}
+  sortTableData(sortParameters: Sort) {
+    sortParameters.active = this.tableColumns.find(
+      (column) => column.name === sortParameters.active
+    )!.dataKey;
+
+    this.sortDataEmitted.emit(sortParameters);
+    return;
+  }
 
   onNewProductInit() {
-    // this.dialogConfig.data = true;
+    const dialogRef = this.dialog.open(ProductComponent, this.dialogConfig);
 
-    console.log('ok');
-    this.dialog.open(ProductComponent, this.dialogConfig);
+    dialogRef
+      .afterClosed()
+      .pipe(
+        filter((data) => data !== undefined),
+        map((data) => this.onNewProductAdd(data)),
+        tap((data) => console.log(data))
+      )
+      .subscribe();
+  }
+
+  private onNewProductAdd(formData: IModifiedProductApiResponse) {
+    return this.productService
+      .addNewProduct(formData)
+      .pipe(
+        map((data) => data.id),
+        tap((newProductId) =>
+          this.toastr.success(
+            `New product id: ${newProductId}`,
+            'New product Added!'
+          )
+        )
+      )
+      .subscribe();
+  }
+
+  private onProductEdit(editedProductData: IModifiedProductApiResponse) {
+    return this.productService.editProduct(editedProductData);
   }
 }

@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Router,
-  Resolve,
-  RouterStateSnapshot,
-  ActivatedRouteSnapshot,
-} from '@angular/router';
+import { Router, Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { catchError, EMPTY, map, Observable, of, tap } from 'rxjs';
 import { ProductApiService } from './product-api.service';
 
@@ -25,8 +20,5 @@ export class ProductResolver implements Resolve<boolean> {
         return EMPTY;
       })
     );
-    // console.log('resolver');
-
-    // return of('');
   }
 }

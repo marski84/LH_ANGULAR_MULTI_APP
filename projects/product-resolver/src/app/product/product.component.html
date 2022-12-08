@@ -1,4 +1,4 @@
-<div>
+<div class="form-container">
     <form [formGroup]="productForm">
 
         <div
@@ -26,8 +26,10 @@
                 Close
             </button>
             <button
+                [disabled]="productForm.invalid"
+                [ngClass]="productForm.invalid ? 'disabled-button' : '' "
                 class="mat-raised-button mat-primary"
-                (click)="addProduct()"
+                (click)="onDialogAccept()"
             >
                 Save
             </button>

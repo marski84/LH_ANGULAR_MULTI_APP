@@ -1,10 +1,10 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { DictionaryServiceService } from 'projects/products-module/src/app/modules/products-list/product/dictionary-service.service';
-import { filter, map, mapTo, take, tap, switchMap } from 'rxjs';
+import { filter, map, take, tap, debounceTime } from 'rxjs';
 import { IModifiedProductApiResponse } from '../models/modifiedApiReponse.interface';
 import { ProductApiService } from '../product-api.service';
 
@@ -17,35 +17,20 @@ export class ProductComponent implements OnInit, AfterViewInit {
   formFields: string[] = [];
   formData!: IModifiedProductApiResponse;
 
+  editedProductDataEmitted = new EventEmitter<IModifiedProductApiResponse>();
+
   productForm: FormGroup = this.fb.group({});
-  newProductForm = true;
 
   constructor(
     private fb: FormBuilder,
     private dictionaryService: DictionaryServiceService,
+    private productService: ProductApiService,
     private dialogRef: MatDialogRef<any>, //   boolean
     private acivatedRoute: ActivatedRoute,
-    private productService: ProductApiService,
-    private router: Router // private activatedRouteSnapshot: ActivatedRouteSnapshot
-  ) {
-    // if (data) {
-    //   this.newProductForm = data;
-    // }
-  }
+    private router: Router
+  ) {}
   ngAfterViewInit(): void {
-    // this.acivatedRoute.data
-    //   .pipe(
-    //     filter((data) => data['product'] !== undefined),
-    //     map((data) => {
-    //       const formData: IModifiedProductApiResponse = data['product'][0];
-    //       this.formData = formData;
-    //       return formData;
-    //     }),
-    //     tap((formData) => {
-    //       this.handleFormControlsInit(formData);
-    //     })
-    //   )
-    //   .subscribe();
+    return;
   }
 
   ngOnInit(): void {
@@ -87,8 +72,8 @@ export class ProductComponent implements OnInit, AfterViewInit {
       }
 
       if (formField === 'id') {
-        const id = faker.datatype.uuid();
-        this.registerFormControl(formField, id);
+        // const id = faker.datatype.uuid();
+        this.registerFormControl(formField);
         this.productForm.get('id')?.disable();
       }
       this.registerFormControl(formField);
@@ -102,11 +87,28 @@ export class ProductComponent implements OnInit, AfterViewInit {
   }
 
   closeDialog() {
+    if (!this.formData) {
+      this.dialogRef.close();
+    }
     this.router.navigate(['']);
-    this.dialogRef.close();
   }
 
-  addProduct() {
+  onDialogAccept() {
+    console.log(this.productForm);
+
+    // handle addNew
+    if (!this.formData) {
+      // this.dialogRef.close();
+      this.dialogRef.close(this.productForm.value);
+    }
+    // handle edit
+    this.productService
+      .editProduct(this.productForm.getRawValue())
+      .pipe(
+        debounceTime(1000),
+        tap(() => this.router.navigate(['']))
+      )
+      .subscribe();
     return;
   }
 }

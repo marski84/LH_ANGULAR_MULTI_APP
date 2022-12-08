@@ -3,6 +3,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { map, tap, catchError, of, ReplaySubject, Observable } from 'rxjs';
 import { IModifiedProductApiResponse } from './models/modifiedApiReponse.interface';
 import { IProductApiResponse } from './models/productApiResponse.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -16,13 +17,21 @@ export class ProductApiService implements OnInit {
 
   private altApi = 'https://jsonplaceholder.typicode.com/posts';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    private toastService: ToastrService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    return;
+  }
+
+  getProductsData() {
+    return this.productDataReplaySubject$.asObservable();
+  }
 
   getProducts() {
     return this.httpClient.get<IProductApiResponse[]>(this.apiEndpoint).pipe(
-      tap(() => console.log('ok')),
       map((response) => this.formatResponse(response)),
       tap((formattedResponse) =>
         this.productDataReplaySubject$.next(formattedResponse)
@@ -34,7 +43,6 @@ export class ProductApiService implements OnInit {
     return this.httpClient
       .get<IProductApiResponse>(`${this.apiEndpoint}/${id}`)
       .pipe(
-        tap((value) => console.log(value)),
         map((response) => this.formatResponse([response])),
         catchError((error) => {
           return of(error);
@@ -42,26 +50,53 @@ export class ProductApiService implements OnInit {
       );
   }
 
+  addNewProduct(newProductData: IModifiedProductApiResponse) {
+    const body = JSON.stringify(newProductData);
+    return this.httpClient
+      .post<any>(this.apiEndpoint, body)
+      .pipe(tap((value) => console.log(value)));
+  }
+
+  editProduct(editedProductData: IModifiedProductApiResponse) {
+    const body = JSON.stringify(editedProductData);
+
+    console.log(editedProductData);
+
+    return this.httpClient
+      .put(this.apiEndpoint + `/${editedProductData.id}`, body)
+      .pipe(
+        tap((response: any) =>
+          this.toastService.success(`Product ${response.id} succes `, 'Sukces')
+        )
+      );
+  }
+
   private formatResponse(response: IProductApiResponse[]) {
     const modifiedResponse: IModifiedProductApiResponse[] = response.map(
       (response) => {
-        const { id, title, price, description, category, image, rating } =
-          response;
-
-        const modifiedResponse: IModifiedProductApiResponse = new Object({
-          id: id,
-          title: title,
-          price: price,
-          description: description,
-          category: category,
-          image: image,
-          rate: rating.rate,
-          count: rating.count,
-        }) as IModifiedProductApiResponse;
+        const modifiedResponse: IModifiedProductApiResponse =
+          this.createModifiedResponse(response);
 
         return modifiedResponse;
       }
     );
     return modifiedResponse;
+  }
+
+  private createModifiedResponse(
+    response: IProductApiResponse
+  ): IModifiedProductApiResponse {
+    const { id, title, price, description, category, image, rating } = response;
+
+    return new Object({
+      id: id,
+      title: title,
+      price: price,
+      description: description,
+      category: category,
+      image: image,
+      rate: rating.rate,
+      count: rating.count,
+    }) as IModifiedProductApiResponse;
   }
 }
