@@ -15,8 +15,6 @@ export class ProductApiService implements OnInit {
 
   private apiEndpoint = 'https://fakestoreapi.com/products';
 
-  private altApi = 'https://jsonplaceholder.typicode.com/posts';
-
   constructor(
     private httpClient: HttpClient,
     private toastService: ToastrService
@@ -69,6 +67,19 @@ export class ProductApiService implements OnInit {
           this.toastService.success(`Product ${response.id} succes `, 'Sukces')
         )
       );
+  }
+
+  sortProducts(direction: string) {
+    console.log(direction);
+    this.httpClient
+      .get<IProductApiResponse[]>(this.apiEndpoint + `?sort=${direction}`)
+      .pipe(
+        map((response) => this.formatResponse(response)),
+        tap((formattedResponse) =>
+          this.productDataReplaySubject$.next(formattedResponse)
+        )
+      )
+      .subscribe();
   }
 
   private formatResponse(response: IProductApiResponse[]) {

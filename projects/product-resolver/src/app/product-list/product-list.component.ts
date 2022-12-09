@@ -43,13 +43,11 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     {
       name: 'Title',
       dataKey: 'title',
-      isSortable: true,
-      position: 'right',
+      position: 'left',
     },
     {
       name: 'Price',
       dataKey: 'price',
-      isSortable: true,
       position: 'right',
     },
     {
@@ -59,7 +57,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     {
       name: 'Category',
       dataKey: 'category',
-      isSortable: true,
       position: 'right',
     },
     // {
@@ -88,12 +85,9 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   };
 
   setTableDataSoure(data: any) {
-    console.log(data);
-
     this.dataSource = new MatTableDataSource<any>(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    // this.dataSource.paginator
   }
 
   constructor(
@@ -133,7 +127,10 @@ export class ProductListComponent implements OnInit, AfterViewInit {
       (column) => column.name === sortParameters.active
     )!.dataKey;
 
-    this.sortDataEmitted.emit(sortParameters);
+    console.log(sortParameters);
+    this.productService.sortProducts(sortParameters.direction);
+
+    // this.sortDataEmitted.emit(sortParameters);
     return;
   }
 
