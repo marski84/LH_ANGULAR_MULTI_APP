@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { map, tap, catchError, of, ReplaySubject, Observable } from 'rxjs';
+import { map, tap, catchError, of, ReplaySubject } from 'rxjs';
 import { IModifiedProductApiResponse } from './models/modifiedApiReponse.interface';
 import { IProductApiResponse } from './models/productApiResponse.interface';
 import { ToastrService } from 'ngx-toastr';
@@ -49,28 +49,36 @@ export class ProductApiService implements OnInit {
   }
 
   addNewProduct(newProductData: IModifiedProductApiResponse) {
-    const body = JSON.stringify(newProductData);
+    const body = JSON.stringify(
+      this.formatDataBeforeSendingToApi(newProductData)
+    );
     return this.httpClient
-      .post<any>(this.apiEndpoint, body)
+      .post<IProductApiResponse>(this.apiEndpoint, body)
       .pipe(tap((value) => console.log(value)));
   }
 
   editProduct(editedProductData: IModifiedProductApiResponse) {
-    const body = JSON.stringify(editedProductData);
-
-    console.log(editedProductData);
+    const body = JSON.stringify(
+      this.formatDataBeforeSendingToApi(editedProductData)
+    );
 
     return this.httpClient
-      .put(this.apiEndpoint + `/${editedProductData.id}`, body)
+      .put<IModifiedProductApiResponse>(
+        this.apiEndpoint + `/${editedProductData.id}`,
+        body
+      )
       .pipe(
-        tap((response: any) =>
-          this.toastService.success(`Product ${response.id} succes `, 'Sukces')
+        map((response) => response),
+        tap(() =>
+          this.toastService.success(
+            `Product with id=${editedProductData.id} succesfully updated`,
+            'Success'
+          )
         )
       );
   }
 
   sortProducts(direction: string) {
-    console.log(direction);
     this.httpClient
       .get<IProductApiResponse[]>(this.apiEndpoint + `?sort=${direction}`)
       .pipe(
@@ -92,6 +100,24 @@ export class ProductApiService implements OnInit {
       }
     );
     return modifiedResponse;
+  }
+
+  private formatDataBeforeSendingToApi(data: IModifiedProductApiResponse) {
+    const { id, title, price, description, category, image, rate, count } =
+      data;
+    const dataToSend: IProductApiResponse = {
+      id: id,
+      title: title,
+      price: price,
+      description: description,
+      category: category,
+      image: image,
+      rating: {
+        rate: rate,
+        count: count,
+      },
+    };
+    return dataToSend;
   }
 
   private createModifiedResponse(

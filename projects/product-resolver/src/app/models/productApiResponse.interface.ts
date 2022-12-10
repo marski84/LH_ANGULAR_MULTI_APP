@@ -6,7 +6,7 @@ export interface IProductApiResponse {
   category: string;
   image: string;
   rating: {
-    rate: number;
-    count: number;
+    rate: string;
+    count: string;
   };
 }

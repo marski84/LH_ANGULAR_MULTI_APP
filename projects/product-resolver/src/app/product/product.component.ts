@@ -72,8 +72,8 @@ export class ProductComponent implements OnInit, AfterViewInit {
       }
 
       if (formField === 'id') {
-        // const id = faker.datatype.uuid();
-        this.registerFormControl(formField);
+        const id = faker.datatype.uuid();
+        this.registerFormControl(formField, id);
         this.productForm.get('id')?.disable();
       }
       this.registerFormControl(formField);
@@ -98,8 +98,8 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
     // handle addNew
     if (!this.formData) {
-      // this.dialogRef.close();
       this.dialogRef.close(this.productForm.value);
+      return;
     }
     // handle edit
     this.productService
@@ -109,6 +109,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
         tap(() => this.router.navigate(['']))
       )
       .subscribe();
+
     return;
   }
 }

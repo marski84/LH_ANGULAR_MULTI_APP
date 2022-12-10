@@ -10,8 +10,9 @@ import { MaterialModule } from './modules/material/material.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { DataKeyPipe } from './product-list/pipes/data-key.pipe';
 import { ViewContainerComponent } from './view-container/view-container.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
+import { NetworkInterceptor } from './network.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,9 @@ import { ToastrModule } from 'ngx-toastr';
     SharedModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: NetworkInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

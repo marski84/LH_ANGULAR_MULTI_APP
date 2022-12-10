@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   OnInit,
   ViewChild,
   AfterViewInit,
@@ -13,9 +12,9 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { TableColumn } from '../models/TableColumn.interface';
 import { ProductComponent } from '../product/product.component';
 import { ProductApiService } from '../product-api.service';
-import { map, catchError, EMPTY, of, tap, filter } from 'rxjs';
+import { map, tap, filter, Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, OnDestroy } from '@angular/core';
 import { IModifiedProductApiResponse } from '../models/modifiedApiReponse.interface';
 
 @Component({
@@ -23,13 +22,14 @@ import { IModifiedProductApiResponse } from '../models/modifiedApiReponse.interf
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
 })
-export class ProductListComponent implements OnInit, AfterViewInit {
+export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns!: string[];
+  onDestroy$: Subject<void> = new Subject<void>();
 
   @Output() sortDataEmitted = new EventEmitter<Sort>();
 
@@ -84,7 +84,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     disableClose: false,
   };
 
-  setTableDataSoure(data: any) {
+  setTableDataSoure(data: IModifiedProductApiResponse[]) {
     this.dataSource = new MatTableDataSource<any>(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -104,15 +104,10 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     this.productService
       .getProductsData()
       .pipe(
+        takeUntil(this.onDestroy$),
         map((productList) => this.setTableDataSoure(productList)),
-        tap(() => this.toastr.info('Succesfully retrieved data!', 'Success!')),
-        catchError((error) => {
-          this.toastr.error(
-            'Error while trying to retrieve data!',
-            'Http Error'
-          );
-          return of(EMPTY);
-        })
+        tap(() => this.toastr.info('Succesfully retrieved data!', 'Success!'))
+        // error handling implemented in network interceptor
       )
       .subscribe();
   }
@@ -123,15 +118,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   sortTableData(sortParameters: Sort) {
-    sortParameters.active = this.tableColumns.find(
-      (column) => column.name === sortParameters.active
-    )!.dataKey;
-
-    console.log(sortParameters);
     this.productService.sortProducts(sortParameters.direction);
-
-    // this.sortDataEmitted.emit(sortParameters);
-    return;
   }
 
   onNewProductInit() {
@@ -162,7 +149,8 @@ export class ProductListComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  private onProductEdit(editedProductData: IModifiedProductApiResponse) {
-    return this.productService.editProduct(editedProductData);
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 }

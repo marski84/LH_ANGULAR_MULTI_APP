@@ -15,6 +15,7 @@ export class ProductResolver implements Resolve<boolean> {
   resolve(route: ActivatedRouteSnapshot): Observable<any> {
     return this.productService.getProduct(route.params?.['id']).pipe(
       map((value) => value),
+      // error handling implemented in network interceptor
       catchError((error) => {
         this.router.navigate(['']);
         return EMPTY;

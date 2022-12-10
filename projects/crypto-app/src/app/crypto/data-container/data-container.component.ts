@@ -14,9 +14,6 @@ export class DataContainerComponent implements OnInit {
   bitCoinStreamSubscription$: Subject<IcoinApiResponse> =
     this.coinService.coinDataStream$;
 
-  // @ViewChild('coinDataForm', { static: true })
-  // coinDataForm!: SelectCoinTypeFormComponent;
-
   constructor(private coinService: CoinService) {}
 
   ngOnInit(): void {}
