@@ -16,11 +16,10 @@ import { ProductApiService } from '../product-api.service';
 export class ProductComponent implements OnInit, AfterViewInit {
   formFields: string[] = [];
   formData!: IModifiedProductApiResponse;
-
-  editedProductDataEmitted = new EventEmitter<IModifiedProductApiResponse>();
-
   productForm: FormGroup = this.fb.group({});
 
+  // 1. formFields - dostarczaj za pomocą DI - to znaczy dostarcz z parent'a - useValue
+  // 2. rozpisać na 3 komponenty
   constructor(
     private fb: FormBuilder,
     private dictionaryService: DictionaryServiceService,
@@ -29,6 +28,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
     private acivatedRoute: ActivatedRoute,
     private router: Router
   ) {}
+
   ngAfterViewInit(): void {
     return;
   }
@@ -39,6 +39,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
       .getFormParams()
       .pipe(
         take(1),
+        tap((value) => console.log(value)),
         tap((value) => (this.formFields = value))
       )
       .subscribe();
@@ -46,24 +47,28 @@ export class ProductComponent implements OnInit, AfterViewInit {
     this.acivatedRoute.data
       .pipe(
         filter((data) => data['product'] !== undefined),
+        // map tutaj trzeba dodać:)
         tap((value) => console.log(value)),
-        map((data) => this.prepareFormData(data))
+        map((data) => this.prepareFormData(data)),
+        tap((data) => this.handleFormControlsInit(data))
       )
       .subscribe();
-
-    this.handleFormControlsInit(this.formData);
   }
 
   private prepareFormData(data: {
     [product: string]: IModifiedProductApiResponse[];
   }) {
+    console.log(data);
+
     const formData: IModifiedProductApiResponse = data['product'][0];
-    this.formData = formData;
+    this.formData = formData; // przemyślec czy potrzebne
 
     return formData;
   }
 
   private handleFormControlsInit(formData?: IModifiedProductApiResponse) {
+    console.log('metoda');
+
     this.formFields.forEach((formField: string) => {
       if (formData) {
         const controlValue =

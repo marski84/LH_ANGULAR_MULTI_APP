@@ -12,6 +12,6 @@ export class ViewContainerComponent implements OnInit {
   }
   // initiate replay subject
   ngOnInit() {
-    return this.productService.getProducts().subscribe();
+    // return this.productService.getProducts().subscribe();
   }
 }

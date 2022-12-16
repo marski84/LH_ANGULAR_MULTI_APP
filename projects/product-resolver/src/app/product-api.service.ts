@@ -4,14 +4,15 @@ import { map, tap, catchError, of, ReplaySubject } from 'rxjs';
 import { IModifiedProductApiResponse } from './models/modifiedApiReponse.interface';
 import { IProductApiResponse } from './models/productApiResponse.interface';
 import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductApiService implements OnInit {
-  productDataReplaySubject$ = new ReplaySubject<
+  productDataReplaySubject$ = new BehaviorSubject<
     IModifiedProductApiResponse[]
-  >();
+  >([]);
 
   private apiEndpoint = 'https://fakestoreapi.com/products';
 
@@ -28,7 +29,18 @@ export class ProductApiService implements OnInit {
     return this.productDataReplaySubject$.asObservable();
   }
 
-  getProducts() {
+  getProducts(sortDirection?: string) {
+    if (sortDirection) {
+      this.httpClient
+        .get<IProductApiResponse[]>(this.apiEndpoint + `?sort=${sortDirection}`)
+        .pipe(
+          map((response) => this.formatResponse(response)),
+          tap((formattedResponse) =>
+            this.productDataReplaySubject$.next(formattedResponse)
+          )
+        )
+        .subscribe();
+    }
     return this.httpClient.get<IProductApiResponse[]>(this.apiEndpoint).pipe(
       map((response) => this.formatResponse(response)),
       tap((formattedResponse) =>
@@ -78,18 +90,6 @@ export class ProductApiService implements OnInit {
       );
   }
 
-  sortProducts(direction: string) {
-    this.httpClient
-      .get<IProductApiResponse[]>(this.apiEndpoint + `?sort=${direction}`)
-      .pipe(
-        map((response) => this.formatResponse(response)),
-        tap((formattedResponse) =>
-          this.productDataReplaySubject$.next(formattedResponse)
-        )
-      )
-      .subscribe();
-  }
-
   private formatResponse(response: IProductApiResponse[]) {
     const modifiedResponse: IModifiedProductApiResponse[] = response.map(
       (response) => {
@@ -106,12 +106,12 @@ export class ProductApiService implements OnInit {
     const { id, title, price, description, category, image, rate, count } =
       data;
     const dataToSend: IProductApiResponse = {
-      id: id,
-      title: title,
-      price: price,
-      description: description,
-      category: category,
-      image: image,
+      id,
+      title,
+      price,
+      description,
+      category,
+      image,
       rating: {
         rate: rate,
         count: count,
@@ -126,12 +126,12 @@ export class ProductApiService implements OnInit {
     const { id, title, price, description, category, image, rating } = response;
 
     return new Object({
-      id: id,
-      title: title,
-      price: price,
-      description: description,
-      category: category,
-      image: image,
+      id,
+      title,
+      price,
+      description,
+      category,
+      image,
       rate: rating.rate,
       count: rating.count,
     }) as IModifiedProductApiResponse;

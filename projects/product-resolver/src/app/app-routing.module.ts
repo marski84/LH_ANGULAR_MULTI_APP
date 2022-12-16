@@ -3,9 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProductComponent } from './product/product.component';
 import { ProductResolver } from './product.resolver';
 import { ProductListComponent } from './product-list/product-list.component';
+import { ProductListResolver } from './product-list.resolver';
 
 const routes: Routes = [
-  { path: '', component: ProductListComponent },
+  {
+    path: '',
+    component: ProductListComponent,
+    resolve: { productList: ProductListResolver },
+  },
   {
     path: 'edit/:id',
     component: ProductComponent,

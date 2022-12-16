@@ -12,7 +12,10 @@ import { DataKeyPipe } from './product-list/pipes/data-key.pipe';
 import { ViewContainerComponent } from './view-container/view-container.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
-import { NetworkInterceptor } from './network.interceptor';
+import { ErrorHandler } from './error-handler.interceptor';
+import { AddProductComponent } from './product/add-product/add-product.component';
+import { EditProductComponent } from './product/edit-product/edit-product.component';
+import { ProductFormComponent } from './product/product-form/product-form.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +24,9 @@ import { NetworkInterceptor } from './network.interceptor';
     ProductListComponent,
     DataKeyPipe,
     ViewContainerComponent,
+    EditProductComponent,
+    AddProductComponent,
+    ProductFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,8 +38,17 @@ import { NetworkInterceptor } from './network.interceptor';
     HttpClientModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: NetworkInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorHandler, multi: true },
+    // { provide: APP_INITIALIZER, useClass: NetworkInterceptor },
+    // { provide: 'nasz_token', useValue: 'test', multi: true },
+    // { provide: 'nasz_token', useValue: 'test2', multi: true },
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+
+//1. injector
+//2. dostawce
+// 3. token
+// elementInjector
+// moduleINjector

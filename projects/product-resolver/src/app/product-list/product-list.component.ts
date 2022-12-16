@@ -29,7 +29,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns!: string[];
-  onDestroy$: Subject<void> = new Subject<void>();
+  private onDestroy$: Subject<void> = new Subject<void>();
 
   @Output() sortDataEmitted = new EventEmitter<Sort>();
 
@@ -84,12 +84,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     disableClose: false,
   };
 
-  setTableDataSoure(data: IModifiedProductApiResponse[]) {
-    this.dataSource = new MatTableDataSource<any>(data);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-  }
-
   constructor(
     private productService: ProductApiService,
     private dialog: MatDialog,
@@ -100,7 +94,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.displayedColumns = this.tableColumns.map(
       (tableColumn) => tableColumn.name
     );
-
+    // this.productService.subject$
     this.productService
       .getProductsData()
       .pipe(
@@ -117,8 +111,14 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource.sort = this.sort;
   }
 
+  setTableDataSoure(data: IModifiedProductApiResponse[]) {
+    this.dataSource = new MatTableDataSource<any>(data);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
   sortTableData(sortParameters: Sort) {
-    this.productService.sortProducts(sortParameters.direction);
+    this.productService.getProducts(sortParameters.direction);
   }
 
   onNewProductInit() {
@@ -127,7 +127,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(
-        filter((data) => data !== undefined),
+        filter((data) => !!data),
         map((data) => this.onNewProductAdd(data)),
         tap((data) => console.log(data))
       )

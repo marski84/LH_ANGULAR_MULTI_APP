@@ -9,7 +9,7 @@ import { catchError, Observable, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
-export class NetworkInterceptor implements HttpInterceptor {
+export class ErrorHandler implements HttpInterceptor {
   constructor(private toastr: ToastrService) {
     return;
   }
@@ -18,17 +18,15 @@ export class NetworkInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (request.url.includes('fakestoreapi.com')) {
-      return next.handle(request).pipe(
-        catchError((err) => {
-          this.toastr.error(
-            'We encountered a problem while fething data',
-            'Ooops!'
-          );
-          return of(err);
-        })
-      );
-    }
+    return next.handle(request).pipe(
+      catchError((err) => {
+        this.toastr.error(
+          'We encountered a problem while fething data',
+          'Ooops!'
+        );
+        return of(err);
+      })
+    );
     return next.handle(request);
   }
 }
