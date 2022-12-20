@@ -1,1 +1,38 @@
 <p>product-form works!</p>
+<div class="form-container">
+    <form [formGroup]="productForm">
+
+        <div
+            mat-dialog-content
+            *ngFor="let field of formFields"
+            class="form-container"
+        >
+            <mat-form-field appearance="fill">
+                <mat-label>{{field}}</mat-label>
+                <input
+                    matInput
+                    [formControlName]="field"
+                >
+                <mat-error *ngIf="productForm.get(field)!.touched && productForm.get(field)!.hasError('required')">This field is required</mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <button
+            class="mat-raised-button"
+            (click)="close()"
+        >
+            Close
+        </button>
+        <button
+            [disabled]="productForm.invalid"
+            [ngClass]="productForm.invalid ? 'disabled-button' : '' "
+            class="mat-raised-button"
+            (click)="acceptChanges()"
+        >
+            Save
+        </button>
+
+    </form>
+
+</div>

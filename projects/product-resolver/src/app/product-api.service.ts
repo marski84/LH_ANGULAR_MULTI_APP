@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { map, tap, catchError, of, ReplaySubject } from 'rxjs';
+import { map, tap, catchError, of } from 'rxjs';
 import { IModifiedProductApiResponse } from './models/modifiedApiReponse.interface';
 import { IProductApiResponse } from './models/productApiResponse.interface';
 import { ToastrService } from 'ngx-toastr';
@@ -49,7 +49,7 @@ export class ProductApiService implements OnInit {
     );
   }
 
-  getProduct(id: number) {
+  getProductData(id: number) {
     return this.httpClient
       .get<IProductApiResponse>(`${this.apiEndpoint}/${id}`)
       .pipe(
@@ -66,7 +66,10 @@ export class ProductApiService implements OnInit {
     );
     return this.httpClient
       .post<IProductApiResponse>(this.apiEndpoint, body)
-      .pipe(tap((value) => console.log(value)));
+      .pipe(
+        tap((value) => console.log(value)),
+        tap(() => this.getProducts().subscribe)
+      );
   }
 
   editProduct(editedProductData: IModifiedProductApiResponse) {

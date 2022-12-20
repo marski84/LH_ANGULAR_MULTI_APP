@@ -1,1 +1,4 @@
-<p>add-product works!</p>
+<app-product-form
+    (editedFormDataEmitted)="handleAddProduct($event)"
+    (formDataClosedEmitted)="handleCloseForm()"
+></app-product-form>

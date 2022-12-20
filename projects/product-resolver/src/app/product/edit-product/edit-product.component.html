@@ -1,1 +1,7 @@
-<app-product-form></app-product-form>
+<div *ngIf="formDataSubscription$ | async as formData">
+    <app-product-form
+        [formData]="formData"
+        (formDataClosedEmitted)="handleFormClosed()"
+        (editedFormDataEmitted)="handleFormEdit($event)"
+    ></app-product-form>
+</div>

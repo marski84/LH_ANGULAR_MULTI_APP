@@ -10,12 +10,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { TableColumn } from '../models/TableColumn.interface';
-import { ProductComponent } from '../product/product.component';
 import { ProductApiService } from '../product-api.service';
 import { map, tap, filter, Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { EventEmitter, OnDestroy } from '@angular/core';
 import { IModifiedProductApiResponse } from '../models/modifiedApiReponse.interface';
+import { AddProductComponent } from '../product/add-product/add-product.component';
 
 @Component({
   selector: 'app-product-list',
@@ -94,7 +94,6 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.displayedColumns = this.tableColumns.map(
       (tableColumn) => tableColumn.name
     );
-    // this.productService.subject$
     this.productService
       .getProductsData()
       .pipe(
@@ -122,7 +121,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onNewProductInit() {
-    const dialogRef = this.dialog.open(ProductComponent, this.dialogConfig);
+    const dialogRef = this.dialog.open(AddProductComponent, this.dialogConfig);
 
     dialogRef
       .afterClosed()

@@ -21,12 +21,11 @@ export class ErrorHandler implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         this.toastr.error(
-          'We encountered a problem while fething data',
+          'We encountered a problem while fetching data',
           'Ooops!'
         );
         return of(err);
       })
     );
-    return next.handle(request);
   }
 }
