@@ -94,8 +94,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.displayedColumns = this.tableColumns.map(
       (tableColumn) => tableColumn.name
     );
-    this.productService
-      .getProductsData()
+    this.productService.products$
       .pipe(
         takeUntil(this.onDestroy$),
         map((productList) => this.setTableDataSoure(productList)),
@@ -134,18 +133,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private onNewProductAdd(formData: IModifiedProductApiResponse) {
-    return this.productService
-      .addNewProduct(formData)
-      .pipe(
-        map((data) => data.id),
-        tap((newProductId) =>
-          this.toastr.success(
-            `New product id: ${newProductId}`,
-            'New product Added!'
-          )
-        )
-      )
-      .subscribe();
+    return this.productService.addNewProduct(formData).subscribe();
   }
 
   ngOnDestroy(): void {

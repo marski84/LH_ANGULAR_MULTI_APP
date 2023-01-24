@@ -1,7 +1,15 @@
 <div *ngIf="formDataSubscription$ | async as formData">
     <app-product-form
+        #editForm
         [formData]="formData"
         (formDataClosedEmitted)="handleFormClosed()"
-        (editedFormDataEmitted)="handleFormEdit($event)"
-    ></app-product-form>
+    >
+        <app-button
+            [disabled]="!editForm.productForm.valid"
+            [buttonName]="'Akceptuj'"
+            [eventName]="'formEdited'"
+            (buttonClickedEmitted)="handleFormEdit($event)"
+        ></app-button>
+
+    </app-product-form>
 </div>

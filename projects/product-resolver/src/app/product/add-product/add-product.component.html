@@ -1,4 +1,12 @@
 <app-product-form
-    (editedFormDataEmitted)="handleAddProduct($event)"
+    #addProductForm
     (formDataClosedEmitted)="handleCloseForm()"
-></app-product-form>
+>
+
+    <app-button
+        [disabled]="!addProductForm.productForm.valid"
+        [buttonName]="'Akceptuj'"
+        [eventName]="'productAdded'"
+        (buttonClickedEmitted)="handleAddProduct()"
+    ></app-button>
+</app-product-form>

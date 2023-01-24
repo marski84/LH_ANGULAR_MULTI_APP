@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { map, tap, catchError, of } from 'rxjs';
+import { map, tap, catchError, of, switchMap } from 'rxjs';
 import { IModifiedProductApiResponse } from './models/modifiedApiReponse.interface';
 import { IProductApiResponse } from './models/productApiResponse.interface';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +14,7 @@ export class ProductApiService implements OnInit {
     IModifiedProductApiResponse[]
   >([]);
 
+  products$ = this.productDataReplaySubject$.asObservable();
   private apiEndpoint = 'https://fakestoreapi.com/products';
 
   constructor(
@@ -25,14 +26,12 @@ export class ProductApiService implements OnInit {
     return;
   }
 
-  getProductsData() {
-    return this.productDataReplaySubject$.asObservable();
-  }
-
   getProducts(sortDirection?: string) {
     if (sortDirection) {
+      const params = new HttpParams().set('sort', sortDirection);
+
       this.httpClient
-        .get<IProductApiResponse[]>(this.apiEndpoint + `?sort=${sortDirection}`)
+        .get<IProductApiResponse[]>(this.apiEndpoint, { params })
         .pipe(
           map((response) => this.formatResponse(response)),
           tap((formattedResponse) =>
@@ -41,6 +40,7 @@ export class ProductApiService implements OnInit {
         )
         .subscribe();
     }
+    // subscribe handled by product-list.resolver
     return this.httpClient.get<IProductApiResponse[]>(this.apiEndpoint).pipe(
       map((response) => this.formatResponse(response)),
       tap((formattedResponse) =>
@@ -49,7 +49,7 @@ export class ProductApiService implements OnInit {
     );
   }
 
-  getProductData(id: number) {
+  getProduct(id: number) {
     return this.httpClient
       .get<IProductApiResponse>(`${this.apiEndpoint}/${id}`)
       .pipe(
@@ -68,7 +68,13 @@ export class ProductApiService implements OnInit {
       .post<IProductApiResponse>(this.apiEndpoint, body)
       .pipe(
         tap((value) => console.log(value)),
-        tap(() => this.getProducts().subscribe)
+        tap((newProductId) =>
+          this.toastService.success(
+            `New product id: ${newProductId}`,
+            'New product Added!'
+          )
+        ),
+        switchMap(() => this.getProducts())
       );
   }
 
@@ -95,12 +101,7 @@ export class ProductApiService implements OnInit {
 
   private formatResponse(response: IProductApiResponse[]) {
     const modifiedResponse: IModifiedProductApiResponse[] = response.map(
-      (response) => {
-        const modifiedResponse: IModifiedProductApiResponse =
-          this.createModifiedResponse(response);
-
-        return modifiedResponse;
-      }
+      (response) => this.createModifiedResponse(response)
     );
     return modifiedResponse;
   }

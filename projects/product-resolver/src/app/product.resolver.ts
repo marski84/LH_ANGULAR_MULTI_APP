@@ -16,7 +16,7 @@ export class ProductResolver implements Resolve<IModifiedProductApiResponse> {
   resolve(
     route: ActivatedRouteSnapshot
   ): Observable<IModifiedProductApiResponse> {
-    return this.productService.getProductData(route.params?.['id']).pipe(
+    return this.productService.getProduct(route.params?.['id']).pipe(
       // error handling implemented in network interceptor
       catchError((error) => {
         this.router.navigate(['']);

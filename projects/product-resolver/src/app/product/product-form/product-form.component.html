@@ -4,7 +4,7 @@
 
         <div
             mat-dialog-content
-            *ngFor="let field of formFields"
+            *ngFor="let field of formControlNames"
             class="form-container"
         >
             <mat-form-field appearance="fill">
@@ -18,19 +18,15 @@
 
         </div>
 
+        <!-- ng-content => content projection tutaj -->
+
+        <ng-content (click)="acceptChanges()"></ng-content>
+
         <button
             class="mat-raised-button"
             (click)="close()"
         >
             Close
-        </button>
-        <button
-            [disabled]="productForm.invalid"
-            [ngClass]="productForm.invalid ? 'disabled-button' : '' "
-            class="mat-raised-button"
-            (click)="acceptChanges()"
-        >
-            Save
         </button>
 
     </form>

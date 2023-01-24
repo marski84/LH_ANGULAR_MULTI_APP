@@ -40,18 +40,6 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('init');
-
-    console.log(this.acivatedRoute.snapshot.data);
-
-    // console.log(
-    //   this.acivatedRoute.data.subscribe((data) =>
-    //     console.log(data?.['product'])
-    //   )
-    // );
-
-    // console.log(this.acivatedRoute.snapshot);
-
     // cold observable- take(1) in order to simulate dictionary api
     this.dictionaryService
       .getFormParams()
@@ -71,8 +59,6 @@ export class ProductComponent implements OnInit {
       }
       this.registerFormControl(formField);
     });
-
-    // id: faker.datatype.uuid(), console.log(this.productForm);
   }
 
   private registerFormControl(controlName: string, ctrlValue?: string) {

@@ -16,13 +16,13 @@ import { IModifiedProductApiResponse } from '../../models/modifiedApiReponse.int
 })
 export class ProductFormComponent implements OnInit {
   constructor(
-    @Inject('formControlNames') private formControlNames: string[],
+    @Inject('formControlNames')
+    public formControlNames: Array<keyof IModifiedProductApiResponse>,
     private fb: FormBuilder
   ) {
     return;
   }
 
-  formFields: string[] = [];
   @Input() formData?: IModifiedProductApiResponse;
   @Output() editedFormDataEmitted: EventEmitter<IModifiedProductApiResponse> =
     new EventEmitter();
@@ -31,32 +31,22 @@ export class ProductFormComponent implements OnInit {
   productForm: FormGroup = this.fb.group({});
 
   ngOnInit(): void {
-    console.log(this.formControlNames);
-    console.log(this.formData);
-
-    this.formFields = this.formControlNames;
-
     this.handleFormControlsInit(this.formData);
 
     return;
   }
 
   private handleFormControlsInit(formData?: IModifiedProductApiResponse) {
-    console.log('metoda');
-    console.log(formData);
-
-    this.formFields.forEach((formField: string) => {
+    this.formControlNames.forEach((formField) => {
+      this.registerFormControl(formField);
       if (formData) {
-        const controlValue =
-          formData[formField as keyof IModifiedProductApiResponse];
-        this.registerFormControl(formField, controlValue as string);
+        const controlValue = formData[formField];
+        this.productForm.get(formField)?.setValue(controlValue);
       }
 
       if (formField === 'id') {
-        this.registerFormControl(formField);
         this.productForm.get('id')?.disable();
       }
-      this.registerFormControl(formField);
     });
   }
 
