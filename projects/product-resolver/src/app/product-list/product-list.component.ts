@@ -5,7 +5,7 @@ import {
   AfterViewInit,
   Output,
 } from '@angular/core';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -26,63 +26,15 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
+  @Output() sortDataEmitted = new EventEmitter<Sort>();
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns!: string[];
   private onDestroy$: Subject<void> = new Subject<void>();
 
-  @Output() sortDataEmitted = new EventEmitter<Sort>();
+  tableColumns: TableColumn[] = [];
 
-  tableColumns: TableColumn[] = [
-    {
-      name: 'Product id',
-      dataKey: 'id',
-      isSortable: true,
-      position: 'right',
-    },
-    {
-      name: 'Title',
-      dataKey: 'title',
-      position: 'left',
-    },
-    {
-      name: 'Price',
-      dataKey: 'price',
-      position: 'right',
-    },
-    {
-      name: 'Product description',
-      dataKey: 'description',
-    },
-    {
-      name: 'Category',
-      dataKey: 'category',
-      position: 'right',
-    },
-    // {
-    //   name: 'Image',
-    //   dataKey: 'image',
-    // },
-    {
-      name: 'Product rating',
-      dataKey: 'rate',
-    },
-    {
-      name: 'Amount of opinions',
-      dataKey: 'count',
-    },
-
-    { name: 'Edit', dataKey: 'edit' },
-  ];
-
-  pageSizeOptions = [5, 10, 15, 20];
-
-  dialogConfig: MatDialogConfig = {
-    autoFocus: true,
-    closeOnNavigation: false,
-    hasBackdrop: true,
-    disableClose: false,
-  };
+  pageSizeOptions: number[] = [];
 
   constructor(
     private productService: ProductApiService,
@@ -91,6 +43,8 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.tableColumns = this.productService.tableColumns;
+    this.pageSizeOptions = this.productService.pageSizeOptions;
     this.displayedColumns = this.tableColumns.map(
       (tableColumn) => tableColumn.name
     );
@@ -116,11 +70,16 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sortTableData(sortParameters: Sort) {
-    this.productService.getProducts(sortParameters.direction);
+    this.productService.getProducts(sortParameters.direction).subscribe();
   }
 
   onNewProductInit() {
-    const dialogRef = this.dialog.open(AddProductComponent, this.dialogConfig);
+    const dialogRef = this.dialog.open(AddProductComponent, {
+      autoFocus: true,
+      closeOnNavigation: false,
+      hasBackdrop: true,
+      disableClose: false,
+    });
 
     dialogRef
       .afterClosed()

@@ -4,12 +4,15 @@
         [formData]="formData"
         (formDataClosedEmitted)="handleFormClosed()"
     >
-        <app-button
+
+        <button
             [disabled]="!editForm.productForm.valid"
-            [buttonName]="'Akceptuj'"
-            [eventName]="'formEdited'"
-            (buttonClickedEmitted)="handleFormEdit($event)"
-        ></app-button>
+            [ngClass]="!editForm.productForm.valid ? 'disabled-button' : '' "
+            class="mat-raised-button"
+            (click)="handleFormEdit()"
+        >
+            Edit
+        </button>
 
     </app-product-form>
 </div>

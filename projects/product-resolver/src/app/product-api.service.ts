@@ -5,6 +5,7 @@ import { IModifiedProductApiResponse } from './models/modifiedApiReponse.interfa
 import { IProductApiResponse } from './models/productApiResponse.interface';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { TableColumn } from './models/TableColumn.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,50 @@ export class ProductApiService implements OnInit {
   productDataReplaySubject$ = new BehaviorSubject<
     IModifiedProductApiResponse[]
   >([]);
+
+  tableColumns: TableColumn[] = [
+    {
+      name: 'Product id',
+      dataKey: 'id',
+      isSortable: true,
+      position: 'right',
+    },
+    {
+      name: 'Title',
+      dataKey: 'title',
+      position: 'left',
+    },
+    {
+      name: 'Price',
+      dataKey: 'price',
+      position: 'right',
+    },
+    {
+      name: 'Product description',
+      dataKey: 'description',
+    },
+    {
+      name: 'Category',
+      dataKey: 'category',
+      position: 'right',
+    },
+    // {
+    //   name: 'Image',
+    //   dataKey: 'image',
+    // },
+    {
+      name: 'Product rating',
+      dataKey: 'rate',
+    },
+    {
+      name: 'Amount of opinions',
+      dataKey: 'count',
+    },
+
+    { name: 'Edit', dataKey: 'edit' },
+  ];
+
+  pageSizeOptions = [5, 10, 15, 20];
 
   products$ = this.productDataReplaySubject$.asObservable();
   private apiEndpoint = 'https://fakestoreapi.com/products';
@@ -27,26 +72,19 @@ export class ProductApiService implements OnInit {
   }
 
   getProducts(sortDirection?: string) {
+    let params = new HttpParams();
     if (sortDirection) {
-      const params = new HttpParams().set('sort', sortDirection);
-
-      this.httpClient
-        .get<IProductApiResponse[]>(this.apiEndpoint, { params })
-        .pipe(
-          map((response) => this.formatResponse(response)),
-          tap((formattedResponse) =>
-            this.productDataReplaySubject$.next(formattedResponse)
-          )
-        )
-        .subscribe();
+      params = params.set('sort', sortDirection);
     }
-    // subscribe handled by product-list.resolver
-    return this.httpClient.get<IProductApiResponse[]>(this.apiEndpoint).pipe(
-      map((response) => this.formatResponse(response)),
-      tap((formattedResponse) =>
-        this.productDataReplaySubject$.next(formattedResponse)
-      )
-    );
+    // subscribe handled by product-list.resolver in initial
+    return this.httpClient
+      .get<IProductApiResponse[]>(this.apiEndpoint, { params })
+      .pipe(
+        map((response) => this.formatResponse(response)),
+        tap((formattedResponse) =>
+          this.productDataReplaySubject$.next(formattedResponse)
+        )
+      );
   }
 
   getProduct(id: number) {
@@ -54,9 +92,7 @@ export class ProductApiService implements OnInit {
       .get<IProductApiResponse>(`${this.apiEndpoint}/${id}`)
       .pipe(
         map((response) => this.formatResponse([response])),
-        catchError((error) => {
-          return of(error);
-        })
+        catchError((error) => of(error))
       );
   }
 

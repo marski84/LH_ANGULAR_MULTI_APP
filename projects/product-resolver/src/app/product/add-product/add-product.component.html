@@ -3,10 +3,13 @@
     (formDataClosedEmitted)="handleCloseForm()"
 >
 
-    <app-button
+    <button
         [disabled]="!addProductForm.productForm.valid"
-        [buttonName]="'Akceptuj'"
-        [eventName]="'productAdded'"
-        (buttonClickedEmitted)="handleAddProduct()"
-    ></app-button>
+        [ngClass]="!addProductForm.productForm.valid ? 'disabled-button' : '' "
+        class="mat-raised-button"
+        (click)="handleAddProduct()"
+    >
+        Add
+    </button>
+
 </app-product-form>

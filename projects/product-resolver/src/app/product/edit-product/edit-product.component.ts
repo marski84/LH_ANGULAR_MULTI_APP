@@ -47,8 +47,7 @@ export class EditProductComponent implements OnInit {
     this.router.navigate(['']);
   }
 
-  handleFormEdit(formDataEvent: string) {
-    console.log(formDataEvent);
+  handleFormEdit() {
     const editedData = this.editForm.productForm.getRawValue();
 
     this.productService

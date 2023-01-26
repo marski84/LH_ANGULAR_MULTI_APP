@@ -14,7 +14,6 @@ import { ErrorHandler } from './error-handler.interceptor';
 import { AddProductComponent } from './product/add-product/add-product.component';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
 import { ProductFormComponent } from './product/product-form/product-form.component';
-import { ButtonComponent } from './product/button/button.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +23,6 @@ import { ButtonComponent } from './product/button/button.component';
     EditProductComponent,
     AddProductComponent,
     ProductFormComponent,
-    ButtonComponent,
   ],
   imports: [
     BrowserModule,
