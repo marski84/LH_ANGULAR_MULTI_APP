@@ -21,7 +21,12 @@
         <!-- ng-content => content projection tutaj -->
         <ng-content></ng-content>
 
-        <button class="mat-raised-button">Close</button>
+        <button
+            class="mat-raised-button"
+            (click)="close()"
+        >
+            Close
+        </button>
 
     </form>
 
